@@ -4,13 +4,13 @@ import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER } from "../../utils/messages";
 
-export default class Cum implements ICommand {
+export default class S implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
 
   constructor() {
-    this.type = CommandEnum.CUM;
+    this.type = CommandEnum.S;
     this.message = ":kissing_heart: **Okei her kommer jeg** :heart_eyes:"
     this.help = "Will make the bot join the voice channel. It will not play anything"
   }

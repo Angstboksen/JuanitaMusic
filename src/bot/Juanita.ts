@@ -2,7 +2,6 @@ import {
   Channel,
   Client,
   Collection,
-  DiscordAPIError,
   Guild,
   Message,
   MessageEmbed,
@@ -11,7 +10,7 @@ import {
 } from "discord.js";
 import { BroadcastEnum } from "../utils/enums";
 import { ERRORS, BROADCAST } from "../utils/messages";
-import { ICommand } from "../utils/api";
+import { ICommand, IGuild } from "../utils/api";
 import { commandTypes } from "../utils/helpers";
 
 export default class Juanita {
@@ -20,6 +19,7 @@ export default class Juanita {
   _guilds: Guild[];
   _textChannels: TextChannel[];
   _commands: ICommand[];
+  IGUILDS: Map<string, IGuild>;
 
   constructor(client: Client) {
     this._client = client;
@@ -27,6 +27,7 @@ export default class Juanita {
     this._allUsers = [];
     this._guilds = [];
     this._textChannels = [];
+    this.IGUILDS = new Map();
   }
 
   public _initialize = () => {
@@ -35,6 +36,15 @@ export default class Juanita {
     this.loadGuilds();
     this.loadChannels();
     this.broadcast(BroadcastEnum.READY);
+  };
+
+  public getIGuild = (guildid: string) => {
+    return this.IGUILDS.get(guildid);
+  };
+
+  public addNewIGuild = async (guild: Guild) => {
+    const newGuild: IGuild = { id: guild.id, name: guild.name, playlists: [] };
+    this.IGUILDS.set(guild.id, newGuild);
   };
 
   public broadcast = async (type: BroadcastEnum) => {
@@ -48,10 +58,13 @@ export default class Juanita {
   };
 
   public execute = async (message: Message, tokens: string[]) => {
-    for(let command of this._commands) {
-        if(command.isValid(tokens)) {
-            command.run(message, tokens)
-        }
+    for (let command of this._commands) {
+      if (command.isValid(tokens)) {
+        const guild: Guild = message.guild!;
+        command.run(message, this.getIGuild(guild.id)!);
+        // Siste som ble gjort var å kommentere guilds
+        console.log(this.IGUILDS);
+      }
     }
   };
 
@@ -59,7 +72,10 @@ export default class Juanita {
     this.sendMessage(channel, ERRORS.COMMAND_NOT_EXIST);
   };
 
-  public sendMessage = (textChannel: TextChannel, content: string | MessageEmbed) => {
+  public sendMessage = (
+    textChannel: TextChannel,
+    content: string | MessageEmbed
+  ) => {
     textChannel.send(content);
   };
 
@@ -77,6 +93,7 @@ export default class Juanita {
     const clientGuilds: Collection<string, Guild> = this._client.guilds.cache;
     for (let guild of clientGuilds) {
       this._guilds.push(guild[1]);
+      this.addNewIGuild(guild[1]);
     }
   };
 

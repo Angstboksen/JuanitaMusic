@@ -4,15 +4,15 @@ import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER } from "../../utils/messages";
 
-export default class Cum implements ICommand {
+export default class Leave implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
 
   constructor() {
-    this.type = CommandEnum.CUM;
-    this.message = ":kissing_heart: **Okei her kommer jeg** :heart_eyes:"
-    this.help = "Will make the bot join the voice channel. It will not play anything"
+    this.type = CommandEnum.LEAVE;
+    this.message = ":x: **Aight Imma head out!** :disappointed_relieved: :zipper_mouth:"
+    this.help = "Will kick the bot from the voice channel"
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -24,9 +24,9 @@ export default class Cum implements ICommand {
   public run = async (message: Message): Promise<void> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const channel: VoiceChannel = message.member?.voice.channel!
-    if(!botAlreadyJoined(channel)) {
+    if(botAlreadyJoined(channel)) {
       message.channel.send(this.message)
-      channel.join()
+      channel.leave()
     }
   };
 }
