@@ -37,3 +37,25 @@ export const botAlreadyJoined = (channel: VoiceChannel): boolean => {
 };
 
 export const commandTypes: string[] = Object.values(CommandEnum);
+
+export const formattedTime = (secs: string) => {
+  var sec_num = parseInt(secs, 10)
+  var hours = Math.floor(sec_num / 3600)
+  var minutes = Math.floor(sec_num / 60) % 60
+  var seconds = sec_num % 60
+
+  return [hours, minutes, seconds]
+      .map(v => v < 10 ? "0" + v : v)
+      .filter((v, i) => v !== "00" || i > 0)
+      .join(":")
+}
+
+export const shuffleArray = (array: Array<any>) => {
+  for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i)
+      const a = array[i]
+      array[i] = array[j]
+      array[j] = a
+  }
+  return array
+}

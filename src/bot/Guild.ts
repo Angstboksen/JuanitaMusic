@@ -1,13 +1,14 @@
-import { User } from "discord.js";
-import { IPlaylist, IQueue } from "../utils/api";
+import { IGuild, IPlaylist } from "../utils/api";
+import * as db from "../database/DatabaseHandler";
 
-class Guild {
-  id: number;
+
+export default class Guild implements IGuild {
+  id: string;
   name: string;
   playlists: IPlaylist[];
   //queue: IQueue;
 
-  constructor(id: number, name: string, playlists: IPlaylist[] = []) {
+  constructor(id: string, name: string, playlists: IPlaylist[] = []) {
     this.id = id;
     this.name = name;
     this.playlists = playlists;
@@ -42,7 +43,7 @@ class Guild {
     return null;
   }
 
-  petBot(sender: User) {
+  petBot(sender: string) {
     //db.petBot(this.id, sender);
   }
 }

@@ -12,6 +12,8 @@ import { BroadcastEnum } from "../utils/enums";
 import { ERRORS, BROADCAST } from "../utils/messages";
 import { ICommand, IGuild } from "../utils/api";
 import { commandTypes } from "../utils/helpers";
+import * as db from "../database/DatabaseHandler";
+
 
 export default class Juanita {
   _allUsers: User[];
@@ -21,13 +23,13 @@ export default class Juanita {
   _commands: ICommand[];
   IGUILDS: Map<string, IGuild>;
 
-  constructor(client: Client) {
+  constructor(client: Client, guilds: Map<string, IGuild>) {
     this._client = client;
     this._commands = [];
     this._allUsers = [];
     this._guilds = [];
     this._textChannels = [];
-    this.IGUILDS = new Map();
+    this.IGUILDS = guilds
   }
 
   public _initialize = () => {
@@ -38,8 +40,8 @@ export default class Juanita {
     this.broadcast(BroadcastEnum.READY);
   };
 
-  public getIGuild = (guildid: string) => {
-    return this.IGUILDS.get(guildid);
+  public getIGuild = (guildid: string): IGuild => {
+    return this.IGUILDS.get(guildid)!;
   };
 
   public addNewIGuild = async (guild: Guild) => {
@@ -62,8 +64,6 @@ export default class Juanita {
       if (command.isValid(tokens)) {
         const guild: Guild = message.guild!;
         command.run(message, this.getIGuild(guild.id)!);
-        // Siste som ble gjort var å kommentere guilds
-        console.log(this.IGUILDS);
       }
     }
   };
@@ -89,11 +89,10 @@ export default class Juanita {
     }
   };
 
-  loadGuilds = () => {
+  loadGuilds = async () => {
     const clientGuilds: Collection<string, Guild> = this._client.guilds.cache;
     for (let guild of clientGuilds) {
       this._guilds.push(guild[1]);
-      this.addNewIGuild(guild[1]);
     }
   };
 

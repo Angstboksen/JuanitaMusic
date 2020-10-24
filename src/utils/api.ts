@@ -19,7 +19,7 @@ export interface IPlaylist {
   name: string;
   songs: ISong[];
   creator: string;
-  trustedusers: User[];
+  trustedusers: string[];
 }
 
 export interface IQueue {
@@ -36,4 +36,8 @@ export interface IGuild {
   name: string;
   playlists: IPlaylist[];
   //queue: IQueue;
+}
+
+export interface IUser {
+
 }
