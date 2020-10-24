@@ -16,10 +16,14 @@ export const ERRORS = {
     )}:x:`,
   NEED_MORE_SONG_INFO:
     ":x: **Du må spesifisere hva som skal avspilles mannen!** :x:",
-  ARGUMENT_NOT_INTEGER: ":robot: **Argument nr.2 må være et tall** :thinking:",
+  ARGUMENT_NOT_INTEGER:
+    ":robot: **Argument nr.2 må være et gyldig tall** :thinking:",
   NOT_VALID_QUEUE_INDEX: ":robot: **Ikke en gyldig index** :thinking:",
   NO_LIST_EXISTS: (playlistname: string) =>
     `:x: **Ingen liste** ${playlistname} **eksisterer** :x:`,
+  QUEUE_NOT_FOUND: `:x: **Finner ingen kø** :x:`,
+  PLAYLIST_HAS_NO_SONGS: (playlistname: string) =>
+    `:clown: **Spillelisten:** ${playlistname} **har ingen sanger** :clown:`,
 };
 
 export const BROADCAST = {
@@ -79,4 +83,6 @@ export const MESSAGES = {
     }
     return text;
   },
+  REMOVED_SONG_FROM_QUEUE: (title: string) =>
+    `:mage: **Fjernet** ${title} **køen listen** :scroll:`,
 };

@@ -47,7 +47,7 @@ export const initializeGuilds = async () => {
         for (let t of trusteditems) {
           trusted_users.push(t.userid);
         }
-        const newpl: IPlaylist = new Playlist(
+        const newpl: Playlist = new Playlist(
           guild.guildid,
           playlist.name,
           songlist,

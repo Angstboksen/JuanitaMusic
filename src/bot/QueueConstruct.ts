@@ -9,7 +9,7 @@ export default class QueueConstruct implements IQueue {
   current: ISong | undefined;
 
   constructor(
-    songs = []
+    songs: ISong[] = []
   ) {
     this.songs = songs;
     this.volume = 5;
@@ -27,7 +27,7 @@ export default class QueueConstruct implements IQueue {
   }
 
   inrange(index: number) {
-    return index > 0 && index < this.songs.length;
+    return index > 0 && index <= this.songs.length;
   }
 
   shift(index: number) {

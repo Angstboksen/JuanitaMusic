@@ -72,7 +72,7 @@ class Playlist implements IPlaylist {
 
   shuffle() {
     let temp: ISong[] = this.songs;
-    return shuffleArray(temp);
+    return shuffleArray(temp) as ISong[];
   }
 
   size() {

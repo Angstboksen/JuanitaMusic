@@ -2,6 +2,7 @@ import { IGuild, IPlaylist, IQueue } from "../utils/api";
 import * as db from "../database/DatabaseHandler";
 import { DMChannel, NewsChannel, TextChannel, VoiceChannel, VoiceConnection } from "discord.js";
 import QueueConstruct from "./QueueConstruct";
+import Playlist from "./Playlist";
 
 export default class JuanitaGuild implements IGuild {
   id: string;
@@ -9,10 +10,10 @@ export default class JuanitaGuild implements IGuild {
   voiceChannel: VoiceChannel | undefined;
   connection: VoiceConnection | undefined;
   name: string;
-  playlists: IPlaylist[];
+  playlists: Playlist[];
   queue: QueueConstruct | undefined;
 
-  constructor(id: string, name: string, playlists: IPlaylist[] = []) {
+  constructor(id: string, name: string, playlists: Playlist[] = []) {
     this.textChannel = undefined
     this.voiceChannel = undefined;
     this.id = id;
@@ -22,7 +23,7 @@ export default class JuanitaGuild implements IGuild {
     this.queue = undefined;
   }
 
-  addPlaylist(playlist: IPlaylist) {
+  addPlaylist(playlist: Playlist) {
     this.playlists.push(playlist);
     db.addNewPlaylistToGuild(playlist);
     return true;
