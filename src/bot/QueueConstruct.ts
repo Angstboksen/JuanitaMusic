@@ -3,20 +3,14 @@ import { IQueue, ISong } from "../utils/api";
 import { formattedTime } from "../utils/helpers";
 
 export default class QueueConstruct implements IQueue {
-  textChannel: TextChannel;
-  voiceChannel: VoiceChannel;
   songs: ISong[];
   volume: number;
   playing: boolean;
   current: ISong | undefined;
 
   constructor(
-    textChannel: TextChannel,
-    voiceChannel: VoiceChannel,
     songs = []
   ) {
-    this.textChannel = textChannel;
-    this.voiceChannel = voiceChannel;
     this.songs = songs;
     this.volume = 5;
     this.playing = false;
@@ -85,6 +79,6 @@ export default class QueueConstruct implements IQueue {
     for (let song of this.songs) {
       totalSeconds += song.length;
     }
-    return formattedTime(String(totalSeconds));
+    return formattedTime(totalSeconds)
   }
 }

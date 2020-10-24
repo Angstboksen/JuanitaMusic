@@ -15,9 +15,3 @@ type DBConfig = {
   port: number;
 };
 
-export type Guild = {
-  id: number;
-  name: string;
-  playlist: IPlaylist;
-  queue: IQueue;
-};

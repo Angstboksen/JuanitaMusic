@@ -38,8 +38,7 @@ export const botAlreadyJoined = (channel: VoiceChannel): boolean => {
 
 export const commandTypes: string[] = Object.values(CommandEnum);
 
-export const formattedTime = (secs: string) => {
-  var sec_num = parseInt(secs, 10)
+export const formattedTime = (sec_num: number) => {
   var hours = Math.floor(sec_num / 3600)
   var minutes = Math.floor(sec_num / 60) % 60
   var seconds = sec_num % 60

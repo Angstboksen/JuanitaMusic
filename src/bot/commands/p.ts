@@ -5,15 +5,19 @@ import {
   TextChannel,
   VoiceChannel,
 } from "discord.js";
-import { ICommand, ISong } from "../../utils/api";
+import { ICommand, IGuild, ISong } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import {
   botAlreadyJoined,
   isCommandNameCorrect,
   tokenize,
 } from "../../utils/helpers";
-import { LOGGER } from "../../utils/messages";
+import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
+import QueueConstruct from "../QueueConstruct";
 import YoutubeSearcher from "../YoutubeSearcher";
+import MediaPlayer from "../MediaPlayer";
+
+const player: MediaPlayer = new MediaPlayer();
 
 export default class P implements ICommand {
   type: CommandEnum;
@@ -23,7 +27,7 @@ export default class P implements ICommand {
 
   constructor() {
     this.type = CommandEnum.P;
-    this.message = ":kissing_heart: **Okei her kommer jeg** :heart_eyes:";
+    this.message = "";
     this.help =
       "Will play the given song link, or search with the given keywords";
   }
@@ -39,13 +43,16 @@ export default class P implements ICommand {
 
   public prettifySongTitle = (song: ISong): ISong => {
     song.title = song.title.replace(
-      /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+      /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF][*])/g,
       ""
     );
     return song;
   };
 
-  public run = async (message: Message): Promise<void | Message> => {
+  public run = async (
+    message: Message,
+    guild: IGuild
+  ): Promise<void | Message> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const keywords: string[] = this.getKeywords(message.content);
     const textChannel: TextChannel | DMChannel | NewsChannel = message.channel;
@@ -53,9 +60,7 @@ export default class P implements ICommand {
 
     // No parameters specified
     if (keywords.length === 0) {
-      return textChannel.send(
-        ":x: **Du må spesifisere hva som skal avspilles mannen!** :x:"
-      );
+      return textChannel.send(ERRORS.NEED_MORE_SONG_INFO);
     }
 
     const song: ISong | undefined = await this.searcher.search(
@@ -64,13 +69,18 @@ export default class P implements ICommand {
 
     // Song search failed
     if (song === undefined) {
-      return textChannel.send(
-        `:x: **Ingen sang funnet med denne søkestrengen:** ${keywords.join(
-          " "
-        )}:x:`
-      );
+      console.log(`No song found with keywords: ${keywords}`);
+      return textChannel.send(ERRORS.NO_SONG_FOUND(keywords));
     }
-
-    console.log(song);
+    if (guild.queue === undefined) {
+      guild.queue = new QueueConstruct();
+      guild.queue.enqueue(song);
+      guild.connection = await channel.join();
+      player.play(guild);
+    } else {
+      guild.queue.enqueue(song);
+      textChannel.send(MESSAGES.ADDED_TO_QUEUE(song.title))
+      textChannel.send(await guild.queue.show())
+    }
   };
 }

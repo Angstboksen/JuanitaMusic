@@ -13,7 +13,7 @@ import { ERRORS, BROADCAST } from "../utils/messages";
 import { ICommand, IGuild } from "../utils/api";
 import { commandTypes } from "../utils/helpers";
 import * as db from "../database/DatabaseHandler";
-
+import JuanitaGuild from "./Guild";
 
 export default class Juanita {
   _allUsers: User[];
@@ -29,7 +29,7 @@ export default class Juanita {
     this._allUsers = [];
     this._guilds = [];
     this._textChannels = [];
-    this.IGUILDS = guilds
+    this.IGUILDS = guilds;
   }
 
   public _initialize = () => {
@@ -45,7 +45,7 @@ export default class Juanita {
   };
 
   public addNewIGuild = async (guild: Guild) => {
-    const newGuild: IGuild = { id: guild.id, name: guild.name, playlists: [] };
+    const newGuild: JuanitaGuild = new JuanitaGuild(guild.id, guild.name);
     this.IGUILDS.set(guild.id, newGuild);
   };
 
@@ -62,10 +62,19 @@ export default class Juanita {
   public execute = async (message: Message, tokens: string[]) => {
     for (let command of this._commands) {
       if (command.isValid(tokens)) {
-        const guild: Guild = message.guild!;
-        command.run(message, this.getIGuild(guild.id)!);
+        const clientguild: Guild = message.guild!;
+        const guild = this.validateAndCheck(clientguild);
+        guild.textChannel = message.channel;
+        await command.run(message, guild);
       }
     }
+  };
+
+  public validateAndCheck = (guild: Guild) => {
+    const exists: boolean = this.IGUILDS.has(guild.id);
+    return exists
+      ? this.getIGuild(guild.id)
+      : new JuanitaGuild(guild.id, guild.name);
   };
 
   public wrongCommand = async (channel: TextChannel) => {

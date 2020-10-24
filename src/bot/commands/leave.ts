@@ -1,5 +1,5 @@
 import { Message, VoiceChannel } from "discord.js";
-import { ICommand } from "../../utils/api";
+import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER } from "../../utils/messages";
@@ -21,12 +21,14 @@ export default class Leave implements ICommand {
     );
   };
 
-  public run = async (message: Message): Promise<void> => {
+  public run = async (message: Message, guild: IGuild): Promise<void> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const channel: VoiceChannel = message.member?.voice.channel!
     if(botAlreadyJoined(channel)) {
       message.channel.send(this.message)
       channel.leave()
+      guild.connection = undefined
+      guild.queue = undefined
     }
   };
 }
