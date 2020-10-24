@@ -4,23 +4,21 @@ import { CommandEnum } from "../../utils/enums";
 import { isCommandNameCorrect, tokenize } from "../../utils/helpers";
 import { ERRORS, LOGGER } from "../../utils/messages";
 import JuanitaGuild from "../Guild";
-import JuanitaMessage from "../JuanitaMessage";
-import MediaPlayer from "../MediaPlayer";
+import { send } from "../JuanitaMessage";
+import { play } from "../MediaPlayer";
 import QueueConstruct from "../QueueConstruct";
-
-const player: MediaPlayer = new MediaPlayer();
 
 export default class Shuffle implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  messageDispatcher: JuanitaMessage;
+
 
   constructor() {
     this.type = CommandEnum.SHUFFLE;
     this.message = "";
     this.help = "Will play the given playlist in shuffle mode";
-    this.messageDispatcher = new JuanitaMessage();
+    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -34,11 +32,11 @@ export default class Shuffle implements ICommand {
     const playlistname: string = tokenize(message.content)[1];
     const playlist = guild.getPlaylistByName(playlistname);
     if (!playlist) {
-      this.messageDispatcher.send(channel, ERRORS.NO_LIST_EXISTS(playlistname));
+      send(channel, ERRORS.NO_LIST_EXISTS(playlistname));
       return;
     }
     if (playlist.size() <= 0) {
-      this.messageDispatcher.send(
+      send(
         channel,
         ERRORS.PLAYLIST_HAS_NO_SONGS(playlistname)
       );
@@ -47,6 +45,6 @@ export default class Shuffle implements ICommand {
     guild.connection = await voiceChannel.join();
     const songs: ISong[] = playlist.getSongs(true);
     guild.queue = new QueueConstruct(songs);
-    player.play(guild);
+    play(guild);
   };
 }

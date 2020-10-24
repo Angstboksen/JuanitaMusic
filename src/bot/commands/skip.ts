@@ -7,20 +7,21 @@ import {
   tokenize,
 } from "../../utils/helpers";
 import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
-import JuanitaMessage from "../JuanitaMessage";
+import { send } from "../JuanitaMessage";
+
 import QueueConstruct from "../QueueConstruct";
 
 export default class Skip implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  messageDispatcher: JuanitaMessage;
+
 
   constructor() {
     this.type = CommandEnum.SKIP;
     this.message = "";
     this.help = "Will skip to the song at the index given in the queue";
-    this.messageDispatcher = new JuanitaMessage();
+    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -36,19 +37,19 @@ export default class Skip implements ICommand {
       return;
     }
     if (!Number.isInteger(index)) {
-      this.messageDispatcher.send(channel, ERRORS.ARGUMENT_NOT_INTEGER);
+      send(channel, ERRORS.ARGUMENT_NOT_INTEGER);
       return;
     }
 
     if (!queue.inrange(index)) {
-      this.messageDispatcher.send(channel, ERRORS.NOT_VALID_QUEUE_INDEX);
+      send(channel, ERRORS.NOT_VALID_QUEUE_INDEX);
       return;
     }
 
     if (guild.connection) {
       queue.shift(index);
       guild.connection.dispatcher.end();
-      this.messageDispatcher.send(channel, MESSAGES.SKIP_ALOT(index));
+      send(channel, MESSAGES.SKIP_ALOT(index));
     }
   };
 }

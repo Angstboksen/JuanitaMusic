@@ -7,19 +7,20 @@ import {
   tokenize,
 } from "../../utils/helpers";
 import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
-import JuanitaMessage from "../JuanitaMessage";
+import { send } from "../JuanitaMessage";
+
 
 export default class Kill implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  messageDispatcher: JuanitaMessage;
+
 
   constructor() {
     this.type = CommandEnum.KILL;
     this.message = "";
     this.help = "Remove a specific song from the queue";
-    this.messageDispatcher = new JuanitaMessage();
+    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -33,16 +34,16 @@ export default class Kill implements ICommand {
     const queue = guild.queue;
 
     if (!queue || queue.size() === 0) {
-      this.messageDispatcher.send(channel, ERRORS.QUEUE_NOT_FOUND);
+      send(channel, ERRORS.QUEUE_NOT_FOUND);
       return;
     }
     if (!queue.inrange(index)) {
-      this.messageDispatcher.send(channel, ERRORS.ARGUMENT_NOT_INTEGER);
+      send(channel, ERRORS.ARGUMENT_NOT_INTEGER);
       return;
     }
     const song = queue.songs[index - 1];
     queue.songs.splice(index - 1, 1);
-    this.messageDispatcher.send(
+    send(
       channel,
       MESSAGES.REMOVED_SONG_FROM_QUEUE(song.title)
     );

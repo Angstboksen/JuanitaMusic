@@ -8,19 +8,20 @@ import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER, MESSAGES } from "../../utils/messages";
-import JuanitaMessage from "../JuanitaMessage";
+import { send } from "../JuanitaMessage";
+
 
 export default class S implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  messageDispatcher: JuanitaMessage;
+
 
   constructor() {
     this.type = CommandEnum.S;
     this.message = ":kissing_heart: **Okei her kommer jeg** :heart_eyes:";
     this.help = "Will skip to the next song in the queue";
-    this.messageDispatcher = new JuanitaMessage();
+    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -35,7 +36,7 @@ export default class S implements ICommand {
       return console.log(LOGGER.NO_CONNECTION_COMMAND);
     if (connection.dispatcher !== undefined) {
       connection.dispatcher.end();
-      this.messageDispatcher.send(channel, MESSAGES.SKIP_SONG);
+      send(channel, MESSAGES.SKIP_SONG);
     }
   };
 }

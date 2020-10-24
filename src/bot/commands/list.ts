@@ -4,20 +4,21 @@ import { CommandEnum } from "../../utils/enums";
 import { isCommandNameCorrect, tokenize } from "../../utils/helpers";
 import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
 import JuanitaGuild from "../Guild";
-import JuanitaMessage from "../JuanitaMessage";
+import { makeEmbed, send } from "../JuanitaMessage";
+
 import Playlist from "../Playlist";
 
 export default class List implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  messageDispatcher: JuanitaMessage;
+
 
   constructor() {
     this.type = CommandEnum.LIST;
     this.message = "";
     this.help = "Will give overview over the songs in the given list";
-    this.messageDispatcher = new JuanitaMessage();
+    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -32,13 +33,13 @@ export default class List implements ICommand {
       playlistname
     );
     if (!playlist) {
-      this.messageDispatcher.send(channel, ERRORS.NO_LIST_EXISTS(playlistname));
+      send(channel, ERRORS.NO_LIST_EXISTS(playlistname));
       return;
     }
-    const embed = this.messageDispatcher.makeEmbed(
+    const embed = makeEmbed(
       `:scroll: **Her er sangene i listen:** ${playlist.name} :scroll:`,
       MESSAGES.PLAYLIST_SONG_INFORMATION(playlist)
     );
-    this.messageDispatcher.send(channel, embed);
+    send(channel, embed);
   };
 }

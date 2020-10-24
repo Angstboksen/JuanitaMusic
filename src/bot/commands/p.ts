@@ -1,38 +1,29 @@
 import {
-  DMChannel,
   Message,
-  NewsChannel,
-  TextChannel,
   VoiceChannel,
 } from "discord.js";
 import { ICommand, IGuild, ISong } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import {
-  botAlreadyJoined,
   isCommandNameCorrect,
   tokenize,
 } from "../../utils/helpers";
 import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
 import QueueConstruct from "../QueueConstruct";
-import YoutubeSearcher from "../YoutubeSearcher";
-import MediaPlayer from "../MediaPlayer";
-import JuanitaMessage from "../JuanitaMessage";
-
-const player: MediaPlayer = new MediaPlayer();
+import { search } from "../YoutubeSearcher";
+import { send } from "../JuanitaMessage";
+import { play } from "../MediaPlayer";
 
 export default class P implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  searcher: YoutubeSearcher = new YoutubeSearcher();
-  messageDispatcher: JuanitaMessage;
 
   constructor() {
     this.type = CommandEnum.P;
     this.message = "";
     this.help =
       "Will play the given song link, or search with the given keywords";
-    this.messageDispatcher = new JuanitaMessage();
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -63,36 +54,28 @@ export default class P implements ICommand {
 
     // No parameters specified
     if (keywords.length === 0) {
-      return this.messageDispatcher.send(
-        textChannel,
-        ERRORS.NEED_MORE_SONG_INFO
-      );
+      return send(textChannel, ERRORS.NEED_MORE_SONG_INFO);
     }
 
-    const song: ISong | undefined = await this.searcher.search(
+    const song: ISong | undefined = await search(
       keywords.join(" ")
     );
 
     // Song search failed
     if (song === undefined) {
       console.log(`No song found with keywords: ${keywords}`);
-      return this.messageDispatcher.send(
-        textChannel,
-        ERRORS.NO_SONG_FOUND(keywords)
-      );
+      return send(textChannel, ERRORS.NO_SONG_FOUND(keywords));
     }
+
     if (guild.queue === undefined) {
       guild.queue = new QueueConstruct();
       guild.queue.enqueue(song);
       guild.connection = await channel.join();
-      player.play(guild);
+      play(guild);
     } else {
       guild.queue.enqueue(song);
-      this.messageDispatcher.send(
-        textChannel,
-        MESSAGES.ADDED_TO_QUEUE(song.title)
-      );
-      this.messageDispatcher.send(textChannel, await guild.queue.show());
+      send(textChannel, MESSAGES.ADDED_TO_QUEUE(song.title));
+      send(textChannel, await guild.queue.show());
     }
   };
 }

@@ -1,23 +1,23 @@
 import { Message } from "discord.js";
-
 import { ICommand, IGuild, IPlaylist } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER, MESSAGES } from "../../utils/messages";
-import JuanitaMessage from "../JuanitaMessage";
+import { makeEmbed, send } from "../JuanitaMessage";
+
 
 export default class ListAll implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
-  messageDispatcher: JuanitaMessage;
+
 
   constructor() {
     this.type = CommandEnum.LISTALL;
     this.message = "";
     this.help =
       "Will list all the stored lists with their name, number of songs and creator";
-    this.messageDispatcher = new JuanitaMessage();
+    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -40,10 +40,10 @@ export default class ListAll implements ICommand {
       text = MESSAGES.EMPTY_PLAYLIST_INFO;
     }
 
-    const embed = this.messageDispatcher.makeEmbed(
+    const embed = makeEmbed(
       MESSAGES.AMOUNT_OF_LISTS(playlists.length),
       text
     );
-    this.messageDispatcher.send(channel, embed);
+    send(channel, embed);
   };
 }

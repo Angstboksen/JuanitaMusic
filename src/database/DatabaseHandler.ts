@@ -83,6 +83,10 @@ export const addNewGuild = async (id: string, name: string) => {
   return null;
 };
 
+export const addNewSong = async (song: ISong) => {
+  await connectAndQuery(statements.insertIntoSongs(song));
+};
+
 export const addNewPlaylistToGuild = async (playlist: IPlaylist) => {
   const playlistInGuild: Array<any> = (await connectAndQuery(
     statements.selectPlaylistByNameAndGuildId(playlist.name, playlist.guildid)

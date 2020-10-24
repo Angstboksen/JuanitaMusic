@@ -1,5 +1,4 @@
 import { DMChannel, Message, NewsChannel, TextChannel, User, VoiceChannel, VoiceConnection } from "discord.js";
-import JuanitaMessage from "../bot/JuanitaMessage";
 import QueueConstruct from "../bot/QueueConstruct";
 import { CommandEnum } from "./enums";
 
@@ -7,7 +6,6 @@ export interface ICommand {
   type: CommandEnum;
   run(message: Message, guild: IGuild): void;
   isValid(tokens: string[]): boolean;
-  messageDispatcher: JuanitaMessage
 }
 
 export interface ISong {

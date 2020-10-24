@@ -85,4 +85,14 @@ export const MESSAGES = {
   },
   REMOVED_SONG_FROM_QUEUE: (title: string) =>
     `:mage: **Fjernet** ${title} **køen listen** :scroll:`,
+  GET_SONG_INFO: (
+    title: string,
+    url: string,
+    size: number,
+    estimatedtime: string
+  ) => `:notes: **Tittel:** ${title}
+    :beginner: **Youtube link:** ${url}
+    :arrows_counterclockwise: **Antall sanger fortsatt i køen:** ${size}
+    :timer: **Beregnet tid:** ${estimatedtime}`,
+  NO_CURRENT_SONG: ":robot: **Det er ingen sang som spiller ** :thinking:",
 };
