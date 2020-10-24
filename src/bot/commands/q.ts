@@ -3,16 +3,19 @@ import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER } from "../../utils/messages";
+import JuanitaMessage from "../JuanitaMessage";
 
 export default class Q implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
+  messageDispatcher: JuanitaMessage;
 
   constructor() {
     this.type = CommandEnum.Q;
     this.message = "";
     this.help = "Will show the current queue";
+    this.messageDispatcher = new JuanitaMessage();
   }
 
   public isValid = (tokens: string[]): boolean => {

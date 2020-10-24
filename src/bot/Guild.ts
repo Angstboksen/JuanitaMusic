@@ -24,7 +24,7 @@ export default class JuanitaGuild implements IGuild {
 
   addPlaylist(playlist: IPlaylist) {
     this.playlists.push(playlist);
-    //db.addNewPlaylistToGuild(playlist);
+    db.addNewPlaylistToGuild(playlist);
     return true;
   }
 
@@ -46,7 +46,7 @@ export default class JuanitaGuild implements IGuild {
         return list;
       }
     }
-    return null;
+    return undefined;
   }
 
   petBot(sender: string) {

@@ -1,15 +1,17 @@
-import { MessageEmbed } from "discord.js";
+import { DMChannel, Message, MessageEmbed, NewsChannel, StreamDispatcher, TextChannel } from "discord.js";
+import { Readable } from "stream";
 import ytdl from "ytdl-core";
-import { IGuild } from "../utils/api";
+import { IGuild, IQueue, ISong } from "../utils/api";
 import { formattedTime } from "../utils/helpers";
 import { ERRORS, MESSAGES } from "../utils/messages";
+import QueueConstruct from "./QueueConstruct";
 
 export default class MediaPlayer {
   constructor() {}
 
   play = (guild: IGuild) => {
-    const queue = guild.queue!;
-    const textChannel = guild.textChannel!;
+    const queue: QueueConstruct = guild.queue!;
+    const textChannel: TextChannel | DMChannel | NewsChannel = guild.textChannel!;
     if (queue.size() === 0) {
       queue.playing = false;
       queue.current = undefined;
@@ -17,11 +19,11 @@ export default class MediaPlayer {
       return;
     }
 
-    const song = queue.next();
+    const song: ISong = queue.next();
     if (!song) return textChannel.send(ERRORS.SONG_PLAY_FAIL);
-    const estimatedtime = formattedTime(song.length);
-    const ytdl_song = ytdl(song.url, { filter: "audioonly" });
-    const dispatcher = guild
+    const estimatedtime: string = formattedTime(song.length);
+    const ytdl_song: Readable = ytdl(song.url, { filter: "audioonly" });
+    const dispatcher: StreamDispatcher = guild
       .connection!.play(ytdl_song)
       .on("finish", () => {
         this.play(guild);
@@ -36,7 +38,7 @@ export default class MediaPlayer {
     queue.dequeue();
     dispatcher.setVolumeLogarithmic(queue.volume / 5);
 
-    const embed = new MessageEmbed();
+    const embed: MessageEmbed = new MessageEmbed();
     embed.setColor("RANDOM");
     embed.setTitle(":arrow_forward: **Hva spilles nå? ** :arrow_forward:");
     embed.setDescription(

@@ -16,6 +16,7 @@ import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
 import QueueConstruct from "../QueueConstruct";
 import YoutubeSearcher from "../YoutubeSearcher";
 import MediaPlayer from "../MediaPlayer";
+import JuanitaMessage from "../JuanitaMessage";
 
 const player: MediaPlayer = new MediaPlayer();
 
@@ -24,12 +25,14 @@ export default class P implements ICommand {
   message: string;
   help: string;
   searcher: YoutubeSearcher = new YoutubeSearcher();
+  messageDispatcher: JuanitaMessage;
 
   constructor() {
     this.type = CommandEnum.P;
     this.message = "";
     this.help =
       "Will play the given song link, or search with the given keywords";
+    this.messageDispatcher = new JuanitaMessage();
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -43,7 +46,7 @@ export default class P implements ICommand {
 
   public prettifySongTitle = (song: ISong): ISong => {
     song.title = song.title.replace(
-      /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF][*])/g,
+      /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
       ""
     );
     return song;
@@ -55,12 +58,15 @@ export default class P implements ICommand {
   ): Promise<void | Message> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const keywords: string[] = this.getKeywords(message.content);
-    const textChannel: TextChannel | DMChannel | NewsChannel = message.channel;
+    const textChannel = message.channel;
     const channel: VoiceChannel = message.member?.voice.channel!;
 
     // No parameters specified
     if (keywords.length === 0) {
-      return textChannel.send(ERRORS.NEED_MORE_SONG_INFO);
+      return this.messageDispatcher.send(
+        textChannel,
+        ERRORS.NEED_MORE_SONG_INFO
+      );
     }
 
     const song: ISong | undefined = await this.searcher.search(
@@ -70,7 +76,10 @@ export default class P implements ICommand {
     // Song search failed
     if (song === undefined) {
       console.log(`No song found with keywords: ${keywords}`);
-      return textChannel.send(ERRORS.NO_SONG_FOUND(keywords));
+      return this.messageDispatcher.send(
+        textChannel,
+        ERRORS.NO_SONG_FOUND(keywords)
+      );
     }
     if (guild.queue === undefined) {
       guild.queue = new QueueConstruct();
@@ -79,8 +88,11 @@ export default class P implements ICommand {
       player.play(guild);
     } else {
       guild.queue.enqueue(song);
-      textChannel.send(MESSAGES.ADDED_TO_QUEUE(song.title))
-      textChannel.send(await guild.queue.show())
+      this.messageDispatcher.send(
+        textChannel,
+        MESSAGES.ADDED_TO_QUEUE(song.title)
+      );
+      this.messageDispatcher.send(textChannel, await guild.queue.show());
     }
   };
 }

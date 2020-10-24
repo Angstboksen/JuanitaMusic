@@ -75,7 +75,7 @@ export const initializeGuilds = async () => {
 export const addNewGuild = async (id: string, name: string) => {
   const existing: Array<any> = (await connectAndQuery(
     statements.selectGuildById(id)
-  )) as Array<any>;
+  )) as Array<IGuild>;
   if (existing.length !== 0) {
     const result = await connectAndQuery(statements.insertIntoGuilds(id, name));
     return result;

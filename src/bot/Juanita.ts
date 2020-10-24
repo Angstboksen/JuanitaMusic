@@ -12,7 +12,6 @@ import { BroadcastEnum } from "../utils/enums";
 import { ERRORS, BROADCAST } from "../utils/messages";
 import { ICommand, IGuild } from "../utils/api";
 import { commandTypes } from "../utils/helpers";
-import * as db from "../database/DatabaseHandler";
 import JuanitaGuild from "./Guild";
 
 export default class Juanita {
@@ -51,11 +50,11 @@ export default class Juanita {
 
   public broadcast = async (type: BroadcastEnum) => {
     const broadcastText: string = BROADCAST[type];
-    for (let channel of this._textChannels) {
-      /*await channel.send(broadcastText).catch(() => {
+    /*for (let channel of this._textChannels) {
+      await channel.send(broadcastText).catch(() => {
         console.log(ERRORS.BROADCAST_NO_ACCESS(channel.id));
-      });*/
-    }
+      });
+    }*/
     console.log(`Broadcasted with type: ${type}`);
   };
 

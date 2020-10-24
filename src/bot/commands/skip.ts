@@ -1,32 +1,54 @@
 import { Message, VoiceChannel } from "discord.js";
-import { ICommand } from "../../utils/api";
+import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
-import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
-import { LOGGER } from "../../utils/messages";
+import {
+  botAlreadyJoined,
+  isCommandNameCorrect,
+  tokenize,
+} from "../../utils/helpers";
+import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
+import JuanitaMessage from "../JuanitaMessage";
+import QueueConstruct from "../QueueConstruct";
 
 export default class Skip implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
+  messageDispatcher: JuanitaMessage;
 
   constructor() {
     this.type = CommandEnum.SKIP;
-    this.message = ":kissing_heart: **Okei her kommer jeg** :heart_eyes:"
-    this.help = "Will make the bot join the voice channel. It will not play anything"
+    this.message = "";
+    this.help = "Will skip to the song at the index given in the queue";
+    this.messageDispatcher = new JuanitaMessage();
   }
 
   public isValid = (tokens: string[]): boolean => {
-    return (
-      tokens.length === 1 && isCommandNameCorrect(tokens[0], this.type)
-    );
+    return tokens.length === 2 && isCommandNameCorrect(tokens[0], this.type);
   };
 
-  public run = async (message: Message): Promise<void> => {
+  public run = async (message: Message, guild: IGuild): Promise<void> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
-    const channel: VoiceChannel = message.member?.voice.channel!
-    if(!botAlreadyJoined(channel)) {
-      message.channel.send(this.message)
-      channel.join()
+    const queue: QueueConstruct | undefined = guild.queue;
+    const index: number = parseInt(tokenize(message.content)[1]);
+    const channel = message.channel;
+    if (!guild.connection || !queue) {
+      return;
+    }
+    if (!Number.isInteger(index)) {
+      this.messageDispatcher.send(channel, ERRORS.ARGUMENT_NOT_INTEGER);
+      return;
+    }
+
+    if (!queue.inrange(index)) {
+      this.messageDispatcher.send(channel, ERRORS.NOT_VALID_QUEUE_INDEX);
+      return;
+    }
+
+    if (guild.connection) {
+      queue.shift(index);
+      guild.connection.dispatcher.end();
+      this.messageDispatcher.send(channel, MESSAGES.SKIP_ALOT(index));
     }
   };
 }

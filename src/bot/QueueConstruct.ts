@@ -1,4 +1,4 @@
-import { MessageEmbed, TextChannel, VoiceChannel } from "discord.js";
+import { MessageEmbed} from "discord.js";
 import { IQueue, ISong } from "../utils/api";
 import { formattedTime } from "../utils/helpers";
 
