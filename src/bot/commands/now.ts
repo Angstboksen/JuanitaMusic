@@ -1,4 +1,4 @@
-import { Message, VoiceChannel } from "discord.js";
+import { Message } from "discord.js";
 import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import {

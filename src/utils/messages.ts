@@ -24,6 +24,12 @@ export const ERRORS = {
   QUEUE_NOT_FOUND: `:x: **Finner ingen kø** :x:`,
   PLAYLIST_HAS_NO_SONGS: (playlistname: string) =>
     `:clown: **Spillelisten:** ${playlistname} **har ingen sanger** :clown:`,
+  FAIL_MAKE_LIST: (playlistname: string) =>
+    `:x: **Kunne ikke mekke ny liste med navn:** ${playlistname}`,
+  NO_LIST_ACCESS:
+    ":police_car: :cop: **Du har ikke lov til å endre denne listen** :scroll: :rotating_light:",
+  SONG_ALREADY_EXISTS:
+    ":rotating_light: **Sangen finnes allerede i listen!** :rotating_light:",
 };
 
 export const BROADCAST = {
@@ -70,7 +76,7 @@ export const MESSAGES = {
         break;
       }
       count++;
-      text += `**${count}) :notes: Title:**" ${song.title} \n`;
+      text += `**${count}) :notes: Title:** ${song.title.replace("*", "")} \n`;
     }
     if (count === 0) {
       text += "List contains no songs";
@@ -95,4 +101,12 @@ export const MESSAGES = {
     :arrows_counterclockwise: **Antall sanger fortsatt i køen:** ${size}
     :timer: **Beregnet tid:** ${estimatedtime}`,
   NO_CURRENT_SONG: ":robot: **Det er ingen sang som spiller ** :thinking:",
+  ADDED_NEW_LIST: (playlistname: string, sender: string) =>
+    `:white_check_mark: **Mekka ny liste til deg ladden:** ${playlistname} - **Administrator:** <@!${sender}>`,
+  ADDED_SONG_TO_LIST: (title: string) =>
+    `:white_check_mark: **La til:** ${title} **i listen** :scroll:`,
+  REMOVED_SONG: (title: string) =>
+    `:mage: **Fjernet** ${title} **fra listen** :scroll:`,
+  REMOVED_LIST: (playlistname: string) =>
+    `:mage: **Fjernet listen:** ${playlistname} :scroll:`,
 };

@@ -23,7 +23,7 @@ export default class First implements ICommand {
   }
 
   public isValid = (tokens: string[]): boolean => {
-    return tokens.length > 0 && isCommandNameCorrect(tokens[0], this.type);
+    return tokens.length > 1 && isCommandNameCorrect(tokens[0], this.type);
   };
 
   public run = async (message: Message, guild: IGuild): Promise<void> => {

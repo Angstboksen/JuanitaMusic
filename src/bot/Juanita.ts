@@ -35,6 +35,7 @@ export default class Juanita {
     this.loadCommands();
     this.loadUsers();
     this.loadGuilds();
+    
     this.loadChannels();
     this.broadcast(BroadcastEnum.READY);
   };
