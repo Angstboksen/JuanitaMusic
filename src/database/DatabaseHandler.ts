@@ -84,7 +84,12 @@ export const addNewGuild = async (id: string, name: string) => {
 };
 
 export const addNewSong = async (song: ISong) => {
-  await connectAndQuery(statements.insertIntoSongs(song));
+  const songExists: Array<any> = (await connectAndQuery(
+    statements.selectSongByURL(song.url)
+  )) as Array<any>;
+  if (songExists.length === 0) {
+    await connectAndQuery(statements.insertIntoSongs(song));
+  }
 };
 
 export const addNewPlaylistToGuild = async (playlist: IPlaylist) => {
