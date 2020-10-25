@@ -27,7 +27,7 @@ client.once("reconnecting", () => {
 });
 
 client.once("disconnect", () => {
-  JUANITA!.broadcast(BroadcastEnum.DISCONNECT);
+  //JUANITA!.broadcast(BroadcastEnum.DISCONNECT);
   console.log("Disconnect!");
 });
 

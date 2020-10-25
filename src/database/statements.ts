@@ -50,7 +50,7 @@ export function insertIntoPlaylists(playlist: IPlaylist) {
 }
 
 export function insertIntoSongs(song: ISong) {
-  return `INSERT INTO songs (url, title, length, thumbnail) VALUES ("${song.url}", "${song.title}", ${song.length}, "${song.thumbnail}")`;
+  return `INSERT INTO songs (url, title, length, thumbnail) VALUES ('${song.url}', '${song.title}, ${song.length}, "${song.thumbnail}")`;
 }
 
 export function insertIntoSongInPLaylist(songurl: string, playlistid: string) {
