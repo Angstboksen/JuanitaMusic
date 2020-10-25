@@ -13,7 +13,7 @@ import { ERRORS, MESSAGES } from "../utils/messages";
 import QueueConstruct from "./QueueConstruct";
 import * as db from "../database/DatabaseHandler";
 
-export const play = (guild: IGuild) => {
+export const play = async (guild: IGuild) => {
   const queue: QueueConstruct = guild.queue!;
   const textChannel: TextChannel | DMChannel | NewsChannel = guild.textChannel!;
   if (queue.size() === 0) {
@@ -30,8 +30,8 @@ export const play = (guild: IGuild) => {
   const ytdl_song: Readable = ytdl(song.url, { filter: "audioonly" });
   const dispatcher: StreamDispatcher = guild
     .connection!.play(ytdl_song)
-    .on("finish", () => {
-      play(guild);
+    .on("finish", async () => {
+      await play(guild);
     })
     .on("error", (error) => {
       console.log(error);
