@@ -35,7 +35,7 @@ export default class Juanita {
     this.loadCommands();
     this.loadUsers();
     this.loadGuilds();
-    
+
     this.loadChannels();
     this.broadcast(BroadcastEnum.READY);
   };
@@ -51,11 +51,11 @@ export default class Juanita {
 
   public broadcast = async (type: BroadcastEnum) => {
     const broadcastText: string = BROADCAST[type];
-    /*for (let channel of this._textChannels) {
+    for (let channel of this._textChannels) {
       await channel.send(broadcastText).catch(() => {
         console.log(ERRORS.BROADCAST_NO_ACCESS(channel.id));
       });
-    }*/
+    }
     console.log(`Broadcasted with type: ${type}`);
   };
 

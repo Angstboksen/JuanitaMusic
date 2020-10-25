@@ -33,10 +33,10 @@ export const ERRORS = {
 };
 
 export const BROADCAST = {
-  ready: "IM ALIVE",
-  down: "IM DOWN",
-  restart: "IM RESTARTING",
-  disconnect: "IM DISCONNECTING",
+  ready: ":100: Im online and ready to recieve commands! :100:",
+  down: ":skull: Im shutting down for now :skull:",
+  restart: ":arrows_counterclockwise: Im restarting, brb :arrows_counterclockwise:",
+  disconnect: ":skull: Im disconnecting :skull:",
 };
 
 export const LOGGER = {
