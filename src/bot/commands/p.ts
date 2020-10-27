@@ -13,6 +13,7 @@ import QueueConstruct from "../QueueConstruct";
 import { search } from "../YoutubeSearcher";
 import { send } from "../JuanitaMessage";
 import { play } from "../MediaPlayer";
+import JuanitaGuild from "../Guild";
 
 export default class P implements ICommand {
   type: CommandEnum;
@@ -45,7 +46,7 @@ export default class P implements ICommand {
 
   public run = async (
     message: Message,
-    guild: IGuild
+    guild: JuanitaGuild
   ): Promise<void | Message> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const keywords: string[] = this.getKeywords(message.content);

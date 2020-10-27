@@ -12,6 +12,7 @@ export default class JuanitaGuild implements IGuild {
   name: string;
   playlists: Playlist[];
   queue: QueueConstruct | undefined;
+  timeout: NodeJS.Timeout | undefined
 
   constructor(id: string, name: string, playlists: Playlist[] = []) {
     this.textChannel = undefined
@@ -21,10 +22,12 @@ export default class JuanitaGuild implements IGuild {
     this.playlists = playlists;
     this.connection = undefined;
     this.queue = undefined;
+    this.timeout =  undefined
   }
 
   addPlaylist(playlist: Playlist) {
     this.playlists.push(playlist);
+    this.timeout = undefined
     db.addNewPlaylistToGuild(playlist);
     return true;
   }

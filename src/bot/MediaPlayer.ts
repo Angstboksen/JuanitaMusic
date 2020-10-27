@@ -8,19 +8,25 @@ import {
 } from "discord.js";
 import { Readable } from "stream";
 import ytdl from "ytdl-core";
-import { IGuild, ISong } from "../utils/api";
+import { ISong } from "../utils/api";
 import { formattedTime } from "../utils/helpers";
 import { ERRORS, MESSAGES } from "../utils/messages";
 import QueueConstruct from "./QueueConstruct";
 import * as db from "../database/DatabaseHandler";
+import JuanitaGuild from "./Guild";
 
-export const play = async (guild: IGuild, voiceChannel: VoiceChannel) => {
+export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
+  let clearedTimeout = false;
+  if (guild.timeout !== undefined) {
+    clearTimeout(guild.timeout);
+    clearedTimeout = true;
+  }
   const queue: QueueConstruct = guild.queue!;
-  if(guild.connection === undefined) {
-    guild.connection === await voiceChannel.join()
+  if (guild.connection === undefined) {
+    guild.connection === (await voiceChannel.join());
   }
   const textChannel: TextChannel | DMChannel | NewsChannel = guild.textChannel!;
-  if (queue.size() === 0) {
+  if (queue.size() === 0 && !clearedTimeout) {
     queue.playing = false;
     queue.current = undefined;
     textChannel.send(MESSAGES.QUEUE_EMPTY);
@@ -28,14 +34,20 @@ export const play = async (guild: IGuild, voiceChannel: VoiceChannel) => {
   }
 
   const song: ISong = queue.next();
-  if (!song) return textChannel.send(ERRORS.SONG_PLAY_FAIL);
+  if (song === undefined) return textChannel.send(ERRORS.SONG_PLAY_FAIL);
   db.addNewSong(song);
   const estimatedtime: string = formattedTime(song.length);
-  const ytdl_song: Readable = ytdl(song.url);
+  const ytdl_song: Readable = ytdl(song.url, {
+    filter: "audioonly",
+    quality: "highestaudio",
+  });
+
   const dispatcher: StreamDispatcher = guild
     .connection!.play(ytdl_song)
     .on("finish", async () => {
-      await play(guild, voiceChannel);
+      if (queue.size() > 0) {
+        await play(guild, voiceChannel);
+      }
     })
     .on("error", (error) => {
       console.log(error);

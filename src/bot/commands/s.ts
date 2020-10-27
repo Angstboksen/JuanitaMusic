@@ -9,6 +9,7 @@ import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER, MESSAGES } from "../../utils/messages";
+import JuanitaGuild from "../Guild";
 import { send } from "../JuanitaMessage";
 
 export default class S implements ICommand {
@@ -26,7 +27,7 @@ export default class S implements ICommand {
     return tokens.length === 1 && isCommandNameCorrect(tokens[0], this.type);
   };
 
-  public run = async (message: Message, guild: IGuild): Promise<void> => {
+  public run = async (message: Message, guild: JuanitaGuild): Promise<void> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const channel = message.channel;
     const connection: VoiceConnection | undefined = guild.connection;
@@ -34,7 +35,12 @@ export default class S implements ICommand {
       return console.log(LOGGER.NO_CONNECTION_COMMAND);
     connection.dispatcher.end();
     if(guild.queue?.size() === 0) {
-     connection.voice?.channel!.leave()
+     guild.timeout = setTimeout(() => {
+       connection.voice?.channel!.leave()
+       guild.queue!.playing = false
+       guild.queue!.current = undefined
+      }
+       , 3000 )
     }
     send(channel, MESSAGES.SKIP_SONG);
   };

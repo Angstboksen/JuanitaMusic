@@ -3,6 +3,7 @@ import { ICommand, IGuild, ISong } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { isCommandNameCorrect } from "../../utils/helpers";
 import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
+import JuanitaGuild from "../Guild";
 import { send } from "../JuanitaMessage";
 import { play } from "../MediaPlayer";
 import QueueConstruct from "../QueueConstruct";
@@ -26,7 +27,7 @@ export default class First implements ICommand {
     return tokens.length > 1 && isCommandNameCorrect(tokens[0], this.type);
   };
 
-  public run = async (message: Message, guild: IGuild): Promise<void> => {
+  public run = async (message: Message, guild: JuanitaGuild): Promise<void> => {
     console.log(LOGGER.RUNNING_COMMAND(this.type, message.author.tag));
     const keywords: string[] = p.getKeywords(message.content);
     const textChannel = message.channel;
