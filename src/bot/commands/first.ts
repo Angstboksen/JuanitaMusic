@@ -51,7 +51,7 @@ export default class First implements ICommand {
       ""
     );
 
-    if (guild.queue === undefined) {
+    if (guild.queue === undefined || (guild.queue.size() === 0 && guild.current == undefined)) {
       guild.queue = new QueueConstruct();
       guild.queue.enqueue(song, true);
       guild.connection = await channel.join();
