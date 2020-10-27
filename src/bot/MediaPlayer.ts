@@ -45,17 +45,17 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
   const dispatcher: StreamDispatcher = guild
     .connection!.play(ytdl_song)
     .on("finish", async () => {
-      queue.dequeue();
       if (queue.size() > 0) {
         await play(guild, voiceChannel);
       }
     })
-    .on("error", async (error) => {
+    .on("error", (error) => {
       console.log(error);
       console.log(`Playing song: ${song.title} again after error `);
-      return play(guild, voiceChannel)
+      return play(guild, voiceChannel);
     });
 
+  queue.dequeue();
   queue.playing = true;
   queue.current = song;
   dispatcher.setVolumeLogarithmic(queue.volume / 5);
