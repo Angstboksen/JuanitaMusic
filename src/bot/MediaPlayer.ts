@@ -49,10 +49,11 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
         await play(guild, voiceChannel);
       }
     })
-    .on("error", (error) => {
+    .on("error", async (error) => {
       console.log(error);
       console.log(`Playing song: ${song.title} again after error `);
-      return play(guild, voiceChannel);
+      await play(guild, voiceChannel);
+      return 
     });
 
   queue.dequeue();
