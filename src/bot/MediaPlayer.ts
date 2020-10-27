@@ -45,6 +45,7 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
   const dispatcher: StreamDispatcher = guild
     .connection!.play(ytdl_song)
     .on("finish", async () => {
+      queue.dequeue();
       if (queue.size() > 0) {
         await play(guild, voiceChannel);
       }
@@ -59,7 +60,6 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
 
   queue.playing = true;
   queue.current = song;
-  queue.dequeue();
   dispatcher.setVolumeLogarithmic(queue.volume / 5);
 
   const embed: MessageEmbed = new MessageEmbed();
