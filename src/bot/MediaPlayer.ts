@@ -53,7 +53,6 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
     .on("error", async (error) => {
       console.log(error);
       console.log(`Playing song: ${song.title} again after error `);
-      textChannel.send(ERRORS.SONG_PLAY_FAIL);
       return play(guild, voiceChannel)
     });
 
