@@ -54,8 +54,7 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
       console.log(error);
       console.log(`Playing song: ${song.title} again after error `);
       textChannel.send(ERRORS.SONG_PLAY_FAIL);
-      await play(guild, voiceChannel)
-      return
+      return play(guild, voiceChannel)
     });
 
   queue.playing = true;
