@@ -31,7 +31,7 @@ export const play = async (guild: IGuild, voiceChannel: VoiceChannel) => {
   if (!song) return textChannel.send(ERRORS.SONG_PLAY_FAIL);
   db.addNewSong(song);
   const estimatedtime: string = formattedTime(song.length);
-  const ytdl_song: Readable = ytdl(song.url, { filter: "audioonly" });
+  const ytdl_song: Readable = ytdl(song.url);
   const dispatcher: StreamDispatcher = guild
     .connection!.play(ytdl_song)
     .on("finish", async () => {
