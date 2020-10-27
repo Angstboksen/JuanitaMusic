@@ -67,7 +67,7 @@ export default class P implements ICommand {
       return send(textChannel, ERRORS.NO_SONG_FOUND(keywords));
     }
 
-    if (guild.queue === undefined || (guild.queue.size() === 0 && guild.current == undefined)) {
+    if (guild.queue === undefined || (guild.queue.size() === 0 && guild.queue.current == undefined)) {
       guild.queue = new QueueConstruct();
       guild.queue.enqueue(song);
       guild.connection = await channel.join();
