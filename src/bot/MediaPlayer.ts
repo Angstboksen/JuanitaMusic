@@ -22,8 +22,8 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
     clearedTimeout = true;
   }
   const queue: QueueConstruct = guild.queue!;
-  if (guild.connection === undefined) {
-    guild.connection === (await voiceChannel.join());
+  if (guild.connection === undefined || voiceChannel.joinable) {
+    guild.connection = await voiceChannel.join();
   }
   const textChannel: TextChannel | DMChannel | NewsChannel = guild.textChannel!;
   if (queue.size() === 0 && !clearedTimeout) {
