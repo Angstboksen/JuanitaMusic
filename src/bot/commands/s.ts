@@ -4,24 +4,22 @@ import {
   VoiceChannel,
   VoiceConnection,
 } from "discord.js";
+import { getInfo } from "ytdl-core";
 import { ICommand, IGuild } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
 import { botAlreadyJoined, isCommandNameCorrect } from "../../utils/helpers";
 import { LOGGER, MESSAGES } from "../../utils/messages";
 import { send } from "../JuanitaMessage";
 
-
 export default class S implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
 
-
   constructor() {
     this.type = CommandEnum.S;
-    this.message = ":kissing_heart: **Okei her kommer jeg** :heart_eyes:";
+    this.message = "";
     this.help = "Will skip to the next song in the queue";
-    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -34,9 +32,10 @@ export default class S implements ICommand {
     const connection: VoiceConnection | undefined = guild.connection;
     if (!connection || !connection.dispatcher)
       return console.log(LOGGER.NO_CONNECTION_COMMAND);
-    if (connection.dispatcher !== undefined) {
-      connection.dispatcher.end();
-      send(channel, MESSAGES.SKIP_SONG);
+    connection.dispatcher.end();
+    if(guild.queue?.size() === 0) {
+     connection.voice?.channel!.leave()
     }
+    send(channel, MESSAGES.SKIP_SONG);
   };
 }

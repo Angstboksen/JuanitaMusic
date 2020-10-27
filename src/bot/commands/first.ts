@@ -55,7 +55,7 @@ export default class First implements ICommand {
       guild.queue = new QueueConstruct();
       guild.queue.enqueue(song, true);
       guild.connection = await channel.join();
-      play(guild);
+      play(guild, channel);
     } else {
       guild.queue.enqueue(song, true);
       send(textChannel, MESSAGES.ADDED_TO_QUEUE(song.title));

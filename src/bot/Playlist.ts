@@ -42,6 +42,7 @@ class Playlist implements IPlaylist {
   }
 
   removeSong(index: number) {
+    console.log("heyy");
     const song = this.songs[index];
     this.songs.splice(index, 1);
     db.deleteSongFromList(this.guildid, this.name, song.url);
@@ -67,11 +68,11 @@ class Playlist implements IPlaylist {
   }
 
   getSongs(shuffle: boolean) {
-    return shuffle ? this.shuffle() : this.songs;
+    return shuffle ? this.shuffle() : [...this.songs];
   }
 
   shuffle() {
-    let temp: ISong[] = this.songs;
+    let temp: ISong[] = [...this.songs];
     return shuffleArray(temp) as ISong[];
   }
 

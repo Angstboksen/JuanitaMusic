@@ -45,6 +45,6 @@ export default class Shuffle implements ICommand {
     guild.connection = await voiceChannel.join();
     const songs: ISong[] = playlist.getSongs(true);
     guild.queue = new QueueConstruct(songs);
-    play(guild);
+    play(guild, voiceChannel);
   };
 }

@@ -76,7 +76,7 @@ export const MESSAGES = {
         break;
       }
       count++;
-      text += `**${count}) :notes: Title:** ${song.title.replace("*", "")} \n`;
+      text += `**${count}) :notes: Title:** ${song.title.replace(/[*]+/, "")} \n`;
     }
     if (count === 0) {
       text += "List contains no songs";
@@ -96,7 +96,7 @@ export const MESSAGES = {
     url: string,
     size: number,
     estimatedtime: string
-  ) => `:notes: **Tittel:** ${title}
+  ) => `:notes: **Tittel:** ${title.replace(/[*]+/, "")}
     :beginner: **Youtube link:** ${url}
     :arrows_counterclockwise: **Antall sanger fortsatt i køen:** ${size}
     :timer: **Beregnet tid:** ${estimatedtime}`,

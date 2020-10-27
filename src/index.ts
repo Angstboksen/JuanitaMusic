@@ -7,7 +7,6 @@ import {
   checkPrefixAndSenderNotBot,
   userInVoiceChannel,
 } from "./utils/helpers";
-import { BroadcastEnum } from "./utils/enums";
 import {ERRORS} from './utils/messages'
 import * as db from './database/DatabaseHandler'
 

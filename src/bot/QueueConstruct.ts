@@ -59,7 +59,7 @@ export default class QueueConstruct implements IQueue {
         break;
       }
       count++;
-      text += `**${count})** :notes: **Tittel:** ${song.title}\n`;
+      text += `**${count})** :notes: **Tittel:** ${song.title.replace(/[*]+/, "")}\n`;
     }
     text +=
       "\n :timer: **Beregnet total tid: ** " + (await this.getEstimatedTime());

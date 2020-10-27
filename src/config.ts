@@ -1,9 +1,8 @@
 import dotenv from "dotenv";
-import { hostname } from "os";
 import { SetupConfig } from "./utils/types";
 dotenv.config();
 
-const testing = process.env.testing;
+const testing: boolean = true
 
 const SETUP_CONFIG: SetupConfig = {
   prefix: testing ? "-" : "!",

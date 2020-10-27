@@ -4,6 +4,7 @@ import {
   NewsChannel,
   StreamDispatcher,
   TextChannel,
+  VoiceChannel,
 } from "discord.js";
 import { Readable } from "stream";
 import ytdl from "ytdl-core";
@@ -13,8 +14,11 @@ import { ERRORS, MESSAGES } from "../utils/messages";
 import QueueConstruct from "./QueueConstruct";
 import * as db from "../database/DatabaseHandler";
 
-export const play = async (guild: IGuild) => {
+export const play = async (guild: IGuild, voiceChannel: VoiceChannel) => {
   const queue: QueueConstruct = guild.queue!;
+  if(guild.connection === undefined) {
+    guild.connection === await voiceChannel.join()
+  }
   const textChannel: TextChannel | DMChannel | NewsChannel = guild.textChannel!;
   if (queue.size() === 0) {
     queue.playing = false;
@@ -31,7 +35,7 @@ export const play = async (guild: IGuild) => {
   const dispatcher: StreamDispatcher = guild
     .connection!.play(ytdl_song)
     .on("finish", async () => {
-      await play(guild);
+      await play(guild, voiceChannel);
     })
     .on("error", (error) => {
       console.log(error);
