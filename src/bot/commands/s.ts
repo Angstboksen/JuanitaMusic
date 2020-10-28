@@ -34,14 +34,6 @@ export default class S implements ICommand {
     if (!connection || !connection.dispatcher)
       return console.log(LOGGER.NO_CONNECTION_COMMAND);
     connection.dispatcher.end();
-    if (guild.queue?.size() === 0) {
-      guild.queue!.playing = false;
-      guild.queue!.current = undefined;
-      guild.timeout = setTimeout(
-        () => connection.voice?.channel!.leave(),
-        3000
-      );
-    }
     send(channel, MESSAGES.SKIP_SONG);
   };
 }

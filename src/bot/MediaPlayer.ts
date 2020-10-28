@@ -47,13 +47,17 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
     .on("finish", async () => {
       if (queue.size() > 0) {
         await play(guild, voiceChannel);
+      } else {
+        queue.playing = false;
+        queue.current = undefined;
+        voiceChannel.leave();
       }
     })
     .on("error", async (error) => {
       console.log(error);
       console.log(`Playing song: ${song.title} again after error `);
       await play(guild, voiceChannel);
-      return 
+      return;
     });
 
   queue.dequeue();
