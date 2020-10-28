@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { SetupConfig } from "./utils/types";
 dotenv.config();
 
-const testing: boolean = true
+const testing: boolean = false
 
 const SETUP_CONFIG: SetupConfig = {
   prefix: testing ? "-" : "!",
