@@ -30,12 +30,21 @@ export const ERRORS = {
     ":police_car: :cop: **Du har ikke lov til å endre denne listen** :scroll: :rotating_light:",
   SONG_ALREADY_EXISTS:
     ":rotating_light: **Sangen finnes allerede i listen!** :rotating_light:",
+  CANNOT_ADD_TRUSTED_USER:
+    ":thinking: **Det er ikke måten man legger til en trusted bruker i en liste** :joy: :joy:",
+  SAME_TRUST_USER:
+    ":thinking: **Du stoler brått allerede på deg selv, eller?** :thinking:",
+  NO_LIST:
+    ":rotating_light: :scroll: **Listen finnes ikke** :scroll: :rotating_light:",
+  NOT_YOUR_LIST:
+    ":police_car: :cop: **Dette er jo ikke din liste** :scroll: :rotating_light:",
 };
 
 export const BROADCAST = {
   ready: ":100: Im online and ready to recieve commands! :100:",
   down: ":skull: Im shutting down for now :skull:",
-  restart: ":arrows_counterclockwise: Im restarting, brb :arrows_counterclockwise:",
+  restart:
+    ":arrows_counterclockwise: Im restarting, brb :arrows_counterclockwise:",
   disconnect: ":skull: Im disconnecting :skull:",
 };
 
@@ -76,7 +85,10 @@ export const MESSAGES = {
         break;
       }
       count++;
-      text += `**${count}) :notes: Title:** ${song.title.replace(/[*]+/, "")} \n`;
+      text += `**${count}) :notes: Title:** ${song.title.replace(
+        /[*]+/,
+        ""
+      )} \n`;
     }
     if (count === 0) {
       text += "List contains no songs";
@@ -109,4 +121,6 @@ export const MESSAGES = {
     `:mage: **Fjernet** ${title} **fra listen** :scroll:`,
   REMOVED_LIST: (playlistname: string) =>
     `:mage: **Fjernet listen:** ${playlistname} :scroll:`,
+  TRUSTED_USER: (trusted: string) =>
+    `:white_check_mark: **Du stoler på at:** <@!${trusted}> **ikke fucker opp listen din** :scroll:`,
 };
