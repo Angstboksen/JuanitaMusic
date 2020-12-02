@@ -38,7 +38,10 @@ export default class Add implements ICommand {
       return send(channel, ERRORS.NEED_MORE_SONG_INFO);
     }
 
-    const song: ISong | undefined = await search(keywords.join(" "));
+    const song: ISong | undefined = await search(
+      keywords.join(" "),
+      message.author.id
+    );
 
     if (!song) {
       send(channel, ERRORS.NO_SONG_FOUND(keywords));

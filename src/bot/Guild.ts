@@ -1,4 +1,4 @@
-import { IGuild, IPlaylist, IQueue } from "../utils/api";
+import { IGuild } from "../utils/api";
 import * as db from "../database/DatabaseHandler";
 import { DMChannel, NewsChannel, TextChannel, VoiceChannel, VoiceConnection } from "discord.js";
 import QueueConstruct from "./QueueConstruct";

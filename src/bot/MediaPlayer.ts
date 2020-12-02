@@ -4,6 +4,7 @@ import {
   NewsChannel,
   StreamDispatcher,
   TextChannel,
+  User,
   VoiceChannel,
 } from "discord.js";
 import { Readable } from "stream";
@@ -35,7 +36,6 @@ export const play = async (guild: JuanitaGuild, voiceChannel: VoiceChannel) => {
 
   const song: ISong = queue.next();
   if (song === undefined) return textChannel.send(ERRORS.SONG_PLAY_FAIL);
-  db.addNewSong(song);
   const estimatedtime: string = formattedTime(song.length);
   const ytdl_song: Readable = ytdl(song.url, {
     filter: "audioonly",

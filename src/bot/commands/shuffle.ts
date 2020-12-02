@@ -7,18 +7,17 @@ import JuanitaGuild from "../Guild";
 import { send } from "../JuanitaMessage";
 import { play } from "../MediaPlayer";
 import QueueConstruct from "../QueueConstruct";
+import * as db from "../../database/DatabaseHandler";
 
 export default class Shuffle implements ICommand {
   type: CommandEnum;
   message: string;
   help: string;
 
-
   constructor() {
     this.type = CommandEnum.SHUFFLE;
     this.message = "";
     this.help = "Will play the given playlist in shuffle mode";
-    
   }
 
   public isValid = (tokens: string[]): boolean => {
@@ -36,14 +35,14 @@ export default class Shuffle implements ICommand {
       return;
     }
     if (playlist.size() <= 0) {
-      send(
-        channel,
-        ERRORS.PLAYLIST_HAS_NO_SONGS(playlistname)
-      );
+      send(channel, ERRORS.PLAYLIST_HAS_NO_SONGS(playlistname));
       return;
     }
     guild.connection = await voiceChannel.join();
     const songs: ISong[] = playlist.getSongs(true);
+    for (let s of songs) {
+      db.addNewSong(s, message.author.id);
+    }
     guild.queue = new QueueConstruct(songs);
     play(guild, voiceChannel);
   };

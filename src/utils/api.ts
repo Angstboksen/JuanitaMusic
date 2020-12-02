@@ -1,4 +1,12 @@
-import { DMChannel, Message, NewsChannel, TextChannel, User, VoiceChannel, VoiceConnection } from "discord.js";
+import {
+  DMChannel,
+  Message,
+  NewsChannel,
+  TextChannel,
+  User,
+  VoiceChannel,
+  VoiceConnection,
+} from "discord.js";
 import QueueConstruct from "../bot/QueueConstruct";
 import { CommandEnum } from "./enums";
 
@@ -13,6 +21,7 @@ export interface ISong {
   title: string;
   length: number;
   thumbnail: string;
+  author: String | undefined;
 }
 
 export interface IPlaylist {
@@ -40,6 +49,4 @@ export interface IGuild {
   queue: QueueConstruct | undefined;
 }
 
-export interface IUser {
-
-}
+export interface IUser {}

@@ -39,7 +39,8 @@ export default class First implements ICommand {
     }
 
     const song: ISong | undefined = await search(
-      keywords.join(" ")
+      keywords.join(" "),
+      message.author.id
     );
 
     if (!song) {
@@ -52,7 +53,10 @@ export default class First implements ICommand {
       ""
     );
 
-    if (guild.queue === undefined || (guild.queue.size() === 0 && guild.queue.current == undefined)) {
+    if (
+      guild.queue === undefined ||
+      (guild.queue.size() === 0 && guild.queue.current == undefined)
+    ) {
       guild.queue = new QueueConstruct();
       guild.queue.enqueue(song, true);
       guild.connection = await channel.join();

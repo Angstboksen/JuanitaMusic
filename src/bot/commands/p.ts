@@ -1,19 +1,14 @@
-import {
-  Message,
-  VoiceChannel,
-} from "discord.js";
-import { ICommand, IGuild, ISong } from "../../utils/api";
+import { Message, VoiceChannel } from "discord.js";
+import { ICommand, ISong } from "../../utils/api";
 import { CommandEnum } from "../../utils/enums";
-import {
-  isCommandNameCorrect,
-  tokenize,
-} from "../../utils/helpers";
+import { isCommandNameCorrect, tokenize } from "../../utils/helpers";
 import { ERRORS, LOGGER, MESSAGES } from "../../utils/messages";
 import QueueConstruct from "../QueueConstruct";
 import { search } from "../YoutubeSearcher";
 import { send } from "../JuanitaMessage";
 import { play } from "../MediaPlayer";
 import JuanitaGuild from "../Guild";
+import * as db from "../../database/DatabaseHandler";
 
 export default class P implements ICommand {
   type: CommandEnum;
@@ -59,7 +54,8 @@ export default class P implements ICommand {
     }
 
     const song: ISong | undefined = await search(
-      keywords.join(" ")
+      keywords.join(" "),
+      message.author.id
     );
 
     // Song search failed
@@ -67,8 +63,12 @@ export default class P implements ICommand {
       console.log(`No song found with keywords: ${keywords}`);
       return send(textChannel, ERRORS.NO_SONG_FOUND(keywords));
     }
+    song.author = message.author.id;
 
-    if (guild.queue === undefined || (guild.queue.size() === 0 && guild.queue.current == undefined)) {
+    if (
+      guild.queue === undefined ||
+      (guild.queue.size() === 0 && guild.queue.current == undefined)
+    ) {
       guild.queue = new QueueConstruct();
       guild.queue.enqueue(song);
       guild.connection = await channel.join();

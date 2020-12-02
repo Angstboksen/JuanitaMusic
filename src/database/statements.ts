@@ -1,3 +1,4 @@
+import { User } from "discord.js";
 import { PlaylistItem } from "yt-search";
 import { IPlaylist, ISong } from "../utils/api";
 
@@ -61,6 +62,10 @@ export function insertIntoSongInPLaylist(songurl: string, playlistid: string) {
 
 export function insertIntoTrustedusers(playlistid: string, userid: string) {
   return `INSERT INTO trustedusers (playlistid, userid) VALUES ("${playlistid}", "${userid}")`;
+}
+
+export function insertIntoSearches(song: number, author: String) {
+  return `INSERT INTO searches (songid, userid) VALUES (${song}, "${author}")`;
 }
 
 export function deleteSongInList(playlistid: string, songurl: string) {

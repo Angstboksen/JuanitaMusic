@@ -1,3 +1,4 @@
+import { User } from "discord.js";
 import mysql, { Connection } from "mysql";
 import Guild from "../bot/Guild";
 import Playlist from "../bot/Playlist";
@@ -39,6 +40,7 @@ export const initializeGuilds = async () => {
             title: song_item.title,
             length: song_item.length,
             thumbnail: song_item.thumbnail,
+            author: undefined,
           };
           songlist.push(song);
         }
@@ -83,13 +85,21 @@ export const addNewGuild = async (id: string, name: string) => {
   return null;
 };
 
-export const addNewSong = async (song: ISong) => {
+export const addNewSong = async (song: ISong, author: String) => {
   const songExists: Array<any> = (await connectAndQuery(
     statements.selectSongByURL(song.url)
   )) as Array<any>;
   if (songExists.length === 0) {
-    await connectAndQuery(statements.insertIntoSongs(song));
+    const packet: any = await connectAndQuery(statements.insertIntoSongs(song));
+    const id = packet.insertId;
+    storeSongPlayed(id, author);
+  } else {
+    storeSongPlayed(songExists[0].id, author);
   }
+};
+
+export const storeSongPlayed = async (id: number, author: String) => {
+  await connectAndQuery(statements.insertIntoSearches(id, author));
 };
 
 export const addNewPlaylistToGuild = async (playlist: IPlaylist) => {

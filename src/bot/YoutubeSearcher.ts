@@ -1,8 +1,10 @@
 import yts from "yt-search";
 import { ISong } from "../utils/api";
+import * as db from '../database/DatabaseHandler'
 
 export const search = async (
   keywords: string,
+  author: String,
   trynr: number = 1
 ): Promise<ISong | undefined> => {
   console.log(`Searching: ${keywords} | Try number: ${trynr}`);
@@ -19,8 +21,10 @@ export const search = async (
       title: first.title,
       length: first.seconds,
       thumbnail: first.thumbnail,
+      author: author,
     };
+    db.addNewSong(song, author)
     return song;
   }
-  return search(keywords, trynr + 1);
+  return search(keywords, author, trynr + 1);
 };
