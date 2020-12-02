@@ -39,7 +39,7 @@ export default class First implements ICommand {
     }
 
     const song: ISong | undefined = await search(
-      keywords.join(" "),
+      keywords.length === 1 ? keywords[0] : keywords.join(" "),
       message.author.id
     );
 
