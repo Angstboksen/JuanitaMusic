@@ -65,7 +65,7 @@ export function insertIntoTrustedusers(playlistid: string, userid: string) {
 }
 
 export function insertIntoSearches(song: number, author: String) {
-  return `INSERT INTO searches (songid, userid) VALUES (${song}, "${author}")`;
+  return `INSERT INTO searches (songid, userid, date) VALUES (${song}, "${author}", "${new Date().toISOString().slice(0, 19).replace('T', ' ')}")`;
 }
 
 export function deleteSongInList(playlistid: string, songurl: string) {
