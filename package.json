@@ -17,7 +17,7 @@
         "@types/ffmpeg": "^1.0.3",
         "@types/libsodium-wrappers": "^0.7.9",
         "@types/mysql": "^2.15.17",
-        "@types/node": "^14.14.25",
+        "@types/node": "^14.14.28",
         "@types/yt-search": "^2.3.0",
         "axios": "^0.21.1",
         "discord.js": "^12.5.1",
