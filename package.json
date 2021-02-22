@@ -14,10 +14,10 @@
     "devDependencies": {},
     "dependencies": {
         "@types/dotenv": "^8.2.0",
-        "@types/ffmpeg": "^1.0.3",
+        "@types/ffmpeg": "^1.0.4",
         "@types/libsodium-wrappers": "^0.7.9",
         "@types/mysql": "^2.15.17",
-        "@types/node": "^14.14.28",
+        "@types/node": "^14.14.31",
         "@types/yt-search": "^2.3.0",
         "axios": "^0.21.1",
         "discord.js": "^12.5.1",
@@ -30,6 +30,6 @@
         "ts-node": "^9.1.1",
         "typescript": "^4.1.5",
         "yt-search": "^2.7.3",
-        "ytdl-core": "^4.4.5"
+        "ytdl-core": "^4.5.0"
     }
 }
