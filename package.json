@@ -16,7 +16,7 @@
         "@types/dotenv": "^8.2.0",
         "@types/ffmpeg": "^1.0.4",
         "@types/libsodium-wrappers": "^0.7.9",
-        "@types/mysql": "^2.15.17",
+        "@types/mysql": "^2.15.18",
         "@types/node": "^14.14.31",
         "@types/yt-search": "^2.3.0",
         "axios": "^0.21.1",
