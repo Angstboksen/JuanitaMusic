@@ -13,6 +13,8 @@ import { ERRORS, BROADCAST } from "../utils/messages";
 import { ICommand, IGuild } from "../utils/api";
 import { commandTypes } from "../utils/helpers";
 import JuanitaGuild from "./Guild";
+import { idText } from "typescript";
+import { addNewGuild } from "../database/DatabaseHandler";
 
 export default class Juanita {
   _allUsers: User[];
@@ -60,6 +62,12 @@ export default class Juanita {
   };
 
   public execute = async (message: Message, tokens: string[]) => {
+    const _guild = message.guild!;
+    if (!this.IGUILDS.has(_guild.id)) {
+      const guild = new JuanitaGuild(_guild.id, _guild.name);
+      this.IGUILDS.set(guild.id, guild);
+      addNewGuild(guild.id, guild.name);
+    }
     for (let command of this._commands) {
       if (command.isValid(tokens)) {
         const clientguild: Guild = message.guild!;

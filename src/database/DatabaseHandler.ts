@@ -70,6 +70,7 @@ export const initializeGuilds = async () => {
     return guilds;
   } catch (e) {
     console.log("An error occured when fetching data");
+    console.log(e);
     return new Map();
   }
 };
@@ -78,7 +79,7 @@ export const addNewGuild = async (id: string, name: string) => {
   const existing: Array<any> = (await connectAndQuery(
     statements.selectGuildById(id)
   )) as Array<IGuild>;
-  if (existing.length !== 0) {
+  if (existing.length === 0) {
     const result = await connectAndQuery(statements.insertIntoGuilds(id, name));
     return result;
   }
