@@ -5,6 +5,7 @@ import {
   VoiceChannel,
   VoiceConnection,
 } from "discord.js";
+import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { Playlist } from "./Playlist";
 import Queue from "./Queue";
 
@@ -39,10 +40,14 @@ export default class JuanitaGuild {
   };
 
   leave = () => {
+    this.queue = new Queue(this);
     this.voiceChannel!.leave();
     this.connection = null;
     this.voiceChannel = null;
-    this.queue.clear();
+    if (JuanitaPlayer.dispatcher !== null) {
+      JuanitaPlayer.dispatcher.destroy();
+    }
+    JuanitaPlayer.dispatcher = null;
   };
 
   send = (msg: string | MessageEmbed) => {

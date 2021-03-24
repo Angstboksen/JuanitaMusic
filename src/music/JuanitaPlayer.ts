@@ -15,7 +15,7 @@ import {
 } from "../utils/helpers";
 
 export abstract class JuanitaPlayer {
-  static dispatcher?: StreamDispatcher | null;
+  static dispatcher: StreamDispatcher | null;
   static guild: JuanitaGuild;
 
   static dispatchStream = (stream: Readable, song: Song) => {
