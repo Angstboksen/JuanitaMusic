@@ -103,7 +103,7 @@ export class SpotifySearcher {
           title,
           seconds: Math.floor(duration_ms / 1000),
           url: spotify,
-          requestor,
+          requestor: { tag: requestor.tag, id: requestor.id },
           isSpotify: true,
         };
       });
