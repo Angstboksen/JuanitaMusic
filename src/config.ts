@@ -1,20 +1,22 @@
-import dotenv from "dotenv";
-import { SetupConfig } from "./utils/types";
-dotenv.config();
+import { config } from "dotenv";
+config();
 
-const testing: boolean = false;
+type SetupConfig = {
+  token: string;
+  botid: string;
+  prefix: string;
+  spotify_id: string;
+  spotify_secret: string;
+  authorization_code: string;
+};
 
 const SETUP_CONFIG: SetupConfig = {
-  prefix: testing ? "-" : "!",
-  token: testing ? process.env.TEST_TOKEN : process.env.BOT_TOKEN,
-  botid: testing ? process.env.TEST_ID : process.env.BOT_ID,
-  db_config: {
-    host: process.env.DB_HOST!,
-    user: process.env.DB_USER!,
-    password: process.env.DB_PASS!,
-    database: process.env.DB_NAME!,
-    port: Number(process.env.DB_PORT!),
-  },
+  token: process.env.JUANITA_TOKEN!,
+  botid: process.env.JUANITA_ID!,
+  spotify_id: process.env.SPOTIFY_ID!,
+  spotify_secret: process.env.SPOTIFY_SECRET!,
+  authorization_code: process.env.SPOTIFY_CODE!,
+  prefix: "-",
 };
 
 export default SETUP_CONFIG;
