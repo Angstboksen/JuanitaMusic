@@ -6,6 +6,10 @@ import { Logger } from "../logger/Logger";
 import { filteredTitle } from "../utils/helpers";
 
 const { spotify_id, spotify_secret } = SETUP_CONFIG;
+const emptyObj = {
+  statusCode: 400,
+  body: { name: "", items: [] },
+};
 
 export class SpotifySearcher {
   api: SpotifyWebApi;
@@ -52,7 +56,11 @@ export class SpotifySearcher {
     offset: number = 0,
     carry: any[] = []
   ): Promise<{ statusCode: number; items: any[] }> => {
-    const response = await this.api.getPlaylistTracks(playlistid, { offset });
+    const response = await this.api
+      .getPlaylistTracks(playlistid, { offset })
+      .catch((error: Error) => {
+        return emptyObj;
+      });
     if (response.statusCode !== 200) {
       return { statusCode: response.statusCode, items: [] };
     }
@@ -70,7 +78,11 @@ export class SpotifySearcher {
     if (this.api.getAccessToken() === undefined) {
       await this.getToken();
     }
-    const { name } = (await this.api.getPlaylist(playlistid)).body;
+    const { name } = (
+      await this.api.getPlaylist(playlistid).catch((error: Error) => {
+        return emptyObj;
+      })
+    ).body;
     const pl: { statusCode: number; items: any[] } = await this.fetchPlaylist(
       playlistid
     );

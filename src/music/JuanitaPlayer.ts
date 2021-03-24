@@ -1,6 +1,7 @@
 import { StreamDispatcher } from "discord.js";
 import { Readable } from "stream";
 import ytdl from "ytdl-core";
+import { storeSearch } from "../api/songs/search";
 import { Logger } from "../logger/Logger";
 import JuanitaGuild from "../logic/JuanitaGuild";
 import { YTSearcher } from "../logic/YTSearcher";
@@ -29,7 +30,8 @@ export abstract class JuanitaPlayer {
 
     JuanitaPlayer.dispatcher = connection!.play(stream);
     JuanitaPlayer.dispatcher.on("start", async () => {
-      addNewSong(song);
+      addNewSong(song); // MySQL
+      storeSearch(song); // Firebase
       queue.playing = true;
       queue.current = song;
       if (textChannel) send(songEmbed(song, queue, song.seconds));
@@ -98,4 +100,3 @@ export abstract class JuanitaPlayer {
     connection.dispatcher.end();
   };
 }
-

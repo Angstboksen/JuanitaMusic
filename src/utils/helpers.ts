@@ -58,20 +58,20 @@ export const addedToQueueEmbed = (song: Song) => {
 
 export const queueFinishedEmbed = () => {
   return createInfoEmbed(
-    ":white_check_mark: :scroll: **Da var denne køen ferdig for denne gang!** :white_check_mark:\n" +
-      ":x: **Ey bror fuck deg - vi chattes på jobben a** :zipper_mouth:"
+    ":white_check_mark: :scroll: **Da var denne køen ferdig for denne gang!**\n" +
+      ":x: **Ey bror fuck deg - vi chattes på jobben a**"
   );
 };
 
 export const skipSongEmbed = () => {
   return createInfoEmbed(
-    ":mage: **Skippetipangen, bort med den sangen!** :no_entry:"
+    ":mage: **Skippetipangen, bort med den sangen!**"
   );
 };
 
 export const leaveEmbed = () => {
   return createInfoEmbed(
-    ":x: **Eyy bror fuck deg - vi chattes på jobben a** :zipper_mouth:"
+    ":x::zipper_mouth: **Eyy bror fuck deg - vi chattes på jobben a**"
   );
 };
 
