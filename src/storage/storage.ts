@@ -27,17 +27,14 @@ export const addNewSong = async (song: Song) => {
     selectSongByURL(song.url)
   )) as Array<any>;
   if (songExists.length === 0) {
-    console.log('Not exists');
     const packet: any = await connectAndQuery(insertIntoSongs(song));
     const id = packet.insertId;
     storeSongPlayed(id, song.requestor!.id);
   } else {
-    console.log("Exists");
     storeSongPlayed(songExists[0].id, song.requestor!.id);
   }
 };
 
 export const storeSongPlayed = async (id: number, author: string) => {
   const res = await connectAndQuery(insertIntoSearches(id, author));
-  console.log(res);
 };
