@@ -16,7 +16,7 @@ The command itself is the one with the `!` in front of it, while any other param
 | --- | --- | --- |
 | `!p <URL or keywords>` | Plays or adds to queue the song fetched based on the keywords provided | `!play` `!sing` |
 | `!spotify <playlist id:string>` | Shuffles a playlist from spotify with the given playlist id | `!sptf` `!hax` |
-| `!first <URL or keywords>` | Plays the song fetched based on the keywords provided | `!f` `!quick` `!speed` |
+| `!first <URL or keywords>` | Plays or puts at the top of the queue the song fetched based on the keywords provided | `!f` `!quick` `!speed` |
 | `!s` | Skips the song currently playing | `!skip` |
 | `!st <position:number>` | Jumps to the given position in the queue | `!skipto` `!jump` |
 | `!kill <position:number>` | Removes the song at the given position from the queue | `!unqueue` `!unq` `!remove` `!rm` |
