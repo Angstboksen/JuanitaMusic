@@ -15,11 +15,11 @@ The command itself is the one with the `!` in front of it, while any other param
 | Command | Description | Aliases|
 | --- | --- | --- |
 | `!p <URL or keywords>` | Plays or adds to queue the song fetched based on the keywords provided | `!play` `!sing` |
-| `!spotify <playlist id: string>` | Shuffles a playlist from spotify with the given playlist id | `!sptf` `!hax` |
+| `!spotify <playlist id:string>` | Shuffles a playlist from spotify with the given playlist id | `!sptf` `!hax` |
 | `!first <URL or keywords>` | Plays the song fetched based on the keywords provided | `!f` `!quick` `!speed` |
 | `!s` | Skips the song currently playing | `!skip` |
-| `!st <position: number>` | Jumps to the given position in the queue | `!skipto` `!jump` |
-| `!kill <position: number>` | Removes the song at the given position from the queue | `!unqueue` `!unq` `!remove` `!rm` |
+| `!st <position:number>` | Jumps to the given position in the queue | `!skipto` `!jump` |
+| `!kill <position:number>` | Removes the song at the given position from the queue | `!unqueue` `!unq` `!remove` `!rm` |
 | `!now` | Shows the song currently playing | `!np` `!current` `!song` |
 | `!q` | Shows the current queue | `!queue` `!queu` `!que` |
 | `!cum` | Makes the bot join the voicechannel | `!come` `!join` `!j` |
