@@ -61,7 +61,7 @@ export default abstract class Spotify implements JuanitaCommand {
       else JuanitaPlayer.play(juanitaGuild);
     } else {
       channel.send(
-        createInfoEmbed(":x: Fant ingen spilleliste med id `playlistid`")
+        createInfoEmbed(`:x: Fant ingen spilleliste med id \`${playlistid}\``)
       );
     }
   }
