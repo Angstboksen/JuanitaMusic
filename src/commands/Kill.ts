@@ -10,7 +10,6 @@ import SETUP_CONFIG from "../config";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
-import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand } from "../types";
 import {
   createInfoEmbed,

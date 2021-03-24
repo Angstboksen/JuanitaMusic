@@ -8,7 +8,10 @@ export type Song = {
   title: string;
   seconds: number;
   url: string;
-  requestor?: string;
+  requestor?: {
+    tag: string;
+    id: string;
+  };
   thumbnail?: string;
   isSpotify: boolean;
 };

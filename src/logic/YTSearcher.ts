@@ -6,7 +6,7 @@ import { filteredTitle } from "../utils/helpers";
 export abstract class YTSearcher {
   static search = async (
     keywords: string,
-    requestor: string,
+    requestor: { tag: string; id: string },
     try_nr: number = 1
   ): Promise<Song | null> => {
     Logger._logSearch(keywords, try_nr);
@@ -26,7 +26,7 @@ export abstract class YTSearcher {
         seconds,
         thumbnail,
         requestor,
-        isSpotify: false
+        isSpotify: false,
       };
       Logger._foundSong(song);
       return song;

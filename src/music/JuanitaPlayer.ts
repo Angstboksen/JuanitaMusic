@@ -4,6 +4,7 @@ import ytdl from "ytdl-core";
 import { Logger } from "../logger/Logger";
 import JuanitaGuild from "../logic/JuanitaGuild";
 import { YTSearcher } from "../logic/YTSearcher";
+import { addNewSong } from "../storage/storage";
 import { Song } from "../types";
 import {
   createErrorEmbed,
@@ -28,6 +29,7 @@ export abstract class JuanitaPlayer {
 
     JuanitaPlayer.dispatcher = connection!.play(stream);
     JuanitaPlayer.dispatcher.on("start", async () => {
+      addNewSong(song);
       queue.playing = true;
       queue.current = song;
       if (textChannel) send(songEmbed(song, queue, song.seconds));
@@ -96,3 +98,4 @@ export abstract class JuanitaPlayer {
     connection.dispatcher.end();
   };
 }
+

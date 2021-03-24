@@ -13,7 +13,7 @@ import { GuildCommander } from "../logic/GuildCommander";
 import { YTSearcher } from "../logic/YTSearcher";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand, Song } from "../types";
-import { tokenize } from "../utils/formatting";
+import { tokenize } from "../utils/helpers";
 import { addedToQueueEmbed, createInfoEmbed } from "../utils/helpers";
 
 const checkAliases = (command?: CommandMessage, client?: Client): string => {
@@ -47,7 +47,10 @@ export default abstract class First implements JuanitaCommand {
     Logger._logCommand(First._name, author.tag);
     GuildCommander.refresh(id, command);
     const args = tokenize(content);
-    const song: Song | null = await YTSearcher.search(args, author.tag);
+    const song: Song | null = await YTSearcher.search(args, {
+      tag: author.tag,
+      id: author.id,
+    });
     if (song === null || args.length === 0) {
       return channel.send(
         createInfoEmbed(

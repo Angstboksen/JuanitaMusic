@@ -47,7 +47,7 @@ export const songEmbed = (song: Song, queue: Queue, forcetime: number = 0) => {
     )
     .setURL(url)
     .setThumbnail(song.thumbnail!)
-    .addField("Lagt til av ", `\`${requestor}\``);
+    .addField("Lagt til av ", `\`${requestor!.tag}\``);
 };
 
 export const addedToQueueEmbed = (song: Song) => {
@@ -118,7 +118,7 @@ export const queueEmbed = (queue: Queue, page: number = 1) => {
           i + 1
         }\`.[${title}](${url})\nEstimert tid:** \`${secondsToTimestamp(
           seconds
-        )}\`\n**Lagt til av**: \`${requestor}\``
+        )}\`\n**Lagt til av**: \`${requestor!.tag}\``
       );
     }
     totalTime += seconds;
@@ -135,7 +135,7 @@ export const queueEmbed = (queue: Queue, page: number = 1) => {
         })\nEstimert tid igjen:** \`${secondsToTimestamp(
           queue.time()
         )}\`\n\`${queue.bar()}\`\n\n**Lagt til av**: \`${
-          current.requestor
+          current.requestor!.tag
         }\`\n ------------------------------------------------------------ \n\n`
       : "") +
     items.join("\n\n") +
@@ -180,3 +180,7 @@ export const filteredTitle = (title: string) => {
   );
   return newTitle.replace("**", "gg");
 };
+
+export const tokenize = (content: string) => {
+  return content.split(" ").slice(1).join(" ")
+}

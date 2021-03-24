@@ -3,11 +3,9 @@ import {
   Command,
   CommandMessage,
   Description,
-  Discord,
   Guard,
   Infos,
 } from "@typeit/discord";
-import { Message, User } from "discord.js";
 import SETUP_CONFIG from "../config";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Logger } from "../logger/Logger";

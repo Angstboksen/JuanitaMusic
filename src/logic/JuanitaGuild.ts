@@ -2,7 +2,6 @@ import {
   GuildMember,
   MessageEmbed,
   TextChannel,
-  User,
   VoiceChannel,
   VoiceConnection,
 } from "discord.js";

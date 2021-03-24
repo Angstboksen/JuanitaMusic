@@ -1,11 +1,8 @@
-import {
-  Discord,
-  CommandMessage,
-  CommandNotFound,
-} from "@typeit/discord";
+import { Discord, CommandMessage, CommandNotFound } from "@typeit/discord";
 import SETUP_CONFIG from "./config";
 import * as Path from "path";
 import { SpotifySearcher } from "./logic/SpotifySearcher";
+import { createInfoEmbed } from "./utils/helpers";
 
 @Discord(SETUP_CONFIG.prefix, {
   import: [Path.join(__dirname, "commands", "*.ts")],
@@ -15,8 +12,9 @@ export abstract class Juanita {
 
   @CommandNotFound()
   notFound(command: CommandMessage) {
-    console.log(command.content);
-    command.channel.send("Command not found");
+    command.channel.send(
+      createInfoEmbed(":question: **Det forsto jeg ikke helt**")
+    );
   }
 
   _reconnect = () => {

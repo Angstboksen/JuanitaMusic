@@ -42,14 +42,13 @@ export default abstract class Spotify implements JuanitaCommand {
     const { channel, author, content, guild } = command;
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
-    console.log(Client.getCommands());
 
     Logger._logCommand(Spotify._name, author.tag);
     GuildCommander.refresh(id, command);
     const playlistid = command.args.playlistid;
     const validPlaylist = await Juanita.spotifySearcher.searchPlaylist(
       playlistid,
-      author.tag
+      author
     );
     if (validPlaylist !== undefined) {
       channel.send(

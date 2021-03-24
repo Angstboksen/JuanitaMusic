@@ -63,7 +63,10 @@ export class SpotifySearcher {
     return { statusCode: 200, items };
   };
 
-  searchPlaylist = async (playlistid: string, requestor: string) => {
+  searchPlaylist = async (
+    playlistid: string,
+    requestor: { tag: string; id: string }
+  ) => {
     if (this.api.getAccessToken() === undefined) {
       await this.getToken();
     }
