@@ -58,6 +58,7 @@ export default class Queue {
 
   clear = () => {
     this.playing = false;
+    this.current = null;
     this.songs = [];
   };
 
