@@ -9,6 +9,8 @@ import { addNewSong } from "../storage/storage";
 import { Song } from "../types";
 import {
   createErrorEmbed,
+  emptyQueueEmbed,
+  leaveEmbed,
   queueFinishedEmbed,
   skipSongEmbed,
   songEmbed,
@@ -38,9 +40,9 @@ export abstract class JuanitaPlayer {
     });
 
     JuanitaPlayer.dispatcher.on("error", (error: Error) => {
-      JuanitaPlayer.skip(guild);
       Logger._error(error.message);
-      if (textChannel) send(createErrorEmbed(`Error Playing Song: ${error}`));
+      send(leaveEmbed());
+      guild.leave();
     });
 
     JuanitaPlayer.dispatcher.on("finish", () => {
@@ -94,6 +96,7 @@ export abstract class JuanitaPlayer {
     const { connection, send } = guild;
     if (!connection || !connection.dispatcher) {
       Logger.debug("Can't skip `undefined` connection");
+      send(emptyQueueEmbed());
       return;
     }
     if (!guild.queue.empty()) send(skipSongEmbed());

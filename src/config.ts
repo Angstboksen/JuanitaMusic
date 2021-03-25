@@ -23,7 +23,7 @@ const SETUP_CONFIG: SetupConfig = {
   botid: process.env.BOT_ID!,
   spotify_id: process.env.SPOTIFY_ID!,
   spotify_secret: process.env.SPOTIFY_SECRET!,
-  prefix: "!",
+  prefix: process.env.PREFIX!,
   db_config: {
     host: process.env.DB_HOST!,
     user: process.env.DB_USER!,

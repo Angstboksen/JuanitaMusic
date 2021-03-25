@@ -12,10 +12,10 @@ Invite the bot to your discord server [by following this link](https://discord.c
 These are the current accepted commands. As the bot is still in development, some of these might be a little fucked.They should however, work as intended.
 The command itself is the one with the `!` in front of it, while any other parameters is described inside the `<>`. Happy dying! 💀
 
-| Command | Description | Aliases|
+| Command | Description | Aliases |
 | --- | --- | --- |
+| Common commands |
 | `!p <URL or keywords>` | Plays or adds to queue the song fetched based on the keywords provided | `!play` `!sing` |
-| `!spotify <playlist id:string>` | Shuffles a playlist from spotify with the given playlist id | `!sptf` `!hax` |
 | `!first <URL or keywords>` | Plays or puts at the top of the queue the song fetched based on the keywords provided | `!f` `!quick` `!speed` |
 | `!s` | Skips the song currently playing | `!skip` |
 | `!st <position:number>` | Jumps to the given position in the queue | `!skipto` `!jump` |
@@ -25,6 +25,13 @@ The command itself is the one with the `!` in front of it, while any other param
 | `!cum` | Makes the bot join the voicechannel | `!come` `!join` `!j` |
 | `!leave` | Kicks the bot from the voice channel | `!l` `!disconnect` `!kys` `!die` |
 | `!help` | Provides a list of all current possible commands | `!h` `!commands` `!how` | 
+| --- | --- | --- |
+| __Spotify commands__ |
+| `!spotify <playlist id:string>` | Shuffles a playlist from spotify with the given playlist id | `!sptf` `!hax` |
+| `!remember <playlist id: string> <alias: string>` | Remembers the given Spotify playlist id as the given alias to be used later | `!remember` `!rem` `!husk` `!import` |
+| `!aliases` | Shows a list of all aliases and their corresponding spotify playlists | `!alist` |
+| --- | --- | --- | 
+
 
 
 ## 💡 Misc

@@ -64,9 +64,7 @@ export const queueFinishedEmbed = () => {
 };
 
 export const skipSongEmbed = () => {
-  return createInfoEmbed(
-    ":mage: **Skippetipangen, bort med den sangen!**"
-  );
+  return createInfoEmbed(":mage: **Skippetipangen, bort med den sangen!**");
 };
 
 export const leaveEmbed = () => {
@@ -163,6 +161,23 @@ export const helpEmbed = () => {
     .setURL("https://github.com/Angstboksen/JuanitaMusic#commands");
 };
 
+export const aliasEmbed = (
+  aliases: { alias: string; plid: string; name: string }[]
+) => {
+  if (aliases.length === 0)
+    return createInfoEmbed(
+      ":watermelon: Bruk `!remember <id> <alias>` for å legge til"
+    ).setTitle(":scream_cat: Ingen aliaser er lagret");
+  let desc = "";
+  for (let i = 0; i < aliases.length; i++) {
+    desc += `:cyclone: **Navn**: [${aliases[i].name}](https://open.spotify.com/playlist/${aliases[i].plid}) | :spy: **Alias:** \`${aliases[i].alias}\`  \n\n`;
+  }
+  desc += `\n :mag: Det er lagret totalt \`${aliases.length}\` aliaser`;
+  return createInfoEmbed(desc).setTitle(
+    ":arrow_down: Her er alle aliasene som er lagret"
+  );
+};
+
 export const shuffleArray = (array: Array<any>) => {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * i);
@@ -182,5 +197,5 @@ export const filteredTitle = (title: string) => {
 };
 
 export const tokenize = (content: string) => {
-  return content.split(" ").slice(1).join(" ")
-}
+  return content.split(" ").slice(1).join(" ");
+};

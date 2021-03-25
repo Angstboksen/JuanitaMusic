@@ -6,6 +6,7 @@ import {
   Guard,
   Infos,
 } from "@typeit/discord";
+import { validateRemember } from "../api/songs/alias";
 import SETUP_CONFIG from "../config";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Juanita } from "../Juanita";
@@ -46,8 +47,10 @@ export default abstract class Spotify implements JuanitaCommand {
     Logger._logCommand(Spotify._name, author.tag);
     GuildCommander.refresh(id, command);
     const playlistid = command.args.playlistid;
+    const remembered = await validateRemember(playlistid);
+
     const validPlaylist = await Juanita.spotifySearcher.searchPlaylist(
-      playlistid,
+      remembered ? remembered.plid : playlistid,
       author
     );
     if (validPlaylist !== undefined) {

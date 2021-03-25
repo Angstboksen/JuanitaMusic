@@ -26,6 +26,18 @@ export class SpotifySearcher {
     }, 3000000);
   }
 
+  findPlaylist = async (playlistid: string) => {
+    if (this.api.getAccessToken() === undefined) {
+      await this.getToken();
+    }
+    const response = await this.api
+      .getPlaylist(playlistid)
+      .catch((error: Error) => {
+        return { statusCode: 400, body: { name: "_default_" } };
+      });
+    return { statusCode: response.statusCode, name: response.body.name };
+  };
+
   getToken = async () => {
     const data = new URLSearchParams();
     data.append("grant_type", "client_credentials");
