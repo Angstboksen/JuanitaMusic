@@ -172,7 +172,7 @@ export const aliasEmbed = (
   for (let i = 0; i < aliases.length; i++) {
     desc += `:cyclone: **Navn**: [${aliases[i].name}](https://open.spotify.com/playlist/${aliases[i].plid}) | :spy: **Alias:** \`${aliases[i].alias}\`  \n\n`;
   }
-  desc += `\n:watermelone: Bruk \`!spotify <alias>\` for å spille av lista \n\n :mag: Det er lagret totalt \`${aliases.length}\` aliaser`;
+  desc += `\n:watermelon: Bruk \`!spotify <alias>\` for å spille av lista \n\n :mag: Det er lagret totalt \`${aliases.length}\` aliaser`;
   return createInfoEmbed(desc).setTitle(
     ":arrow_down: Her er alle aliasene som er lagret"
   );
