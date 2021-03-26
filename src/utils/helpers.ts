@@ -105,6 +105,9 @@ export const queueEmbed = (queue: Queue, page: number = 1) => {
 
   const items = [];
   const { current } = queue;
+  const maxPages = Math.ceil(queue.size() / 5);
+  if (page > maxPages) page = maxPages;
+  else if (page < 1) page = 1;
   let totalTime = queue.time();
 
   for (let i = (page - 1) * 5; i < queue.size(); i++) {
@@ -140,7 +143,7 @@ export const queueEmbed = (queue: Queue, page: number = 1) => {
     "\n\n**:timer: Total beregnet tid:** " +
     `\`${secondsToTimestamp(
       totalTime
-    )}\` \n\n Side \`${page}\` av \`${Math.floor(queue.size() / 5)}\``;
+    )}\` \n\n Side \`${page}\` av \`${maxPages}\``;
 
   return createInfoEmbed(desc).setTitle(
     ":scroll: **Her er køen slik den ser ut nå** \n"
