@@ -14,7 +14,7 @@ import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand } from "../types";
-import { createInfoEmbed, shuffleArray } from "../utils/helpers";
+import { createInfoEmbed, queueEmbed, shuffleArray } from "../utils/helpers";
 
 const checkAliases = (command?: CommandMessage, client?: Client): string => {
   if (command) {
@@ -61,6 +61,7 @@ export default abstract class Spotify implements JuanitaCommand {
       );
       queue.songs = queue.songs.concat(shuffleArray(validPlaylist.tracks));
       if (!queue.playing) JuanitaPlayer.play(juanitaGuild);
+      else channel.send(queueEmbed(queue));
     } else {
       channel.send(
         createInfoEmbed(`:x: Fant ingen spilleliste med id \`${playlistid}\``)
