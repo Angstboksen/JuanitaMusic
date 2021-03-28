@@ -61,7 +61,11 @@ export default abstract class Spotify implements JuanitaCommand {
       );
       queue.songs = queue.songs.concat(shuffleArray(validPlaylist.tracks));
       if (!queue.playing) JuanitaPlayer.play(juanitaGuild);
-      else channel.send(queueEmbed(queue));
+      else {
+        const msg = await channel.send(queueEmbed(queue));
+        await msg.react("⬅️");
+        await msg.react("➡️");
+      }
     } else {
       channel.send(
         createInfoEmbed(`:x: Fant ingen spilleliste med id \`${playlistid}\``)
