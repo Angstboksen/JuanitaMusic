@@ -19,7 +19,7 @@
         "@types/libsodium-wrappers": "^0.7.9",
         "@types/moment": "^2.13.0",
         "@types/mysql": "^2.15.18",
-        "@types/node": "^14.14.36",
+        "@types/node": "^14.14.37",
         "@types/whatwg-fetch": "0.0.33",
         "@types/yt-search": "^2.3.0",
         "avconv": "^3.1.0",
