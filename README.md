@@ -36,8 +36,9 @@ The command itself is the one with the `!` in front of it, while any other param
 
 ## 💡 Misc
 
-JuanitaMusic aka. Juanita is currently being hosted on Heroku
+JuanitaMusic aka. Juanita is currently being hosted on Heroku <br>
 More commands will be added as time goes by
 
 Made with Discord.js written in TypeScript
 
+[MIT License](./LICENSE)
