@@ -28,7 +28,7 @@
         "discord.js": "^12.5.2",
         "dotenv": "^8.2.0",
         "ffmpeg": "0.0.4",
-        "ffmpeg-static": "^4.2.8",
+        "ffmpeg-static": "^4.3.0",
         "firebase-admin": "^9.6.0",
         "libsodium-wrappers": "^0.7.9",
         "moment": "^2.29.1",
