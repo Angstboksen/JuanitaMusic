@@ -18,7 +18,7 @@ export const existsInFirestore = async (
 ) => {
   const collection = firestoreConnection.collection(`${collectionName}`);
   const snapshot = await collection.where(ref, "==", value).get();
-  return snapshot.docs
+  return snapshot.docs;
 };
 
 export const showDBCollection = async (collectionName: string) => {
@@ -28,4 +28,15 @@ export const showDBCollection = async (collectionName: string) => {
     data.push(doc.data());
   });
   return data;
+};
+
+export const _fetchDBCollectionWithDoc = async (
+  collectionName: string,
+  docRef: string
+) => {
+  const snapshot = await firestoreConnection
+    .collection(collectionName)
+    .doc(docRef)
+    .get();
+  return snapshot.data();
 };
