@@ -1,12 +1,14 @@
 import firestoreConnection from "..";
 import { Song } from "../../types";
-import { existsInFirestore } from "../queries";
+import { existsInFirestore, showDBCollectionWithDoc } from "../queries";
 import { storeSong } from "./song";
 
 export const storeSearch = async (song: Song) => {
   const { title, url, requestor } = song;
   const docRef = firestoreConnection.collection(`searches`).doc();
-  let exist = await existsInFirestore(`songs`, `url`, url);
+  const pDocRef = firestoreConnection.collection("specials").doc("playtime");
+  const playtime = await showDBCollectionWithDoc("specials", "playtime");
+  const exist = await existsInFirestore(`songs`, `url`, url);
   let id;
   if (exist.length === 0) {
     id = await storeSong(song);
@@ -18,5 +20,8 @@ export const storeSearch = async (song: Song) => {
     song: firestoreConnection.doc(`songs/${id}`),
     requestor,
     date: new Date().toISOString(),
+  });
+  await pDocRef.set({
+    seconds: playtime!.seconds + song.seconds,
   });
 };
