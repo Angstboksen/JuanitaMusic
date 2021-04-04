@@ -8,7 +8,7 @@ export type Song = {
   title: string;
   seconds: number;
   url: string;
-  requestor?: {
+  requestor: {
     tag: string;
     id: string;
   };
