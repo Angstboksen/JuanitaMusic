@@ -25,7 +25,7 @@
         "avconv": "^3.1.0",
         "axios": "^0.21.1",
         "base-64": "^1.0.0",
-        "discord.js": "^12.5.2",
+        "discord.js": "^12.5.3",
         "dotenv": "^8.2.0",
         "ffmpeg": "0.0.4",
         "ffmpeg-static": "^4.2.8",
