@@ -38,7 +38,7 @@ export const storeSearch = async (song: Song) => {
   await rpDocRef.set({
     id: requestor.id,
     tag: requestor.tag,
-    plays: req!.plays === undefined ?  1 : req!.plays + 1,
+    plays: req === undefined ?  1 : req.plays + 1,
   });
   await spesSearchDocRef.add(search);
 };
