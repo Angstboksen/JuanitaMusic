@@ -6,7 +6,6 @@ import { storeSearch } from "../api/songs/search";
 import { Logger } from "../logger/Logger";
 import JuanitaGuild from "../logic/JuanitaGuild";
 import { YTSearcher } from "../logic/YTSearcher";
-import { addNewSong } from "../storage/storage";
 import { Song } from "../types";
 import {
   createErrorEmbed,
@@ -32,7 +31,6 @@ export abstract class JuanitaPlayer {
 
     guild.dispatcher = connection!.play(stream);
     guild.dispatcher.on("start", async () => {
-      addNewSong(song); // MySQL
       storeSearch(song); // Firebase
       mongoStoreSearch(song); // MongoDB
       queue.playing = true;
