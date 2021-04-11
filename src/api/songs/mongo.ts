@@ -5,39 +5,40 @@ import { Search, Song } from "../../types";
 const client = new MongoClient(process.env.MONGOURL!, {
   useUnifiedTopology: true,
 });
+client.connect();
 export const mongoStoreSearch = async (song: Song | null) => {
   if (!song) return;
-  client.connect(async () => {
-    const db = client.db("juanitamusic");
-    const songExists = await mongoExistsSong(song, db);
-    const requestorExists = await mongoExistsRequestor(song.requestor, db);
-    if (!songExists) {
-      const nSong = {
-        title: song.title,
-        url: song.url,
-        seconds: song.seconds,
-        thumbnail: song.thumbnail,
-      };
-      await db.collection("songs").insertOne(nSong);
-    }
-    if (!requestorExists) {
-      await db.collection("requestors").insertOne(song.requestor);
-    }
-
-    const search: Search = {
+  const db = client.db("juanitamusic");
+  const songExists = await mongoExistsSong(song, db);
+  const requestorExists = await mongoExistsRequestor(song.requestor, db);
+  if (!songExists) {
+    const nSong = {
       title: song.title,
-      requestor: song.requestor,
-      date: new Date(),
+      url: song.url,
+      seconds: song.seconds,
+      thumbnail: song.thumbnail,
     };
-    await db.collection("searches").insertOne(search);
-  });
+    await db.collection("songs").insertOne(nSong);
+  }
+  if (!requestorExists) {
+    await db.collection("requestors").insertOne(song.requestor);
+  }
+
+  const search: Search = {
+    title: song.title,
+    requestor: song.requestor,
+    date: new Date(),
+  };
+  await db.collection("searches").insertOne(search);
 };
 
-export const mongoStoreAlias = (plid: string, alias: string, name: string) => {
-  client.connect(async () => {
-    const db = client.db("juanitamusic");
-    await db.collection("aliases").insertOne({ alias, plid, name });
-  });
+export const mongoStoreAlias = async (
+  plid: string,
+  alias: string,
+  name: string
+) => {
+  const db = client.db("juanitamusic");
+  await db.collection("aliases").insertOne({ alias, plid, name });
 };
 
 export const mongoExistsSong = async (song: Song, db: Db) => {
