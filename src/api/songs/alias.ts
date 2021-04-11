@@ -1,5 +1,6 @@
 import firestoreConnection from "..";
 import { showDBCollection, showDBCollectionWithDoc } from "../queries";
+import { mongoStoreAlias } from "./mongo";
 
 export const aliasExists = async (alias: string) => {
   const doc = await showDBCollectionWithDoc("aliases", alias);
@@ -24,6 +25,7 @@ export const rememberAlias = async (
     plid,
     name,
   });
+  mongoStoreAlias(plid, alias, name);
 };
 
 export const retrieveAliases = async () => {

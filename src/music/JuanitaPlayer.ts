@@ -1,6 +1,7 @@
 import { StreamDispatcher } from "discord.js";
 import { Readable } from "stream";
 import ytdl from "ytdl-core";
+import { mongoStoreSearch } from "../api/songs/mongo";
 import { storeSearch } from "../api/songs/search";
 import { Logger } from "../logger/Logger";
 import JuanitaGuild from "../logic/JuanitaGuild";
@@ -33,6 +34,7 @@ export abstract class JuanitaPlayer {
     guild.dispatcher.on("start", async () => {
       addNewSong(song); // MySQL
       storeSearch(song); // Firebase
+      mongoStoreSearch(song); // MongoDB
       queue.playing = true;
       queue.current = song;
       if (textChannel) send(songEmbed(song, queue, song.seconds));

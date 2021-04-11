@@ -15,3 +15,12 @@ export type Song = {
   thumbnail?: string;
   isSpotify: boolean;
 };
+
+export type Search = {
+  title: string;
+  requestor: {
+    tag: string;
+    id: string;
+  };
+  date: Date;
+};
