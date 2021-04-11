@@ -30,7 +30,6 @@ export const mongoStoreSearch = async (song: Song | null) => {
       date: new Date(),
     };
     await db.collection("searches").insertOne(search);
-    await client.close();
   });
 };
 
@@ -38,7 +37,6 @@ export const mongoStoreAlias = (plid: string, alias: string, name: string) => {
   client.connect(async () => {
     const db = client.db("juanitamusic");
     await db.collection("aliases").insertOne({ alias, plid, name });
-    client.close();
   });
 };
 
@@ -66,15 +64,6 @@ export const mongoExistsRequestor = async (
       .collection("requestors")
       .find({ id: requestor.id })
       .toArray();
-    return exists.length > 0;
-  } catch (err) {
-    return false;
-  }
-};
-
-export const mongoExistsAlias = async (alias: string, db: Db) => {
-  try {
-    const exists = await db.collection("aliases").find({ alias }).toArray();
     return exists.length > 0;
   } catch (err) {
     return false;

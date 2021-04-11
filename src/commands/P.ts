@@ -6,7 +6,6 @@ import {
   Guard,
   Infos,
 } from "@typeit/discord";
-import { mongoStoreSearch } from "../api/songs/mongo";
 import SETUP_CONFIG from "../config";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Logger } from "../logger/Logger";
