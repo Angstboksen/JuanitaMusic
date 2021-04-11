@@ -17,21 +17,20 @@ import {
 } from "../utils/helpers";
 
 export abstract class JuanitaPlayer {
-  static dispatcher: StreamDispatcher | null;
   static guild: JuanitaGuild;
 
   static dispatchStream = (stream: Readable, song: Song) => {
-    if (JuanitaPlayer.dispatcher) {
-      JuanitaPlayer.dispatcher.end();
-      JuanitaPlayer.dispatcher = null;
-    }
-
     const { guild, play, skip, songEnd } = JuanitaPlayer;
     const { connection, queue, textChannel, send } = guild;
+    if (guild.dispatcher) {
+      guild.dispatcher.end();
+      guild.dispatcher = null;
+    }
+
     queue.dequeue();
 
-    JuanitaPlayer.dispatcher = connection!.play(stream);
-    JuanitaPlayer.dispatcher.on("start", async () => {
+    guild.dispatcher = connection!.play(stream);
+    guild.dispatcher.on("start", async () => {
       addNewSong(song); // MySQL
       storeSearch(song); // Firebase
       queue.playing = true;
@@ -39,26 +38,26 @@ export abstract class JuanitaPlayer {
       if (textChannel) send(songEmbed(song, queue, song.seconds));
     });
 
-    JuanitaPlayer.dispatcher.on("error", (error: Error) => {
+    guild.dispatcher.on("error", (error: Error) => {
       Logger._error(error.message);
       send(leaveEmbed());
       guild.leave();
     });
 
-    JuanitaPlayer.dispatcher.on("finish", () => {
+    guild.dispatcher.on("finish", () => {
       JuanitaPlayer.songEnd(guild);
     });
 
-    JuanitaPlayer.dispatcher.on("end", (reason: string) => {
+    guild.dispatcher.on("end", (reason: string) => {
       Logger.debug(reason);
     });
   };
 
   static songEnd = (guild: JuanitaGuild) => {
-    if (JuanitaPlayer.dispatcher) {
+    if (guild.dispatcher) {
       setTimeout(() => {
         guild.queue.playing = false;
-        JuanitaPlayer.dispatcher = null;
+        guild.dispatcher = null;
         guild.connection = null;
         JuanitaPlayer.play(guild);
       }, 1000);

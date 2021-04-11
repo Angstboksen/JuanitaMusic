@@ -1,6 +1,7 @@
 import {
   GuildMember,
   MessageEmbed,
+  StreamDispatcher,
   TextChannel,
   VoiceChannel,
   VoiceConnection,
@@ -14,6 +15,7 @@ export default class JuanitaGuild {
   name: string;
   textChannel: TextChannel | null = null;
   voiceChannel: VoiceChannel | null = null;
+  dispatcher: StreamDispatcher | null;
   connection: VoiceConnection | null = null;
   playlists: Playlist[];
   queue: Queue = new Queue(this);
@@ -22,6 +24,7 @@ export default class JuanitaGuild {
     this.id = id;
     this.name = name;
     this.playlists = playlists;
+    this.dispatcher = null;
   }
 
   addPlaylist = (playlist: Playlist) => {
@@ -44,10 +47,10 @@ export default class JuanitaGuild {
     this.voiceChannel!.leave();
     this.connection = null;
     this.voiceChannel = null;
-    if (JuanitaPlayer.dispatcher !== null) {
-      JuanitaPlayer.dispatcher.destroy();
+    if (this.dispatcher !== null) {
+      this.dispatcher.destroy();
     }
-    JuanitaPlayer.dispatcher = null;
+    this.dispatcher = null;
   };
 
   send = (msg: string | MessageEmbed) => {
