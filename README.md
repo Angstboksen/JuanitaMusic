@@ -14,7 +14,7 @@ The command itself is the one with the `!` in front of it, while any other param
 
 | Command | Description | Aliases |
 | --- | --- | --- |
-| Common commands |
+| __Common commands__ |
 | `!p <URL or keywords>` | Plays or adds to queue the song fetched based on the keywords provided | `!play` `!sing` |
 | `!first <URL or keywords>` | Plays or puts at the top of the queue the song fetched based on the keywords provided | `!f` `!quick` `!speed` |
 | `!s` | Skips the song currently playing | `!skip` |
@@ -25,12 +25,10 @@ The command itself is the one with the `!` in front of it, while any other param
 | `!cum` | Makes the bot join the voicechannel | `!come` `!join` `!j` |
 | `!leave` | Kicks the bot from the voice channel | `!l` `!disconnect` `!kys` `!die` |
 | `!help` | Provides a list of all current possible commands | `!h` `!commands` `!how` | 
-| --- | --- | --- |
 | __Spotify commands__ |
 | `!spotify <playlist id:string>` | Shuffles a playlist from spotify with the given playlist id | `!sptf` `!hax` |
 | `!remember <playlist id: string> <alias: string>` | Remembers the given Spotify playlist id as the given alias to be used later | `!remember` `!rem` `!husk` `!import` |
 | `!aliases` | Shows a list of all aliases and their corresponding spotify playlists | `!alist` |
-| --- | --- | --- | 
 
 
 
