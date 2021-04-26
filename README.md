@@ -1,5 +1,6 @@
 
 # 🎵 JuanitaMusic (aka. Juanita)
+![Build badge](https://img.shields.io/github/workflow/status/Angstboksen/JuanitaMusic/Build%20and%20test)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f012ea4b47d45ab88391d2fd7794812)](https://app.codacy.com/gh/Angstboksen/JuanitaMusic?utm_source=github.com&utm_medium=referral&utm_content=Angstboksen/JuanitaMusic&utm_campaign=Badge_Grade)
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/AngstBoksen/JuanitaMusic/graphs/commit-activity)
 [![GitHub contributors](https://img.shields.io/github/contributors/Angstboksen/JuanitaMusic.svg)](https://GitHub.com/Angstboksen/JuanitaMusic/graphs/contributors/)
