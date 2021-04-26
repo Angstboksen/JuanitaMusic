@@ -17,34 +17,34 @@ export default class Queue {
   }
 
   next = (): Song | null => {
-    return this.songs[0];
+    return this.songs[0] ? this.songs[0] : null;
   };
 
-  size = () => {
+  size = (): number => {
     return this.songs.length;
   };
 
-  inrange = (index: number) => {
+  inrange = (index: number): boolean => {
     return index >= 0 && index < this.songs.length;
   };
 
-  kill = (index: number) => {
-    const song = this.songs[index];
+  kill = (index: number): Song => {
+    const song = { ...this.songs[index] };
     this.songs.splice(index, 1);
     return song;
   };
 
-  skipTo = (index: number) => {
-    const song = this.songs[index];
+  skipTo = (index: number): Song => {
+    const song = { ...this.songs[index] };
     this.shift(index);
     return song;
   };
 
-  shift = (index: number) => {
+  shift = (index: number): void => {
     this.songs = this.songs.splice(index, this.songs.length);
   };
 
-  enqueue = (song: Song, first: boolean = false) => {
+  enqueue = (song: Song, first: boolean = false): void => {
     if (first) {
       this.songs = [song].concat(this.songs);
       return;
@@ -52,25 +52,25 @@ export default class Queue {
     this.songs.push(song);
   };
 
-  dequeue = () => {
+  dequeue = (): void => {
     this.songs.shift();
   };
 
-  clear = () => {
+  clear = (): void => {
     this.playing = false;
     this.current = null;
     this.songs = [];
   };
 
-  stop = () => {
+  stop = (): void => {
     this.playing = false;
   };
 
-  empty = () => {
+  empty = (): boolean => {
     return this.size() === 0;
   };
 
-  time = () => {
+  time = (): number => {
     if (this.guild.connection && this.current) {
       return Math.floor(
         this.current.seconds -
@@ -80,7 +80,7 @@ export default class Queue {
     return this.next()!.seconds;
   };
 
-  bar = () => {
+  bar = (): string => {
     let bar = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬".split("");
     const part =
       this.guild.connection!.dispatcher.totalStreamTime /
@@ -91,39 +91,4 @@ export default class Queue {
     bar[index] = "🔘";
     return bar.join("");
   };
-
-  /*async show() {
-    let embed = new MessageEmbed();
-    let text = "";
-    let count = 0;
-    for (let song of this.songs) {
-      if (text.length > 1500) {
-        break;
-      }
-      count++;
-      text += `**${count})** :notes:  **Tittel:** ${song.title.replace(
-        /[*]+/,
-        ""
-      )}\n`;
-    }
-    text +=
-      "\n :timer: **Beregnet total tid: ** " + (await this.getEstimatedTime());
-    let title =
-      count === 0
-        ? ":scroll: **Køen er tom!** :scroll:"
-        : ":scroll: **Slik ser køen ut** :scroll: | **Antall sanger: **" +
-          this.size();
-    embed.setTitle(title);
-    embed.setDescription(text);
-
-    return embed;
-  }
-
-  async getEstimatedTime() {
-    let totalSeconds = 0;
-    for (let song of this.songs) {
-      totalSeconds += song.length;
-    }
-    return formattedTime(totalSeconds);
-  }*/
 }

@@ -5,7 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "start": "npx ts-node src/index.ts",
-        "test": "jest --passWithNoTests",
+        "test": "jest --passWithNoTests --coverage",
         "update": "npm update --save"
     },
     "keywords": [],
@@ -44,6 +44,7 @@
         "opusscript": "^0.0.8",
         "rimraf": "^3.0.2",
         "spotify-web-api-node": "^5.0.2",
+        "ts-jest": "^26.5.5",
         "ts-node": "^9.1.1",
         "tslib": "^2.2.0",
         "typescript": "^4.2.4",
