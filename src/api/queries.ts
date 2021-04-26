@@ -29,14 +29,3 @@ export const showDBCollection = async (collectionName: string) => {
   });
   return data;
 };
-
-export const _fetchDBCollectionWithDoc = async (
-  collectionName: string,
-  docRef: string
-) => {
-  const snapshot = await firestoreConnection
-    .collection(collectionName)
-    .doc(docRef)
-    .get();
-  return snapshot.data();
-};

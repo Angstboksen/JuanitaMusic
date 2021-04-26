@@ -5,7 +5,7 @@ import { storeSong } from "./song";
 
 export const storeSearch = async (song: Song) => {
   const { title, url, requestor } = song;
-  const docRef = firestoreConnection.collection(`searches`).doc();
+  const docRef = firestoreConnection.collection("searches").doc();
   const spesSearchDocRef = firestoreConnection
     .collection("requestors")
     .doc(requestor.id)
@@ -16,7 +16,7 @@ export const storeSearch = async (song: Song) => {
     .doc(requestor.id);
   const playtime = await showDBCollectionWithDoc("specials", "playtime");
   const req = await showDBCollectionWithDoc("requestors", requestor.id);
-  const exist = await existsInFirestore(`songs`, `url`, url);
+  const exist = await existsInFirestore("songs", "url", url);
   let id;
   if (exist.length === 0) {
     id = await storeSong(song);
@@ -38,7 +38,7 @@ export const storeSearch = async (song: Song) => {
   await rpDocRef.set({
     id: requestor.id,
     tag: requestor.tag,
-    plays: req === undefined ?  1 : req.plays + 1,
+    plays: req === undefined ? 1 : req.plays + 1,
   });
   await spesSearchDocRef.add(search);
 };
