@@ -1,42 +1,37 @@
-name: JuanitaTests
+name: Build and test
 
-on:
-  push:
-    branches: [main]
-    paths:
-      - "./**"
-      - "!**.md"
-  pull_request:
-    branches: [main]
-    paths:
-      - "./**"
-      - "!**.md"
-  workflow_dispatch:
+on: push
 
 jobs:
-  tests:
+  build-project:
+    name: Build project
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          node-version: "latest"
-      - name: Cache node modules
-        id: cacheStep
+          node-version: 14
+      
+      - name: Cache Node.js dependencies
+        id: node-cache
         uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: frontend-client/node_modules
-          key: ${{ runner.os }}-build-${{ hashFiles('./package-lock.json') }}
-
-      - name: Install dependencies
-        if: steps.cacheStep.outputs.cache-hit != 'true'
+          path: | 
+            node_modules
+          key: my-cache-${{ runner.os }}-${{ hashFiles('./package-lock.json') }}
+      
+      - name: Install Node.js dependencies
+        if: steps.node-cache.outputs.cache-hit != 'true'
         run: npm install
-
-      - name: Builds
+      
+      - name: Build
         run: npm run build --if-present
-
-      - name: Tests
+        
+      - name: Test
         run: npm test
+      
+  
