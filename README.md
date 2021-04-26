@@ -8,7 +8,7 @@
 
 ![https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=0&scope=bot][logo]
 
-A Discord bot for playing music with friends on discord. <br>
+A Discord bot for playing music with friends on discord. 
 
 Invite the bot to your discord server [by following this link](https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=0&scope=bot)
 
