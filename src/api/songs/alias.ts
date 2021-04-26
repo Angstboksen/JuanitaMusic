@@ -19,7 +19,7 @@ export const rememberAlias = async (
   alias: string,
   name: string
 ) => {
-  const docRef = firestoreConnection.collection(`aliases`).doc(alias);
+  const docRef = firestoreConnection.collection("aliases").doc(alias);
   docRef.set({
     alias,
     plid,

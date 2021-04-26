@@ -47,7 +47,7 @@ export abstract class Juanita {
     const { guild, embeds } = message.message;
     const { title, description } = embeds[0];
     if (
-      title == ":scroll: **Her er køen slik den ser ut nå**" &&
+      title === ":scroll: **Her er køen slik den ser ut nå**" &&
       description !== null
     ) {
       let page = +description
@@ -57,10 +57,10 @@ export abstract class Juanita {
         .split("av")[0];
       const queue = GuildCommander.get(guild!).queue;
       const max = Math.ceil(queue.size() / 5);
-      if (message.emoji.name == "⬅️") {
+      if (message.emoji.name === "⬅️") {
         if (page === 0) return;
         page--;
-      } else if (message.emoji.name == "➡️") {
+      } else if (message.emoji.name === "➡️") {
         if (page === max) return;
         page++;
       }
