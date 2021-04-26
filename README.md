@@ -1,6 +1,7 @@
-![https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=0&scope=bot][logo]
 
 # 🎵 JuanitaMusic (aka. Juanita)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f012ea4b47d45ab88391d2fd7794812)](https://app.codacy.com/gh/Angstboksen/JuanitaMusic?utm_source=github.com&utm_medium=referral&utm_content=Angstboksen/JuanitaMusic&utm_campaign=Badge_Grade) <br>
+![https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=0&scope=bot][logo] <br>
 A Discord bot for playing music with friends on discord. <br>
 
 Invite the bot to your discord server [by following this link](https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=0&scope=bot)
