@@ -5,7 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "start": "npx ts-node src/index.ts",
-        "test": "jest --ci --coverage && codecov",
+        "test": "jest --ci --coverage",
         "update": "npm update --save"
     },
     "keywords": [],
