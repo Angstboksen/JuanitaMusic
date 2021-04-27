@@ -1,6 +1,6 @@
 import JuanitaGuild from "../JuanitaGuild";
 import Queue from "../Queue";
-import { testSong, testSongArray } from "./data";
+import { testSong, testSongArray } from "../../__tests__/data";
 
 describe("Test Queue.ts class", () => {
   const g = new JuanitaGuild("test-id", "TestName");

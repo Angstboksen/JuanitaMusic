@@ -1,4 +1,4 @@
-import { Song } from "../../types";
+import { Song } from "../types";
 
 export const testSongArray: Song[] = [
   {
