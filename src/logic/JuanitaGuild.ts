@@ -61,24 +61,4 @@ export default class JuanitaGuild {
     this.voiceChannel = member.voice.channel;
     await this.connect();
   };
-  /*removePlaylist(playlistname: string) {
-    let index = 0;
-    for (let list of this.playlists) {
-      if (list.name === playlistname) {
-        break;
-      }
-      index++;
-    }
-    this.playlists.splice(index, 1);
-    db.deleteListFromGuild(this.id, playlistname);
-  }
-
-  getPlaylistByName(playlistname: string) {
-    for (let list of this.playlists) {
-      if (list.name === playlistname) {
-        return list;
-      }
-    }
-    return undefined;
-  }*/
 }
