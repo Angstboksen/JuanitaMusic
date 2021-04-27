@@ -1,6 +1,6 @@
-import { Song } from "../../types";
 import JuanitaGuild from "../JuanitaGuild";
 import Queue from "../Queue";
+import { testSong, testSongArray } from "./data";
 
 describe("Test Queue.ts class", () => {
   const g = new JuanitaGuild("test-id", "TestName");
@@ -107,50 +107,3 @@ describe("Test Queue.ts class", () => {
     expect(q.empty()).toBe(true);
   });
 });
-
-const testSongArray: Song[] = [
-  {
-    title: "Song 1",
-    seconds: 1,
-    url: "url 1",
-    requestor: {
-      tag: "User1#1234",
-      id: "1",
-    },
-    thumbnail: "thumbnail1",
-    isSpotify: false,
-  },
-  {
-    title: "Song 2",
-    seconds: 2,
-    url: "url 2",
-    requestor: {
-      tag: "User2#1234",
-      id: "2",
-    },
-    isSpotify: true,
-  },
-  {
-    title: "Song 3",
-    seconds: 3,
-    url: "url 3",
-    requestor: {
-      tag: "User3#1234",
-      id: "3",
-    },
-    thumbnail: "thumbnail3",
-    isSpotify: false,
-  },
-];
-
-const testSong = {
-  title: "Song 4",
-  seconds: 4,
-  url: "url 4",
-  requestor: {
-    tag: "User4#1234",
-    id: "4",
-  },
-  thumbnail: "thumbnail4",
-  isSpotify: false,
-};
