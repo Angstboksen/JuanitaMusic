@@ -7,6 +7,7 @@ import {
   Infos,
 } from "@typeit/discord";
 import SETUP_CONFIG from "../config";
+import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
@@ -35,7 +36,7 @@ export default abstract class P implements JuanitaCommand {
     aliases: P._aliases,
   })
   @Description(P._description)
-  @Guard(InVoiceChannel)
+  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
   async execute(command: CommandMessage) {
     const { channel, author, content, guild } = command;
     const juanitaGuild = GuildCommander.get(guild!);

@@ -50,4 +50,11 @@ export default class JuanitaGuild {
     this.voiceChannel = member.voice.channel;
     await this.connect();
   };
+
+  clear = () => {
+    this.connection = null;
+    this.voiceChannel = null;
+    this.dispatcher = null;
+    this.queue.clear();
+  };
 }

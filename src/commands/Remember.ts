@@ -8,6 +8,7 @@ import {
 } from "@typeit/discord";
 import { rememberAlias, validateRemember } from "../api/songs/alias";
 import SETUP_CONFIG from "../config";
+import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Juanita } from "../Juanita";
 import { Logger } from "../logger/Logger";
@@ -39,7 +40,7 @@ export default abstract class Remember implements JuanitaCommand {
     aliases: Remember._aliases,
   })
   @Description(Remember._description)
-  @Guard(InVoiceChannel)
+  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
   async execute(command: CommandMessage) {
     const { channel, author, guild } = command;
     const juanitaGuild = GuildCommander.get(guild!);

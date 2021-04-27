@@ -1,3 +1,4 @@
+import { testSongArray } from "../../__tests__/data";
 import MockDiscord from "../../__tests__/MockDiscord";
 import JuanitaGuild from "../JuanitaGuild";
 
@@ -67,5 +68,15 @@ describe("Test JuanitaGuild.ts class", () => {
     g.connect = jest.fn();
     g.join(md.getGuildMember());
     expect(g.connect).toHaveBeenCalledTimes(1);
+  });
+
+  test("JuanitaGuild.clear() method", () => {
+    g.voiceChannel = md.getVoiceChannel();
+    g.queue.songs = [...testSongArray];
+    expect(g.voiceChannel).not.toBeNull();
+    expect(g.queue.size() > 0).toBe(true);
+    g.clear();
+    expect(g.voiceChannel).toBeNull();
+    expect(g.queue.size()).toBe(0);
   });
 });
