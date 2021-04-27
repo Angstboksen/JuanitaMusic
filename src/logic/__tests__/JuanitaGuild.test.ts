@@ -9,6 +9,11 @@ describe("Test JuanitaGuild.ts class", () => {
     g = new JuanitaGuild("test-id", "TestName");
   });
 
+  afterAll((done) => {
+    md.getClient().destroy();
+    done();
+  });
+
   test("JuanitaGuild constructor", () => {
     expect(g).toBeDefined();
     expect(g.id).toBe("test-id");

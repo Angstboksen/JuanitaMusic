@@ -7,6 +7,11 @@ describe("Test GuildCommander.ts class", () => {
     GuildCommander._guilds.clear();
   });
 
+  afterAll((done) => {
+    md.getClient().destroy();
+    done();
+  });
+
   test("Guildcommander constructor", () => {
     expect(GuildCommander).toBeDefined();
   });

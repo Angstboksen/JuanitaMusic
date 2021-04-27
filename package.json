@@ -6,7 +6,7 @@
     "scripts": {
         "start": "npx ts-node src/index.ts",
         "test": "jest --coverage --detectOpenHandles",
-        "test:coverage": "jest --ci --coverage && codecov --detectOpenHandles",
+        "test:coverage": "jest --ci --coverage --detectOpenHandles && codecov",
         "update": "npm update --save"
     },
     "keywords": [],
