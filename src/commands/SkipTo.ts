@@ -17,15 +17,18 @@ import {
   emptyQueueEmbed,
   skippedToEmbed,
 } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): string => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-    for (const alias of SkipTo._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`) return `${alias} :number`;
-    }
-  }
-  return `${SkipTo._name} :number`;
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(
+    command,
+    SkipTo._aliases,
+    RegexOrString.STRING,
+    " :number"
+  );
 };
 
 export default abstract class SkipTo implements JuanitaCommand {
@@ -44,8 +47,7 @@ export default abstract class SkipTo implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
 
-    Logger._logCommand(SkipTo._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(SkipTo._name, author.tag, id, command);
 
     const index: number = args.number - 1;
     if (!queue || queue.empty()) {

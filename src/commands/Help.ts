@@ -10,17 +10,13 @@ import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaCommand, Song } from "../types";
 import { helpEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): RegExp => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-
-    for (const alias of Help._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return new RegExp(`${alias}$`, "i");
-    }
-  }
-  return new RegExp(`${Help._name}$`, "i");
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, Help._aliases, RegexOrString.REGEX);
 };
 
 export default abstract class Help implements JuanitaCommand {
@@ -39,8 +35,7 @@ export default abstract class Help implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id } = juanitaGuild;
 
-    Logger._logCommand(Help._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Help._name, author.tag, id, command);
 
     await channel.send(helpEmbed());
   }

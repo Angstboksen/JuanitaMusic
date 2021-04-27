@@ -13,17 +13,13 @@ import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaCommand } from "../types";
 import { aliasEmbed, noCurrentSongEmbed, songEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): RegExp => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-
-    for (const alias of Aliases._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return new RegExp(`${alias}$`, "i");
-    }
-  }
-  return new RegExp(`${Aliases._name}$`, "i");
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, Aliases._aliases, RegexOrString.REGEX);
 };
 
 export default abstract class Aliases implements JuanitaCommand {
@@ -43,8 +39,7 @@ export default abstract class Aliases implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id } = juanitaGuild;
 
-    Logger._logCommand(Aliases._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Aliases._name, author.tag, id, command)
 
     const aliases = await retrieveAliases();
     channel.send(aliasEmbed(aliases));

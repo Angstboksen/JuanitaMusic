@@ -16,15 +16,18 @@ import {
   emptyQueueEmbed,
   killedSongEmbed,
 } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): string => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-    for (const alias of Kill._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`) return `${alias} :number`;
-    }
-  }
-  return `${Kill._name} :number`;
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(
+    command,
+    Kill._aliases,
+    RegexOrString.STRING,
+    " :number"
+  );
 };
 
 export default abstract class Kill implements JuanitaCommand {
@@ -44,8 +47,7 @@ export default abstract class Kill implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
 
-    Logger._logCommand(Kill._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Kill._name, author.tag, id, command);
 
     const index: number = args.number - 1;
     if (!queue || queue.empty()) {

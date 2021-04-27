@@ -12,16 +12,13 @@ import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand } from "../types";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): RegExp => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-    for (const alias of S._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return new RegExp(`${alias}$`, "i");
-    }
-  }
-  return new RegExp(`${S._name}$`, "i");
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, S._aliases, RegexOrString.REGEX);
 };
 
 export default abstract class S implements JuanitaCommand {
@@ -40,8 +37,7 @@ export default abstract class S implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id } = juanitaGuild;
 
-    Logger._logCommand(S._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(S._name, author.tag, id, command);
 
     JuanitaPlayer.skip(juanitaGuild);
   }

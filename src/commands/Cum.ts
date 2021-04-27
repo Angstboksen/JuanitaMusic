@@ -12,17 +12,13 @@ import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaCommand } from "../types";
 import { botCanJoin, cumEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): RegExp => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-
-    for (const alias of Cum._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return new RegExp(`${alias}$`, "i");
-    }
-  }
-  return new RegExp(`${Cum._name}$`, "i");
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, Cum._aliases, RegexOrString.REGEX);
 };
 
 export default abstract class Cum implements JuanitaCommand {
@@ -42,8 +38,7 @@ export default abstract class Cum implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, connection } = juanitaGuild;
 
-    Logger._logCommand(Cum._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Cum._name, author.tag, id, command);
 
     if (!connection && botCanJoin(command)) {
       channel.send(cumEmbed());

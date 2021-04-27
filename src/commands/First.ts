@@ -15,16 +15,13 @@ import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand, Song } from "../types";
 import { tokenize } from "../utils/helpers";
 import { addedToQueueEmbed, createInfoEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): string => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-
-    for (const alias of First._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`) return alias;
-    }
-  }
-  return First._name;
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, First._aliases, RegexOrString.STRING, "");
 };
 
 export default abstract class First implements JuanitaCommand {
@@ -44,8 +41,8 @@ export default abstract class First implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
 
-    Logger._logCommand(First._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(First._name, author.tag, id, command)
+
     const args = tokenize(content);
     const song: Song | null = await YTSearcher.search(args, {
       tag: author.tag,

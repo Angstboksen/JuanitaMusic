@@ -13,17 +13,13 @@ import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand } from "../types";
 import { leaveEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): RegExp => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-
-    for (const alias of Leave._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return new RegExp(`${alias}$`, "i");
-    }
-  }
-  return new RegExp(`${Leave._name}$`, "i");
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, Leave._aliases, RegexOrString.REGEX);
 };
 
 export default abstract class Leave implements JuanitaCommand {
@@ -43,8 +39,7 @@ export default abstract class Leave implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id } = juanitaGuild;
 
-    Logger._logCommand(Leave._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Leave._name, author.tag, id, command);
 
     channel.send(leaveEmbed());
     juanitaGuild.leave();

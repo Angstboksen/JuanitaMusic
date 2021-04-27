@@ -12,20 +12,20 @@ import { InVoiceChannel } from "../guards/InVoiceChannel";
 import { Juanita } from "../Juanita";
 import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
-import { SpotifySearcher } from "../logic/SpotifySearcher";
-import { JuanitaPlayer } from "../music/JuanitaPlayer";
 import { JuanitaCommand } from "../types";
-import { createInfoEmbed, shuffleArray } from "../utils/helpers";
+import { createInfoEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): string => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-    for (const alias of Remember._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return `${alias} :playlistid :alias`;
-    }
-  }
-  return `${Remember._name} :playlistid :alias`;
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(
+    command,
+    Remember._aliases,
+    RegexOrString.STRING,
+    " :playlistid :alias"
+  );
 };
 
 export default abstract class Remember implements JuanitaCommand {
@@ -41,18 +41,20 @@ export default abstract class Remember implements JuanitaCommand {
   @Description(Remember._description)
   @Guard(InVoiceChannel)
   async execute(command: CommandMessage) {
-    const { channel, author, content, guild } = command;
+    const { channel, author, guild } = command;
     const juanitaGuild = GuildCommander.get(guild!);
-    const { id, queue } = juanitaGuild;
+    const { id } = juanitaGuild;
 
-    Logger._logCommand(Remember._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Remember._name, author.tag, id, command);
+
     const playlistid = command.args.playlistid;
     const given = command.args.alias;
 
-    if (given.length < 3 || Number.isInteger(given)) {
+    if (!given || given.length < 3 || Number.isInteger(given)) {
       return channel.send(
-        "Aliaset kan ikke være et tall, eller være kortere enn 3 bokstaver"
+        createInfoEmbed(
+          "Aliaset kan ikke være et tall, eller være kortere enn 3 bokstaver"
+        )
       );
     }
 

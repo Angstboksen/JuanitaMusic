@@ -12,17 +12,13 @@ import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaCommand } from "../types";
 import { queueEmbed } from "../utils/helpers";
+import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
 
-const checkAliases = (command?: CommandMessage, client?: Client): RegExp => {
-  if (command) {
-    const cmd = command.content.split(" ")[0];
-
-    for (const alias of Q._aliases) {
-      if (cmd === `${SETUP_CONFIG.prefix}${alias}`)
-        return new RegExp(`${alias}$`, "i");
-    }
-  }
-  return new RegExp(`${Q._name}$`, "i");
+const checkAliases = (
+  command?: CommandMessage,
+  client?: Client
+): RegExp | string => {
+  return validateAlias(command, Q._aliases, RegexOrString.REGEX);
 };
 
 export default abstract class Q implements JuanitaCommand {
@@ -41,8 +37,7 @@ export default abstract class Q implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
 
-    Logger._logCommand(Q._name, author.tag);
-    GuildCommander.refresh(id, command);
+    logAndRefresh(Q._name, author.tag, id, command)
 
     const msg = await channel.send(queueEmbed(queue));
     await msg.react("⬅️");
