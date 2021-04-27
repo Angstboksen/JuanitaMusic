@@ -41,7 +41,7 @@ export default abstract class First implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
 
-    logAndRefresh(First._name, author.tag, id, command)
+    logAndRefresh(First._name, author.tag, id, command);
 
     const args = tokenize(content);
     const song: Song | null = await YTSearcher.search(args, {

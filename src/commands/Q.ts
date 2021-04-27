@@ -37,7 +37,7 @@ export default abstract class Q implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id, queue } = juanitaGuild;
 
-    logAndRefresh(Q._name, author.tag, id, command)
+    logAndRefresh(Q._name, author.tag, id, command);
 
     const msg = await channel.send(queueEmbed(queue));
     await msg.react("⬅️");

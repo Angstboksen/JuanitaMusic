@@ -33,7 +33,7 @@ const checkAliases = (
 
 export default abstract class SkipTo implements JuanitaCommand {
   static _name: string = "st";
-  static _aliases: string[] = ["skipto", "jump"];
+  static _aliases: string[] = ["st", "skipto", "jump"];
   static _description: string = "Jumps to the given position in the queue";
 
   @Command(checkAliases)

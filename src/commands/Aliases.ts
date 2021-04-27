@@ -39,7 +39,7 @@ export default abstract class Aliases implements JuanitaCommand {
     const juanitaGuild = GuildCommander.get(guild!);
     const { id } = juanitaGuild;
 
-    logAndRefresh(Aliases._name, author.tag, id, command)
+    logAndRefresh(Aliases._name, author.tag, id, command);
 
     const aliases = await retrieveAliases();
     channel.send(aliasEmbed(aliases));
