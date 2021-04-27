@@ -5,7 +5,7 @@
     "main": "src/index.js",
     "scripts": {
         "start": "npx ts-node src/index.ts",
-        "test": "jest --ci --coverage",
+        "test": "jest --ci --coverage && codecov",
         "update": "npm update --save"
     },
     "keywords": [],
@@ -30,6 +30,7 @@
         "avconv": "^3.1.0",
         "axios": "^0.21.1",
         "base-64": "^1.0.0",
+        "codecov": "^3.8.1",
         "discord.js": "^12.5.3",
         "dotenv": "^8.2.0",
         "ffmpeg": "0.0.4",
