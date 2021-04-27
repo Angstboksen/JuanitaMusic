@@ -5,8 +5,8 @@
     "main": "src/index.js",
     "scripts": {
         "start": "npx ts-node src/index.ts",
-        "test": "jest --coverage",
-        "test:coverage": "jest --ci --coverage && codecov",
+        "test": "jest --coverage --detectOpenHandles",
+        "test:coverage": "jest --ci --coverage && codecov --detectOpenHandles",
         "update": "npm update --save"
     },
     "keywords": [],
