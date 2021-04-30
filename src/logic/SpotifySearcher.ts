@@ -76,9 +76,9 @@ export class SpotifySearcher {
     if (response.statusCode !== 200) {
       return { statusCode: response.statusCode, items: [] };
     }
-    let items = carry.concat(response.body.items);
+    let items = carry.concat([carry].concat(response.body.items));
     if (response.body.items.length >= 100) {
-      return this.fetchPlaylist(playlistid, offset + 100, response.body.items);
+      return this.fetchPlaylist(playlistid, offset + 100, items);
     }
     return { statusCode: 200, items };
   };
@@ -99,7 +99,9 @@ export class SpotifySearcher {
       playlistid
     );
     if (pl.statusCode === 200) {
-      const tracks = pl.items.map((item: any) => {
+      const tracks = [];
+      for (const item of pl.items) {
+        if (item.track === undefined) continue;
         const {
           name,
           duration_ms,
@@ -111,14 +113,14 @@ export class SpotifySearcher {
             (artist: { name: string }) => `${artist.name}`
           )}`
         );
-        return {
+        tracks.push({
           title,
           seconds: Math.floor(duration_ms / 1000),
           url: spotify,
           requestor: { tag: requestor.tag, id: requestor.id },
           isSpotify: true,
-        };
-      });
+        });
+      }
       return { name, tracks };
     }
     return undefined;
