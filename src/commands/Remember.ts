@@ -40,7 +40,6 @@ export default abstract class Remember implements JuanitaCommand {
     aliases: Remember._aliases,
   })
   @Description(Remember._description)
-  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
   async execute(command: CommandMessage) {
     const { channel, author, guild } = command;
     const juanitaGuild = GuildCommander.get(guild!);
