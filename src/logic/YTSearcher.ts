@@ -14,7 +14,7 @@ export abstract class YTSearcher {
       return null;
     }
 
-    const obj = await yts(keywords).catch(() => {
+    const obj = await yts(keywords + " lyrics").catch(() => {
       return null;
     });
 
