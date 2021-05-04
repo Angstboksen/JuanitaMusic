@@ -34,7 +34,6 @@ export default abstract class Aliases implements JuanitaCommand {
     aliases: Aliases._aliases,
   })
   @Description(Aliases._description)
-  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
   async execute(command: CommandMessage) {
     const { channel, author, guild } = command;
     const juanitaGuild = GuildCommander.get(guild!);
