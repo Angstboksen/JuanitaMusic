@@ -18,7 +18,7 @@ Invite the bot to your discord server [by following this link](https://discord.c
 
 ## 📰 Commands
 
-These are the current accepted commands. As the bot is still in development, some of these might be a little fucked.They should however, work as intended.
+These are the current accepted commands. As the bot is still in development, some of these might be a little fucked. They should however, work as intended.
 The command itself is the one with the `!` in front of it, while any other parameters is described inside the `<>`. Happy dying! 💀
 
 | Command | Description | Aliases |
