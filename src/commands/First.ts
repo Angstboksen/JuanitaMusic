@@ -52,7 +52,7 @@ export default abstract class First implements JuanitaCommand {
     if (song === null || args.length === 0) {
       return channel.send(
         createInfoEmbed(
-          ":mag: Fant ingen sanger med søkestreng gitt søkestreng"
+          ":mag: Fant ingen sanger med gitt søkestreng"
         )
       );
     }
