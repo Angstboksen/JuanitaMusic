@@ -1,7 +1,7 @@
 import yts from "yt-search";
 import { Logger } from "../logger/Logger";
 import { Song } from "../types";
-import { filteredTitle } from "../utils/helpers";
+import { filteredTitle, isValidYTLink } from "../utils/helpers";
 
 export abstract class YTSearcher {
   static search = async (
@@ -14,9 +14,13 @@ export abstract class YTSearcher {
       return null;
     }
 
-    const obj = await yts(keywords + " lyrics").catch(() => {
-      return null;
-    });
+    const isYTLink: boolean = isValidYTLink(keywords);
+
+    const obj = await yts(isYTLink ? keywords : keywords + " lyrics").catch(
+      () => {
+        return null;
+      }
+    );
 
     if (obj !== null && obj.videos.length > 0) {
       const { url, title, seconds, thumbnail } = obj.videos[0];

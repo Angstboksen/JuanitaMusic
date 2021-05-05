@@ -6,10 +6,8 @@ import {
   Guard,
   Infos,
 } from "@typeit/discord";
-import SETUP_CONFIG from "../config";
 import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
 import { InVoiceChannel } from "../guards/InVoiceChannel";
-import { Logger } from "../logger/Logger";
 import { GuildCommander } from "../logic/GuildCommander";
 import { JuanitaCommand } from "../types";
 import { botCanJoin, cumEmbed } from "../utils/helpers";

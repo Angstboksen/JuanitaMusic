@@ -202,3 +202,8 @@ export const filteredTitle = (title: string) => {
 export const tokenize = (content: string) => {
   return content.split(" ").slice(1).join(" ");
 };
+
+export const isValidYTLink = (url: string) => {
+  const regex: RegExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  return url.match(regex) !== null;
+};
