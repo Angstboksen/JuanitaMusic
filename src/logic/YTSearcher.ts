@@ -14,9 +14,9 @@ export abstract class YTSearcher {
       return null;
     }
 
-    const isYTLink: boolean = isValidYTLink(keywords);
+    //const isYTLink: boolean = isValidYTLink(keywords);
 
-    const obj = await yts(isYTLink ? keywords : keywords + " lyrics").catch(
+    const obj = await yts(keywords).catch(
       () => {
         return null;
       }
