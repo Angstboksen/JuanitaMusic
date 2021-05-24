@@ -13,7 +13,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@typeit/discord": "^4.0.9",
+        "@typeit/discord": "^4.0.10",
         "@types/axios": "^0.14.0",
         "@types/base-64": "^1.0.0",
         "@types/dotenv": "^8.2.0",
