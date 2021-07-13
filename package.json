@@ -25,9 +25,9 @@
         "@types/mysql": "^2.15.19",
         "@types/node": "^16.3.0",
         "@types/spotify-web-api-node": "^5.0.2",
-        "@types/uuid": "^8.3.0",
+        "@types/uuid": "^8.3.1",
         "@types/whatwg-fetch": "0.0.33",
-        "@types/yt-search": "^2.3.0",
+        "@types/yt-search": "^2.3.1",
         "avconv": "^3.1.0",
         "axios": "^0.21.1",
         "base-64": "^1.0.0",
@@ -47,7 +47,7 @@
         "rimraf": "^3.0.2",
         "spotify-web-api-node": "^5.0.2",
         "ts-jest": "^26.5.6",
-        "ts-node": "^10.0.0",
+        "ts-node": "^10.1.0",
         "tslib": "^2.3.0",
         "typescript": "^4.3.5",
         "uuid": "^8.3.2",
@@ -56,6 +56,6 @@
         "ytdl-core": "^4.8.3"
     },
     "devDependencies": {
-        "@types/node-schedule": "^1.3.1"
+        "@types/node-schedule": "^1.3.2"
     }
 }
