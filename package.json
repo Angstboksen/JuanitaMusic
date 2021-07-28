@@ -27,7 +27,7 @@
         "@types/spotify-web-api-node": "^5.0.2",
         "@types/uuid": "^8.3.1",
         "@types/whatwg-fetch": "0.0.33",
-        "@types/yt-search": "^2.3.1",
+        "@types/yt-search": "^2.3.2",
         "avconv": "^3.1.0",
         "axios": "^0.21.1",
         "base-64": "^1.0.0",
