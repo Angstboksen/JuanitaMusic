@@ -29,7 +29,7 @@
         "@types/whatwg-fetch": "0.0.33",
         "@types/yt-search": "^2.3.2",
         "avconv": "^3.1.0",
-        "axios": "^0.21.4",
+        "axios": "^0.22.0",
         "base-64": "^1.0.0",
         "codecov": "^3.8.3",
         "discord.js": "^13.1.0",
