@@ -2,9 +2,7 @@ import { Db, MongoClient } from "mongodb";
 import { Search, Song } from "../../types";
 
 // Create a new MongoClient
-const client = new MongoClient(process.env.MONGOURL!, {
-  useUnifiedTopology: true,
-});
+const client = new MongoClient(process.env.MONGOURL!);
 client.connect();
 export const mongoStoreSearch = async (song: Song | null) => {
   if (!song) return;
