@@ -15,6 +15,8 @@ import {
   tokenize,
 } from "../utils/helpers";
 import { JuanitaSubscription } from "./JuanitaSubscription";
+import { mongoStoreSearch } from "../api/songs/mongo";
+import { storeSearch } from "../api/songs/search";
 
 /**
  * This is the data required to create a Track object
@@ -123,6 +125,8 @@ export class Track implements TrackData {
           })
           .catch(console.warn);
         subscription.current = song;
+        mongoStoreSearch(song!)
+        storeSearch(song!)
       },
       onFinish() {
         wrappedMethods.onFinish = noop;
