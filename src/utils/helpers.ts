@@ -1,12 +1,12 @@
-import { Message, MessageEmbed } from "discord.js";
+import { MessageEmbed, VoiceChannel } from "discord.js";
 import moment from "moment";
-import Queue from "../logic/Queue";
 import { Song } from "../types";
+import { Track } from "../music/Track";
+import { JuanitaSubscription } from "../music/JuanitaSubscription";
 
-export const botCanJoin = (msg: Message): Promise<boolean> => {
+export const botCanJoin = (channel: VoiceChannel): Promise<boolean> => {
   return new Promise((done, error) => {
-    let channel = msg.member!.voice.channel;
-    if (channel && channel.type === "voice") done(true);
+    if (channel && channel.type === "GUILD_VOICE") done(true);
     else done(false);
   });
 };
@@ -33,17 +33,23 @@ export const createInfoEmbed = (message: string = "") => {
   return createEmbed().setDescription(message);
 };
 
-export const songEmbed = (song: Song, queue: Queue, forcetime: number = 0) => {
+export const songEmbed = (
+  song: Song,
+  substription: JuanitaSubscription,
+  forcetime: number = 0
+): MessageEmbed => {
   const { title, url, requestor } = song;
   return createEmbed()
     .setTitle("▶️ Nå spilles:")
     .setDescription(
       `:notes:  **Tittel:** _${title}_
         :beginner: **Youtube link:** ${url}
-        :arrows_counterclockwise: **Antall sanger i køen:** \`${queue.size()}\`
+        :arrows_counterclockwise: **Antall sanger i køen:** \`${
+          substription.queue.length
+        }\`
         :timer: **Beregnet tid igjen:** \`${secondsToTimestamp(
-          forcetime > 0 ? forcetime : queue.time()
-        )}\` \`${queue.bar()}\`\n`
+          forcetime > 0 ? forcetime : substription.time(song)
+        )}\` \`${substription.bar()}\`\n`
     )
     .setURL(url)
     .setThumbnail(song.thumbnail!)
@@ -56,6 +62,10 @@ export const addedToQueueEmbed = (song: Song) => {
   );
 };
 
+export const playbackErrorEmbed = () => {
+  return createInfoEmbed(":x: **Her skjedde det en feil med avspillingen.. **");
+};
+
 export const queueFinishedEmbed = () => {
   return createInfoEmbed(
     ":white_check_mark: :scroll: **Da var denne køen ferdig for denne gang!**\n" +
@@ -65,12 +75,6 @@ export const queueFinishedEmbed = () => {
 
 export const skipSongEmbed = () => {
   return createInfoEmbed(":mage: **Skippetipangen, bort med den sangen!**");
-};
-
-export const leaveEmbed = () => {
-  return createInfoEmbed(
-    ":x::zipper_mouth: **Eyy bror fuck deg - vi chattes på jobben a**"
-  );
 };
 
 export const cumEmbed = () => {
@@ -91,93 +95,9 @@ export const killedSongEmbed = (song: Song) => {
   );
 };
 
-export const skippedToEmbed = (song: Song, position: number) => {
-  return createInfoEmbed(
-    `:white_check_mark: Hoppet til posisjon \`${position}\` i køen.\n 
-    :arrow_forward: Spiller nå: \`${song.title}\` fra køen`
-  );
-};
-
-export const queueEmbed = (queue: Queue, page: number = 1) => {
-  if (queue.empty()) {
-    return emptyQueueEmbed();
-  }
-
-  const items = [];
-  const { current } = queue;
-  const maxPages = Math.ceil(queue.size() / 5);
-  if (page > maxPages) page = maxPages;
-  else if (page < 1) page = 1;
-  let totalTime = queue.time();
-
-  for (let i = (page - 1) * 5; i < queue.size(); i++) {
-    const item = queue.songs[i];
-    const { title, url, seconds, requestor } = item;
-    if (i < (page - 1) * 5 + 5) {
-      items.push(
-        ` **\`${
-          i + 1
-        }\`.[${title}](${url})\nEstimert tid:** \`${secondsToTimestamp(
-          seconds
-        )}\`\n**Lagt til av**: \`${requestor!.tag}\``
-      );
-    }
-    totalTime += seconds;
-  }
-
-  let desc =
-    "**:notes:  Totalt antall sanger: ** `" +
-    queue.size() +
-    "` \n\n" +
-    (current !== null
-      ? "------------------------------------------------------------\n :arrow_forward: **Nå spilles: **\n" +
-        ` **[${current.title}](${
-          current.url
-        })\nEstimert tid igjen:** \`${secondsToTimestamp(
-          queue.time()
-        )}\`\n\`${queue.bar()}\`\n\n**Lagt til av**: \`${
-          current.requestor!.tag
-        }\`\n ------------------------------------------------------------ \n\n`
-      : "") +
-    items.join("\n\n") +
-    "\n\n**:timer: Total beregnet tid:** " +
-    `\`${secondsToTimestamp(
-      totalTime
-    )}\` \n\n Side \`${page}\` av \`${maxPages}\``;
-
-  return createInfoEmbed(desc).setTitle(
-    ":scroll: **Her er køen slik den ser ut nå** \n"
-  );
-};
-
 export const noCurrentSongEmbed = () => {
   return createInfoEmbed(
     ":notes: **Ingen sang spilles nå. Bruk ** `!p <søkestreng>` **for å legge til sanger**"
-  );
-};
-
-export const helpEmbed = () => {
-  return createInfoEmbed(
-    ":arrow_up: Klikk på tittelen for å få en liste over kommandoer"
-  )
-    .setTitle(":newspaper: Hva kan jeg gjøre?")
-    .setURL("https://github.com/Angstboksen/JuanitaMusic#commands");
-};
-
-export const aliasEmbed = (
-  aliases: { alias: string; plid: string; name: string }[]
-) => {
-  if (aliases.length === 0)
-    return createInfoEmbed(
-      ":watermelon: Bruk `!remember <id> <alias>` for å legge til"
-    ).setTitle(":scream_cat: Ingen aliaser er lagret");
-  let desc = "";
-  for (let i = 0; i < aliases.length; i++) {
-    desc += `:cyclone: **Navn**: [${aliases[i].name}](https://open.spotify.com/playlist/${aliases[i].plid}) | :spy: **Alias:** \`${aliases[i].alias}\`  \n\n`;
-  }
-  desc += `\n:watermelon: Bruk \`!spotify <alias>\` for å spille av lista \n\n :mag: Det er lagret totalt \`${aliases.length}\` aliaser`;
-  return createInfoEmbed(desc).setTitle(
-    ":arrow_down: Her er alle aliasene som er lagret"
   );
 };
 
@@ -204,6 +124,7 @@ export const tokenize = (content: string) => {
 };
 
 export const isValidYTLink = (url: string) => {
-  const regex: RegExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+  const regex: RegExp =
+    /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return url.match(regex) !== null;
 };

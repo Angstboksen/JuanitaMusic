@@ -1,47 +1,20 @@
-import {
-  Client,
-  Command,
-  CommandMessage,
-  Description,
-  Guard,
-  Infos,
-} from "@typeit/discord";
-import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
-import { InVoiceChannel } from "../guards/InVoiceChannel";
-import { GuildCommander } from "../logic/GuildCommander";
-import { JuanitaCommand } from "../types";
-import { botCanJoin, cumEmbed } from "../utils/helpers";
-import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
+import { Discord, SimpleCommand, SimpleCommandMessage } from "discordx";
+import { Logger } from "../logger/Logger";
+import { JuanitaManager } from "../logic/JuanitaManager";
+import { createInfoEmbed } from "../utils/helpers";
 
-const checkAliases = (
-  command?: CommandMessage,
-  client?: Client
-): RegExp | string => {
-  return validateAlias(command, Cum._aliases, RegexOrString.REGEX);
-};
-
-export default abstract class Cum implements JuanitaCommand {
-  static _name: string = "cum";
-  static _aliases: string[] = ["cum", "join", "come", "j"];
-  static _description: string =
-    "Makes the bot join the voicechannel the user is in";
-
-  @Command(checkAliases)
-  @Infos({
-    aliases: Cum._aliases,
-  })
-  @Description(Cum._description)
-  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
-  async execute(command: CommandMessage) {
-    const { author, guild, member, channel } = command;
-    const juanitaGuild = GuildCommander.get(guild!);
-    const { id, connection } = juanitaGuild;
-
-    logAndRefresh(Cum._name, author.tag, id, command);
-
-    if (!connection && botCanJoin(command)) {
-      channel.send(cumEmbed());
-      await juanitaGuild.join(member!);
-    }
+@Discord()
+class Cum {
+  @SimpleCommand("cum", { aliases: ["join", "come", "j", "coom"] })
+  async cum(command: SimpleCommandMessage) {
+    Logger._logCommand("cum", command.message.author.tag)
+    const joined = await JuanitaManager.joinChannel(command.message);
+    if (joined) command.message.channel.send({ embeds: [cumEmbed()] });
   }
 }
+
+const cumEmbed = () => {
+  return createInfoEmbed(
+    ":kissing_heart: **Okei her kommer jeg** :heart_eyes:"
+  );
+};

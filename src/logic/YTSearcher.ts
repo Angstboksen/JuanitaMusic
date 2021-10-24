@@ -1,20 +1,18 @@
 import yts from "yt-search";
 import { Logger } from "../logger/Logger";
 import { Song } from "../types";
-import { filteredTitle, isValidYTLink } from "../utils/helpers";
+import { filteredTitle } from "../utils/helpers";
 
 export abstract class YTSearcher {
   static search = async (
     keywords: string,
     requestor: { tag: string; id: string },
     try_nr: number = 1
-  ): Promise<Song | null> => {
+  ): Promise<Song | undefined> => {
     Logger._logSearch(keywords, try_nr);
     if (keywords === "" || try_nr == 3) {
-      return null;
+      return undefined;
     }
-
-    //const isYTLink: boolean = isValidYTLink(keywords);
 
     const obj = await yts(keywords).catch(
       () => {

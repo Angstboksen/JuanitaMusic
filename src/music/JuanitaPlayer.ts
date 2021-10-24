@@ -1,104 +1,68 @@
-import { StreamDispatcher } from "discord.js";
-import { Readable } from "stream";
-import ytdl from "ytdl-core";
-import { mongoStoreSearch } from "../api/songs/mongo";
-import { storeSearch } from "../api/songs/search";
-import { Logger } from "../logger/Logger";
-import JuanitaGuild from "../logic/JuanitaGuild";
-import { YTSearcher } from "../logic/YTSearcher";
-import { Song } from "../types";
+import { entersState, VoiceConnectionStatus } from "@discordjs/voice";
+import { Message } from "discord.js";
+import { Track } from "./Track";
+import { JuanitaSubscription } from "./JuanitaSubscription";
 import {
-  createErrorEmbed,
+  addedToQueueEmbed,
+  createInfoEmbed,
   emptyQueueEmbed,
-  leaveEmbed,
-  queueFinishedEmbed,
   skipSongEmbed,
-  songEmbed,
 } from "../utils/helpers";
 
-export abstract class JuanitaPlayer {
-  static guild: JuanitaGuild;
-
-  static dispatchStream = (stream: Readable, song: Song) => {
-    const { guild, play, skip, songEnd } = JuanitaPlayer;
-    const { connection, queue, textChannel, send } = guild;
-    if (guild.dispatcher) {
-      guild.dispatcher.end();
-      guild.dispatcher = null;
-    }
-
-    queue.dequeue();
-
-    guild.dispatcher = connection!.play(stream);
-    guild.dispatcher.on("start", async () => {
-      storeSearch(song); // Firebase
-      mongoStoreSearch(song); // MongoDB
-      queue.playing = true;
-      queue.current = song;
-      if (textChannel) send(songEmbed(song, queue, song.seconds));
-    });
-
-    guild.dispatcher.on("error", (error: Error) => {
-      Logger._error(error.message);
-      send(leaveEmbed());
-      guild.leave();
-    });
-
-    guild.dispatcher.on("finish", () => {
-      JuanitaPlayer.songEnd(guild);
-    });
-
-    guild.dispatcher.on("end", (reason: string) => {
-      Logger.debug(reason);
-    });
-  };
-
-  static songEnd = (guild: JuanitaGuild) => {
-    if (guild.dispatcher) {
-      setTimeout(() => {
-        guild.queue.playing = false;
-        guild.dispatcher = null;
-        guild.connection = null;
-        JuanitaPlayer.play(guild);
-      }, 1000);
-    }
-  };
-
-  static play = async (guild: JuanitaGuild) => {
-    JuanitaPlayer.guild = guild;
-    const { queue, validateConnection, send, leave } = JuanitaPlayer.guild;
-
-    let song = queue.next();
-    // Queue empty, leave the channel
-    if (song === null || song === undefined) {
-      send(queueFinishedEmbed());
-      return leave();
-    }
-
-    await validateConnection();
-
-    if (song.isSpotify || !song.url) {
-      song = await YTSearcher.search(song.title, song.requestor!);
-      if (song === null) {
-        return JuanitaPlayer.skip(guild);
-      }
-    }
-
-    const stream: Readable = ytdl(song.url, {
-      filter: "audioonly",
-      quality: "highestaudio",
-    });
-    JuanitaPlayer.dispatchStream(stream, song);
-  };
-
-  static skip = (guild: JuanitaGuild) => {
-    const { connection, send } = guild;
-    if (!connection || !connection.dispatcher) {
-      Logger.debug("Can't skip `undefined` connection");
-      send(emptyQueueEmbed());
+export class JuanitaPlayer {
+  static play = async (
+    subscription: JuanitaSubscription,
+    message: Message,
+    first: boolean = false,
+    spotify: boolean = false
+  ) => {
+    try {
+      await entersState(
+        subscription.voiceConnection,
+        VoiceConnectionStatus.Ready,
+        5e3
+      );
+    } catch (error) {
+      console.warn(error);
+      await message.channel.send({
+        embeds: [
+          createInfoEmbed(
+            "Failed to join voice channel within 5 seconds, please try again later!"
+          ),
+        ],
+      });
       return;
     }
-    if (!guild.queue.empty()) send(skipSongEmbed());
-    connection.dispatcher.end();
+
+    try {
+      if (spotify) return;
+      let track = await Track.from(message, subscription);
+
+      if (!track) {
+        throw new Error();
+      }
+      if (first) subscription.enqueue(track, true);
+      else subscription.enqueue(track);
+
+      await message.channel.send({ embeds: [addedToQueueEmbed(track.song)] });
+    } catch (error) {
+      console.warn(error);
+      await message.reply("Failed to play track, please try again later!");
+    }
+  };
+
+  static skip = async (
+    subscription: JuanitaSubscription,
+    message: Message,
+    silent: boolean = false
+  ) => {
+    if (subscription) {
+      subscription.audioPlayer.stop();
+      if (!silent) await message.channel.send({ embeds: [skipSongEmbed()] });
+      else {
+        if (!silent)
+          await message.channel.send({ embeds: [emptyQueueEmbed()] });
+      }
+    }
   };
 }

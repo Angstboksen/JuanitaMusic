@@ -1,78 +1,63 @@
 import {
-  Client,
-  Command,
-  CommandMessage,
-  Description,
-  Guard,
-  Infos,
-} from "@typeit/discord";
+  Discord,
+  SimpleCommand,
+  SimpleCommandMessage,
+  SimpleCommandOption,
+} from "discordx";
 import { validateRemember } from "../api/songs/alias";
-import SETUP_CONFIG from "../config";
-import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
-import { InVoiceChannel } from "../guards/InVoiceChannel";
-import { Juanita } from "../Juanita";
 import { Logger } from "../logger/Logger";
-import { GuildCommander } from "../logic/GuildCommander";
+import { JuanitaManager } from "../logic/JuanitaManager";
+import { SpotifySearcher } from "../logic/SpotifySearcher";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
-import { JuanitaCommand } from "../types";
-import { createInfoEmbed, queueEmbed, shuffleArray } from "../utils/helpers";
-import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
+import { Song } from "../types";
+import { createInfoEmbed, shuffleArray } from "../utils/helpers";
+import { queueEmbed } from "./Queue";
 
-const checkAliases = (
-  command?: CommandMessage,
-  client?: Client
-): RegExp | string => {
-  return validateAlias(
-    command,
-    Spotify._aliases,
-    RegexOrString.STRING,
-    " :playlistid"
-  );
-};
-
-export default abstract class Spotify implements JuanitaCommand {
-  static _name: string = "spotify";
-  static _aliases: string[] = ["spotify", "sptf", "hax"];
-  static _description: string =
-    "Shuffles a playlist from spotify with the given playlist id";
-
-  @Command(checkAliases)
-  @Infos({
-    aliases: Spotify._aliases,
-  })
-  @Description(Spotify._description)
-  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
-  async execute(command: CommandMessage) {
-    const { channel, author, guild } = command;
-    const juanitaGuild = GuildCommander.get(guild!);
-    const { id, queue } = juanitaGuild;
-
-    logAndRefresh(Spotify._name, author.tag, id, command);
-
-    const playlistid = command.args.playlistid;
-    const remembered = await validateRemember(playlistid);
-
-    const validPlaylist = await Juanita.spotifySearcher.searchPlaylist(
-      remembered ? remembered.plid : playlistid,
-      author
-    );
-    if (validPlaylist !== undefined) {
-      channel.send(
-        createInfoEmbed(
-          `:cyclone: **Laster inn sanger fra** \`${validPlaylist.name}\``
-        )
+@Discord()
+class Spotify {
+  @SimpleCommand("spotify", { aliases: ["sptf", "hax"] })
+  async spotify(
+    @SimpleCommandOption("playlist", { type: "STRING" })
+    playlist: string | undefined,
+    command: SimpleCommandMessage
+  ) {
+    Logger._logCommand("spotify", command.message.author.tag)
+    const subscription = await JuanitaManager.joinChannel(command.message);
+    if (subscription) {
+      if (!playlist)
+        return command.message.channel.send({
+          embeds: [createInfoEmbed(":question: **Det forsto jeg ikke helt**")],
+        });
+      const remembered = await validateRemember(playlist);
+      const validPlaylist = await SpotifySearcher.searchPlaylist(
+        remembered ? remembered.plid : playlist,
+        command.message.author
       );
-      queue.songs = queue.songs.concat(shuffleArray(validPlaylist.tracks));
-      if (!queue.playing) JuanitaPlayer.play(juanitaGuild);
-      else {
-        const msg = await channel.send(queueEmbed(queue));
-        await msg.react("⬅️");
-        await msg.react("➡️");
+      if (validPlaylist) {
+        command.message.channel.send({
+          embeds: [
+            createInfoEmbed(
+              `:cyclone: **Laster inn sanger fra** \`${validPlaylist.name}\``
+            ),
+          ],
+        });
+        subscription.spotifyEnqueue(command.message, subscription, shuffleArray(validPlaylist.tracks) as Song[]);
+        if (!subscription.current) {
+          JuanitaPlayer.play(subscription, command.message, false, true);
+        } else {
+          command.message.channel.send({
+            embeds: [queueEmbed(subscription)],
+          });
+        }
+      } else {
+        command.message.channel.send({
+          embeds: [
+            createInfoEmbed(
+              `:x: Fant ingen spilleliste med id \`${playlist}\``
+            ),
+          ],
+        });
       }
-    } else {
-      channel.send(
-        createInfoEmbed(`:x: Fant ingen spilleliste med id \`${playlistid}\``)
-      );
     }
   }
 }

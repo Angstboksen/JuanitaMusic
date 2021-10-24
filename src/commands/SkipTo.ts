@@ -1,70 +1,58 @@
 import {
-  Client,
-  Command,
-  CommandMessage,
-  Description,
-  Guard,
-  Infos,
-} from "@typeit/discord";
-import SETUP_CONFIG from "../config";
-import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
-import { InVoiceChannel } from "../guards/InVoiceChannel";
+  Discord,
+  SimpleCommand,
+  SimpleCommandMessage,
+  SimpleCommandOption,
+} from "discordx";
 import { Logger } from "../logger/Logger";
-import { GuildCommander } from "../logic/GuildCommander";
+import { JuanitaManager } from "../logic/JuanitaManager";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
-import { JuanitaCommand } from "../types";
-import {
-  createInfoEmbed,
-  emptyQueueEmbed,
-  skippedToEmbed,
-} from "../utils/helpers";
-import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
+import { Song } from "../types";
+import { createInfoEmbed, emptyQueueEmbed } from "../utils/helpers";
 
-const checkAliases = (
-  command?: CommandMessage,
-  client?: Client
-): RegExp | string => {
-  return validateAlias(
-    command,
-    SkipTo._aliases,
-    RegexOrString.STRING,
-    " :number"
-  );
-};
-
-export default abstract class SkipTo implements JuanitaCommand {
-  static _name: string = "st";
-  static _aliases: string[] = ["st", "skipto", "jump"];
-  static _description: string = "Jumps to the given position in the queue";
-
-  @Command(checkAliases)
-  @Infos({
-    aliases: SkipTo._aliases,
-  })
-  @Description(SkipTo._description)
-  @Guard(InVoiceChannel, BotJoinedVoiceChannel)
-  async execute(command: CommandMessage) {
-    const { author, guild, channel, args } = command;
-    const juanitaGuild = GuildCommander.get(guild!);
-    const { id, queue } = juanitaGuild;
-
-    logAndRefresh(SkipTo._name, author.tag, id, command);
-
-    const index: number = args.number - 1;
-    if (!queue || queue.empty()) {
-      channel.send(emptyQueueEmbed());
-    } else {
-      if (queue.inrange(index)) {
-        const song = queue.skipTo(index);
-        JuanitaPlayer.skip(juanitaGuild);
-        channel.send(skippedToEmbed(song!, index + 1));
+@Discord()
+class SkipTo {
+  @SimpleCommand("skipto", { aliases: ["jump", "st"], argSplitter: " " })
+  async skipto(
+    @SimpleCommandOption("index", { type: "INTEGER" })
+    index: number | undefined,
+    command: SimpleCommandMessage
+  ) {
+    Logger._logCommand("skipto", command.message.author.tag)
+    const subscription = await JuanitaManager.joinChannel(command.message);
+    if (subscription) {
+      if (!index)
+        return command.message.channel.send({
+          embeds: [createInfoEmbed(":question: **Det forsto jeg ikke helt**")],
+        });
+      index = index - 1;
+      const { queue } = subscription;
+      if (!queue || queue.length == 0) {
+        command.message.channel.send({ embeds: [emptyQueueEmbed()] });
       } else {
-        channel.send(
-          createInfoEmbed(
-            ":exclamation::x:**Kan hoppe til ugyldig posisjon i køen**"
-          )
-        );
+        if (subscription.inrange(index)) {
+          const song = subscription.skipTo(index);
+          JuanitaPlayer.skip(subscription, command.message, true);
+          command.message.channel.send({
+            embeds: [skippedToEmbed(song!, index + 1)],
+          });
+        } else {
+          command.message.channel.send({
+            embeds: [
+              createInfoEmbed(
+                ":exclamation::x:**Kan hoppe til ugyldig posisjon i køen**"
+              ),
+            ],
+          });
+        }
       }
     }
   }
 }
+
+export const skippedToEmbed = (song: Song, position: number) => {
+  return createInfoEmbed(
+    `:white_check_mark: Hoppet til posisjon \`${position}\` i køen.\n 
+    :arrow_forward: Spiller nå: \`${song.title}\` fra køen`
+  );
+};

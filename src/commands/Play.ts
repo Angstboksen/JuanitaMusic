@@ -4,13 +4,13 @@ import { JuanitaManager } from "../logic/JuanitaManager";
 import { JuanitaPlayer } from "../music/JuanitaPlayer";
 
 @Discord()
-class First {
-  @SimpleCommand("first", { aliases: ["f", "quick", "speed"] })
-  async first(command: SimpleCommandMessage) {
-    Logger._logCommand("first", command.message.author.tag)
+class Play {
+  @SimpleCommand("play", { aliases: ["p", "sing"] })
+  async play(command: SimpleCommandMessage) {
+    Logger._logCommand("play", command.message.author.tag)
     const subscription = await JuanitaManager.joinChannel(command.message);
     if (subscription) {
-      JuanitaPlayer.play(subscription, command.message, true);
+      JuanitaPlayer.play(subscription, command.message);
     }
   }
 }

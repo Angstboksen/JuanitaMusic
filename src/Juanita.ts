@@ -1,74 +1,27 @@
 import {
   Discord,
-  CommandMessage,
-  CommandNotFound,
-  On,
-  ArgsOf,
-} from "@typeit/discord";
-import SETUP_CONFIG from "./config";
-import * as Path from "path";
-import { SpotifySearcher } from "./logic/SpotifySearcher";
-import { createInfoEmbed, queueEmbed } from "./utils/helpers";
-import { GuildCommander } from "./logic/GuildCommander";
-import { Client, MessageReaction } from "discord.js";
+  SimpleCommand,
+  SimpleCommandOption,
+  SimpleCommandMessage
+} from "discordx";
 
-@Discord(SETUP_CONFIG.prefix, {
-  import: [Path.join(__dirname, "commands", "*.ts")],
-})
+@Discord()
 export abstract class Juanita {
-  static spotifySearcher = new SpotifySearcher();
-
-  @CommandNotFound()
-  notFound(command: CommandMessage) {
-    command.channel.send(
-      createInfoEmbed(":question: **Det forsto jeg ikke helt**")
-    );
+  @SimpleCommand("hello", { aliases: ["hi"] })
+  hello(command: SimpleCommandMessage) {
+    command.message.reply(`👋 ${command.message.member}`);
   }
 
-  @On("messageReactionAdd")
-  async messageReactionAdd(
-    [message]: ArgsOf<"messageReactionAdd">,
-    client: Client
+  @SimpleCommand("sum", { argSplitter: "+" })
+  sum(
+    @SimpleCommandOption("num1") num1: number,
+    @SimpleCommandOption("num2") num2: number,
+    command: SimpleCommandMessage
   ) {
-    this.editQueuePage(message, client);
-  }
-
-  @On("messageReactionRemove")
-  async messageReaction(
-    [message]: ArgsOf<"messageReactionRemove">,
-    client: Client
-  ) {
-    this.editQueuePage(message, client);
-  }
-
-  editQueuePage = async (message: MessageReaction, client: Client) => {
-    const isBot = message.me;
-    if (isBot) return;
-    const { guild, embeds } = message.message;
-    const { title, description } = embeds[0];
-    if (
-      title === ":scroll: **Her er køen slik den ser ut nå**" &&
-      description !== null
-    ) {
-      let page = +description
-        .split("Side")[1]
-        .replace(/\s/g, "")
-        .replace(/`/g, "")
-        .split("av")[0];
-      const queue = GuildCommander.get(guild!).queue;
-      const max = Math.ceil(queue.size() / 5);
-      if (message.emoji.name === "⬅️") {
-        if (page === 0) return;
-        page--;
-      } else if (message.emoji.name === "➡️") {
-        if (page === max) return;
-        page++;
-      }
-      await message.message.edit(queueEmbed(queue, page));
+    if (typeof num1 !== "number" || typeof num2 !== "number") {
+      return command.message.reply(`**Usage**: 1+1`);
     }
-  };
+    command.message.reply(`total = ${num1 + num2}`);
+  }
 
-  _reconnect = () => {
-    console.log("Reconnecting");
-  };
 }

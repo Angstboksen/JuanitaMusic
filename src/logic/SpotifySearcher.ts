@@ -12,25 +12,20 @@ const emptyObj = {
 };
 
 export class SpotifySearcher {
-  api: SpotifyWebApi;
-  interval: NodeJS.Timeout | undefined = undefined;
+  static api: SpotifyWebApi = new SpotifyWebApi({
+    clientId: spotify_id,
+    clientSecret: spotify_secret,
+    redirectUri: "https://angstboksen.no",
+  });
+  static interval: NodeJS.Timeout | undefined = setInterval(async () => {
+    await SpotifySearcher.getToken();
+  }, 3000000);
 
-  constructor() {
-    this.api = new SpotifyWebApi({
-      clientId: spotify_id,
-      clientSecret: spotify_secret,
-      redirectUri: "https://angstboksen.no",
-    });
-    this.interval = setInterval(async () => {
-      await this.getToken();
-    }, 3000000);
-  }
-
-  findPlaylist = async (playlistid: string) => {
-    if (this.api.getAccessToken() === undefined) {
-      await this.getToken();
+  static findPlaylist = async (playlistid: string) => {
+    if (SpotifySearcher.api.getAccessToken() === undefined) {
+      await SpotifySearcher.getToken();
     }
-    const response = await this.api
+    const response = await SpotifySearcher.api
       .getPlaylist(playlistid)
       .catch((error: Error) => {
         return { statusCode: 400, body: { name: "_default_" } };
@@ -38,7 +33,7 @@ export class SpotifySearcher {
     return { statusCode: response.statusCode, name: response.body.name };
   };
 
-  getToken = async () => {
+  static getToken = async () => {
     const data = new URLSearchParams();
     data.append("grant_type", "client_credentials");
     const encoded = base64.encode(`${spotify_id}:${spotify_secret}`);
@@ -56,19 +51,19 @@ export class SpotifySearcher {
     })) as AxiosResponse<any>;
     if (response.status === 200) {
       const { access_token } = response.data;
-      this.api.setAccessToken(access_token);
+      SpotifySearcher.api.setAccessToken(access_token);
       Logger.debug("Fetched new token: " + access_token);
       return access_token;
     }
     return undefined;
   };
 
-  fetchPlaylist = async (
+  static fetchPlaylist = async (
     playlistid: string,
     offset: number = 0,
     carry: any[] = []
   ): Promise<{ statusCode: number; items: any[] }> => {
-    const response = await this.api
+    const response = await SpotifySearcher.api
       .getPlaylistTracks(playlistid, { offset })
       .catch((error: Error) => {
         return emptyObj;
@@ -78,24 +73,24 @@ export class SpotifySearcher {
     }
     let items = carry.concat([carry].concat(response.body.items));
     if (response.body.items.length >= 100) {
-      return this.fetchPlaylist(playlistid, offset + 100, items);
+      return SpotifySearcher.fetchPlaylist(playlistid, offset + 100, items);
     }
     return { statusCode: 200, items };
   };
 
-  searchPlaylist = async (
+  static searchPlaylist = async (
     playlistid: string,
     requestor: { tag: string; id: string }
   ) => {
-    if (this.api.getAccessToken() === undefined) {
-      await this.getToken();
+    if (SpotifySearcher.api.getAccessToken() === undefined) {
+      await SpotifySearcher.getToken();
     }
     const { name } = (
-      await this.api.getPlaylist(playlistid).catch((error: Error) => {
+      await SpotifySearcher.api.getPlaylist(playlistid).catch((error: Error) => {
         return emptyObj;
       })
     ).body;
-    const pl: { statusCode: number; items: any[] } = await this.fetchPlaylist(
+    const pl: { statusCode: number; items: any[] } = await SpotifySearcher.fetchPlaylist(
       playlistid
     );
     if (pl.statusCode === 200) {

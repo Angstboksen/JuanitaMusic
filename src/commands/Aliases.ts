@@ -1,47 +1,32 @@
-import {
-  Client,
-  Command,
-  CommandMessage,
-  Description,
-  Guard,
-  Infos,
-} from "@typeit/discord";
-import { retrieveAliases } from "../api/songs/alias";
-import SETUP_CONFIG from "../config";
-import { BotJoinedVoiceChannel } from "../guards/BotJoinedVoicechannel";
-import { InVoiceChannel } from "../guards/InVoiceChannel";
+import { Discord, SimpleCommand, SimpleCommandMessage } from "discordx";
 import { Logger } from "../logger/Logger";
-import { GuildCommander } from "../logic/GuildCommander";
-import { JuanitaCommand } from "../types";
-import { aliasEmbed, noCurrentSongEmbed, songEmbed } from "../utils/helpers";
-import { logAndRefresh, RegexOrString, validateAlias } from "./utils/helpers";
+import { retrieveAliases } from "../api/songs/alias";
+import { createInfoEmbed } from "../utils/helpers";
 
-const checkAliases = (
-  command?: CommandMessage,
-  client?: Client
-): RegExp | string => {
-  return validateAlias(command, Aliases._aliases, RegexOrString.REGEX);
-};
-
-export default abstract class Aliases implements JuanitaCommand {
-  static _name: string = "aliases";
-  static _aliases: string[] = ["aliases", "alist"];
-  static _description: string =
-    "Shows a list of all aliases and their corresponding spotify playlists";
-
-  @Command(checkAliases)
-  @Infos({
-    aliases: Aliases._aliases,
-  })
-  @Description(Aliases._description)
-  async execute(command: CommandMessage) {
-    const { channel, author, guild } = command;
-    const juanitaGuild = GuildCommander.get(guild!);
-    const { id } = juanitaGuild;
-
-    logAndRefresh(Aliases._name, author.tag, id, command);
-
+@Discord()
+class Aliases {
+  @SimpleCommand("aliases", { aliases: ["alist"] })
+  async aliases(command: SimpleCommandMessage) {
+    Logger._logCommand("aliases", command.message.author.tag)
+    const { channel } = command.message;
     const aliases = await retrieveAliases();
-    channel.send(aliasEmbed(aliases));
+    channel.send({ embeds: [aliasEmbed(aliases)] });
   }
 }
+
+const aliasEmbed = (
+  aliases: { alias: string; plid: string; name: string }[]
+) => {
+  if (aliases.length === 0)
+    return createInfoEmbed(
+      ":watermelon: Bruk `!remember <id> <alias>` for å legge til"
+    ).setTitle(":scream_cat: Ingen aliaser er lagret");
+  let desc = "";
+  for (let i = 0; i < aliases.length; i++) {
+    desc += `:cyclone: **Navn**: [${aliases[i].name}](https://open.spotify.com/playlist/${aliases[i].plid}) | :spy: **Alias:** \`${aliases[i].alias}\`  \n\n`;
+  }
+  desc += `\n:watermelon: Bruk \`!spotify <alias>\` for å spille av lista \n\n :mag: Det er lagret totalt \`${aliases.length}\` aliaser`;
+  return createInfoEmbed(desc).setTitle(
+    ":arrow_down: Her er alle aliasene som er lagret"
+  );
+};
