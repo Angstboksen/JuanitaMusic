@@ -31,7 +31,7 @@
         "@types/spotify-web-api-node": "^5.0.2",
         "@types/uuid": "^8.3.1",
         "@types/yt-search": "^2.3.2",
-        "axios": "^0.23.0",
+        "axios": "^0.24.0",
         "base-64": "^1.0.0",
         "codecov": "^3.8.3",
         "discord.js": "^13.2.0",
