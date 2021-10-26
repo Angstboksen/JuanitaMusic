@@ -18,7 +18,7 @@
     "license": "ISC",
     "dependencies": {
         "@discordjs/voice": "^0.6.0",
-        "@discordx/utilities": "^1.5.0",
+        "@discordx/utilities": "^2.0.0",
         "@koenie06/discord.js-music": "^1.2.9",
         "@types/axios": "^0.14.0",
         "@types/base-64": "^1.0.0",
