@@ -35,7 +35,7 @@
         "base-64": "^1.0.0",
         "codecov": "^3.8.3",
         "discord.js": "^13.2.0",
-        "discordx": "^7.0.0",
+        "discordx": "^9.1.7",
         "dotenv": "^10.0.0",
         "ffmpeg": "0.0.4",
         "ffmpeg-static": "^4.4.0",
