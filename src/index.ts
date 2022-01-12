@@ -2,24 +2,18 @@ import "reflect-metadata";
 import path from "path";
 import { Intents, Interaction, Message } from "discord.js";
 import { Client } from "discordx";
-import {config} from 'dotenv'
-config()
+import { config } from "dotenv";
+import { importx } from "@discordx/importer";
+config();
 
 const client = new Client({
-  simpleCommand: {
-    prefix: process.env.PREFIX,
-  },
+  simpleCommand: { prefix: "!" },
   intents: [
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
     Intents.FLAGS.GUILD_VOICE_STATES,
-  ],
-  classes: [
-    path.join(__dirname, "commands", "**/*.{ts,js}"),
-  ],
-  botGuilds: [(client) => client.guilds.cache.map((guild) => guild.id)],
-  silent: true,
+  ]
 });
 
 client.once("ready", async () => {
@@ -28,16 +22,14 @@ client.once("ready", async () => {
     global: { log: true },
   });
   await client.initApplicationPermissions();
-
-  console.log("Juanita is now online");
+  console.log("------ Initiation successful! ------")
+  console.log("------ Juanita is now online! ------")
 });
 
 client.on("interactionCreate", (interaction: Interaction) => {
   client.executeInteraction(interaction);
 });
 
-client.on("messageCreate", (message: Message) => {
-  client.executeCommand(message);
+importx(path.join(__dirname, "JuanitaMusic.ts")).then(() => {
+  client.login(process.env.BOT_TOKEN ?? "");
 });
-
-client.login(process.env.BOT_TOKEN ?? ""); // provide your bot token

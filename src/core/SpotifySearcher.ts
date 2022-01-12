@@ -2,8 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import base64 from "base-64";
 import SpotifyWebApi from "spotify-web-api-node";
 import SETUP_CONFIG from "../config";
-import { Logger } from "../logger/Logger";
-import { filteredTitle } from "../utils/helpers";
+import spotify from "spotify-url-info";
 
 const { spotify_id, spotify_secret } = SETUP_CONFIG;
 const emptyObj = {
@@ -11,7 +10,7 @@ const emptyObj = {
   body: { name: "", items: [] },
 };
 
-export class SpotifySearcher {
+export default class SpotifySearcher {
   static api: SpotifyWebApi = new SpotifyWebApi({
     clientId: spotify_id,
     clientSecret: spotify_secret,
@@ -46,13 +45,12 @@ export class SpotifySearcher {
       },
       data,
     };
-    const response = (await axios(config).catch((error: Error) => {
-      Logger._error(error.message);
-    })) as AxiosResponse<any>;
+    const response = (await axios(config).catch(
+      (error: Error) => {}
+    )) as AxiosResponse<any>;
     if (response.status === 200) {
       const { access_token } = response.data;
       SpotifySearcher.api.setAccessToken(access_token);
-      Logger.debug("Fetched new token: " + access_token);
       return access_token;
     }
     return undefined;
@@ -78,46 +76,37 @@ export class SpotifySearcher {
     return { statusCode: 200, items };
   };
 
-  static searchPlaylist = async (
-    playlistid: string,
-    requestor: { tag: string; id: string }
-  ) => {
+  static searchPlaylist = async (playlistid: string) => {
     if (SpotifySearcher.api.getAccessToken() === undefined) {
       await SpotifySearcher.getToken();
     }
     const { name } = (
-      await SpotifySearcher.api.getPlaylist(playlistid).catch((error: Error) => {
-        return emptyObj;
-      })
+      await SpotifySearcher.api
+        .getPlaylist(playlistid)
+        .catch((error: Error) => {
+          return emptyObj;
+        })
     ).body;
-    const pl: { statusCode: number; items: any[] } = await SpotifySearcher.fetchPlaylist(
-      playlistid
-    );
+    const pl: { statusCode: number; items: any[] } =
+      await SpotifySearcher.fetchPlaylist(playlistid);
     if (pl.statusCode === 200) {
-      const tracks = [];
+      const tracks: spotify.Tracks[] = [];
       for (const item of pl.items) {
         if (!item.track) continue;
-        const {
-          name,
-          duration_ms,
-          artists,
-          external_urls: { spotify },
-        } = item.track;
-        const title = filteredTitle(
-          ` ${name} by ${artists.map(
-            (artist: { name: string }) => `${artist.name}`
-          )}`
-        );
-        tracks.push({
-          title,
-          seconds: Math.floor(duration_ms / 1000),
-          url: spotify,
-          requestor: { tag: requestor.tag, id: requestor.id },
-          isSpotify: true,
-        });
+        tracks.push(item.track);
       }
-      return { name, tracks };
+      return shuffleArray(tracks);
     }
     return undefined;
   };
 }
+
+const shuffleArray = (array: Array<any>) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i);
+      const a = array[i];
+      array[i] = array[j];
+      array[j] = a;
+    }
+    return array;
+  };

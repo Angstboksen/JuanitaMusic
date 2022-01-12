@@ -1,9 +1,10 @@
 import { Db, MongoClient } from "mongodb";
-import { Search, Song } from "../../types";
+import { Search, Song } from "../types";
 
 // Create a new MongoClient
 const client = new MongoClient(process.env.MONGOURL!);
 client.connect();
+
 export const mongoStoreSearch = async (song: Song | null) => {
   if (!song) return;
   const db = client.db("juanitamusic");
@@ -66,5 +67,31 @@ export const mongoExistsRequestor = async (
     return exists.length > 0;
   } catch (err) {
     return false;
+  }
+};
+
+export const mongoExistsAlias = async (alias: String) => {
+  try {
+    const exists = await client
+      .db("juanitamusic")
+      .collection("aliases")
+      .find({ alias: alias })
+      .toArray();
+    return exists[0];
+  } catch (err) {
+    return undefined;
+  }
+};
+
+export const mongoRetrieveAliases = async () => {
+  try {
+    const exists = await client
+      .db("juanitamusic")
+      .collection("aliases")
+      .find({})
+      .toArray();
+    return (exists ? exists : []) as any[];
+  } catch (err) {
+    return undefined;
   }
 };
