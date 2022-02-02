@@ -8,7 +8,7 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/Angstboksen/JuanitaMusic/pulls)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-![https://cdn.discordapp.com/app-icons/708320525285457950/392f659c8b929799b917f0192b872ea5.png?size=512][logo]
+![https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=2147483648&scope=bot%20applications.commands][logo]
 
 A Discord bot for playing music with friends on discord. 
 
