@@ -14,7 +14,7 @@ A Discord bot for playing music with friends on discord.
 
 Invite the bot to your discord server [by following this link](https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=2147483648&scope=bot%20applications.commands)
 
-[logo]: https://cdn.discordapp.com/app-icons/708320525285457950/392f659c8b929799b917f0192b872ea5.png?size=512 "Juanita doing her thing"
+[logo]: https://cdn.discordapp.com/app-icons/708320525285457950/2e04e39441554ac7ab7871c604853a1e.png?size=128 "Juanita doing her thing"
 
 ## 📰 Commands
 
