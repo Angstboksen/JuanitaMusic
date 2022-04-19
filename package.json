@@ -21,7 +21,7 @@
         "@discordx/importer": "^1.1.2",
         "@discordx/music": "^3.1.5",
         "@discordx/pagination": "^1.1.0",
-        "@discordx/utilities": "^3.1.5",
+        "@discordx/utilities": "^4.2.0",
         "@koenie06/discord.js-music": "^1.2.9",
         "@types/axios": "^0.14.0",
         "@types/base-64": "^1.0.0",
