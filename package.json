@@ -29,7 +29,7 @@
         "@types/ffmpeg": "^1.0.4",
         "@types/moment": "^2.13.0",
         "@types/mongodb": "^4.0.7",
-        "@types/node": "^16.10.3",
+        "@types/node": "^18.7.11",
         "@types/reflect-metadata": "^0.1.0",
         "@types/spotify-web-api-node": "^5.0.2",
         "@types/uuid": "^8.3.1",
