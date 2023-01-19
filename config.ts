@@ -9,11 +9,6 @@ export type JuanitaConfig = {
 		guild: string | undefined;
 	};
 	opt: {
-		DJ: {
-			enabled: boolean;
-			roleName: string;
-			commands: string[];
-		};
 		maxVol: number;
 		leaveOnEnd: boolean;
 		loopMessage: boolean;
@@ -37,11 +32,6 @@ const envConfig: JuanitaConfig = {
 	},
 
 	opt: {
-		DJ: {
-			enabled: false,
-			roleName: 'Lord of the Bangers',
-			commands: [],
-		},
 		maxVol: 100,
 		leaveOnEnd: true,
 		loopMessage: false,
