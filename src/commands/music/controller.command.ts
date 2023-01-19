@@ -34,10 +34,6 @@ export default {
 			.setTitle('control your music from the buttons below')
 			.setImage(interaction.guild.iconURL({ size: 4096 }))
 			.setColor('#36393e')
-			.setFooter({
-				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member!.avatar!.toString(),
-			});
 
 		interaction.reply({ content: `sending controller to ${channel}... ✅`, ephemeral: true });
 

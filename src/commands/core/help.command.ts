@@ -22,10 +22,6 @@ export default {
 			)
 			.addFields([{ name: `Enabled - ${commands.size}`, value: commands.map((x) => `\`${x.name}\``).join(' | ') }])
 			.setTimestamp()
-			.setFooter({
-				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member!.avatar!.toString(),
-			});
 
 		return interaction.reply({ embeds: [embed] });
 	},

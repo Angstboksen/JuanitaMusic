@@ -38,11 +38,7 @@ export default {
 				iconURL: client.user!.displayAvatarURL({ size: 1024, forceStatic: false }),
 			})
 			.setDescription(`Current ${queue.current.title}\n\n${tracks.slice(0, 5).join('\n')}\n\n${nextSongs}`)
-			.setTimestamp()
-			.setFooter({
-				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member.avatar!.toString(),
-			});
+			.setTimestamp();
 
 		return interaction.reply({ embeds: [embed] });
 	},

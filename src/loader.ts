@@ -30,11 +30,11 @@ const loadClient = (Jclient: JuanitaClient) => {
 		const commands: string[] = readdirSync(`./src/commands/${dirs}`).filter((files) => files.endsWith('.command.ts'));
 
 		for (const file of commands) {
-			const command: JuanitaCommand = require(`./commands/${dirs}/${file}`);
-			if (command.name && command.description) {
-				commandArray.push(command);
-				console.log(`-> [Loaded Command] ${command.name.toLowerCase()}`);
-				Jclient.commands.set(command.name.toLowerCase(), command);
+			const command: {default: JuanitaCommand} = require(`./commands/${dirs}/${file}`);
+			if (command.default.name && command.default.description) {
+				commandArray.push(command.default);
+				console.log(`-> [Loaded Command] ${command.default.name.toLowerCase()}`);
+				Jclient.commands.set(command.default.name.toLowerCase(), command.default);
 				delete require.cache[require.resolve(`./commands/${dirs}/${file}`)];
 			} else console.log(`[failed Command]  ${file}`);
 		}
@@ -43,7 +43,10 @@ const loadClient = (Jclient: JuanitaClient) => {
 	Jclient.on('ready', (client) => {
 		console.log(`Logged in as ${client.user?.tag}!`);
 		if (Jclient.config.app.global) client.application.commands.set(commandArray);
-		else client.guilds.cache.get(Jclient.config.app.guild!)?.commands.set(commandArray);
+		else {
+			console.log("based")
+			client.guilds.cache.get(Jclient.config.app.guild!)?.commands.set(commandArray);
+		}
 	});
 };
 

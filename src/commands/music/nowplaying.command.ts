@@ -31,10 +31,6 @@ export default {
 					methods[queue.repeatMode]
 				}**\nRequested by ${track.requestedBy}`,
 			)
-			.setFooter({
-				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member!.avatar!.toString(),
-			})
 			.setColor('#ff0000')
 			.setTimestamp();
 

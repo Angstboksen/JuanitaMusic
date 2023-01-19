@@ -16,7 +16,6 @@ module.exports = async ({ inter, queue }) => {
                     { name: 'Song URL:', value: `\`${queue.current.url}\`` }
                 )
                 .setThumbnail(queue.current.thumbnail)
-                .setFooter({ text: `from the server ${inter.member.guild.name}`, iconURL: inter.member.guild.iconURL({ dynamic: false }) })
         ]
     }).then(() => {
         return inter.reply({ content: `I have sent you the title of the music by private messages ✅`, ephemeral: true });
