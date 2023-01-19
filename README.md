@@ -18,7 +18,7 @@ Invite the bot to your discord server [by following this link.](https://discord.
 All commands are available using Discord slash application command interface. The commands, and their description, can be seen in the table below.
 
 | Command | Description |
-| --- | --- | --- |
+| --- | --- |
 | __Common commands__ |
 | `/play <URL or keywords: string>` | Plays or adds to queue the song fetched based on the keywords provided | 
 | `/first <URL or keywords: string>` | Plays or puts at the top of the queue the song fetched based on the keywords provided | 
