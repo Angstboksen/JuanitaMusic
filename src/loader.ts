@@ -26,7 +26,7 @@ const loadClient = (Jclient: JuanitaClient) => {
 	console.log(`Loading commands...`);
 
 	readdirSync('./src/commands/').forEach((dirs) => {
-		if (dirs.includes('.')) return
+		if (dirs.endsWith('.command.ts')) return
 		const commands: string[] = readdirSync(`./src/commands/${dirs}`).filter((files) => files.endsWith('.js'));
 
 		for (const file of commands) {
