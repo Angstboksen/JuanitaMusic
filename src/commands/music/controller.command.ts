@@ -33,58 +33,37 @@ export default {
 		const embed = new EmbedBuilder()
 			.setTitle('control your music from the buttons below')
 			.setImage(interaction.guild.iconURL({ size: 4096 }))
-			.setColor('#36393e')
+			.setColor('#36393e');
 
 		interaction.reply({ content: `sending controller to ${channel}... ✅`, ephemeral: true });
 
-		const back = new ButtonBuilder()
-			.setLabel('Back')
-			.setCustomId(JSON.stringify({ ffb: 'back' }))
-			.setStyle(ButtonStyle.Primary);
+		const leave = new ButtonBuilder()
+			.setLabel('💀Kys')
+			.setCustomId(JSON.stringify({ ffb: 'leave' }))
+			.setStyle(ButtonStyle.Danger);
 
 		const skip = new ButtonBuilder()
-			.setLabel('Skip')
+			.setLabel('⏭️Skip')
 			.setCustomId(JSON.stringify({ ffb: 'skip' }))
-			.setStyle(ButtonStyle.Primary);
-
-		const resumepause = new ButtonBuilder()
-			.setLabel('Resume & Pause')
-			.setCustomId(JSON.stringify({ ffb: 'resume&pause' }))
-			.setStyle(ButtonStyle.Danger);
-
-		const save = new ButtonBuilder()
-			.setLabel('Save')
-			.setCustomId(JSON.stringify({ ffb: 'savetrack' }))
 			.setStyle(ButtonStyle.Success);
 
-		const volumeup = new ButtonBuilder()
-			.setLabel('Volume up')
-			.setCustomId(JSON.stringify({ ffb: 'volumeup' }))
+		const pause = new ButtonBuilder()
+			.setLabel('⏸️Pause')
+			.setCustomId(JSON.stringify({ ffb: 'pause' }))
+			.setStyle(ButtonStyle.Success);
+
+		const shuffle = new ButtonBuilder()
+			.setLabel('🎲Shuffle')
+			.setCustomId(JSON.stringify({ ffb: 'shuffle' }))
 			.setStyle(ButtonStyle.Primary);
-
-		const volumedown = new ButtonBuilder()
-			.setLabel('Volume Down')
-			.setCustomId(JSON.stringify({ ffb: 'volumedown' }))
-			.setStyle(ButtonStyle.Primary);
-
-		const loop = new ButtonBuilder()
-			.setLabel('Loop')
-			.setCustomId(JSON.stringify({ ffb: 'loop' }))
-			.setStyle(ButtonStyle.Danger);
-
-		const np = new ButtonBuilder()
-			.setLabel('Now Playing')
-			.setCustomId(JSON.stringify({ ffb: 'nowplaying' }))
-			.setStyle(ButtonStyle.Secondary);
 
 		const queuebutton = new ButtonBuilder()
-			.setLabel('Queue')
+			.setLabel('📝Queue')
 			.setCustomId(JSON.stringify({ ffb: 'queue' }))
-			.setStyle(ButtonStyle.Secondary);
+			.setStyle(ButtonStyle.Primary);
 
-		const row1 = new ActionRowBuilder().addComponents(back, queuebutton, resumepause, np, skip);
-		const row2 = new ActionRowBuilder().addComponents(volumedown, loop, save, volumeup);
+		const row1 = new ActionRowBuilder().addComponents(leave, skip, pause, shuffle, queuebutton);
 
-		return channel.send({ embeds: [embed], components: [row1 as any, row2] });
+		return channel.send({ embeds: [embed], components: [row1 as any] });
 	},
 } as JuanitaCommand;

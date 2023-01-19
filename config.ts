@@ -36,7 +36,7 @@ const envConfig: JuanitaConfig = {
 		leaveOnEnd: true,
 		loopMessage: false,
 		spotifyBridge: true,
-		defaultvolume: 75,
+		defaultvolume: 50,
 		discordPlayer: {
 			ytdlOptions: {
 				quality: 'highestaudio',

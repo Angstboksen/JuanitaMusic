@@ -14,7 +14,7 @@ const loadClient = (Jclient: JuanitaClient) => {
 	console.log(`Loading events...`);
 
 	for (const file of events) {
-		const event = require(`./events/${file}`);
+		const event = require(`./events/${file}`).default;
 		const fileName: string | undefined = file.split('.')[0];
 		if (fileName) {
 			console.log(`-> [Loaded Event] ${fileName}`);

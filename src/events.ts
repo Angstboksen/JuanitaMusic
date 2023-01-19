@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import type JuanitaClient from './JuanitaClient';
 
 const loadPlayer = (client: JuanitaClient) => {
@@ -21,34 +21,8 @@ const loadPlayer = (client: JuanitaClient) => {
 			})
 			.setColor('#13f857');
 
-		const back = new ButtonBuilder()
-			.setLabel('Back')
-			.setCustomId(JSON.stringify({ ffb: 'back' }))
-			.setStyle(ButtonStyle.Primary);
-
-		const skip = new ButtonBuilder()
-			.setLabel('Skip')
-			.setCustomId(JSON.stringify({ ffb: 'skip' }))
-			.setStyle(ButtonStyle.Primary);
-
-		const resumepause = new ButtonBuilder()
-			.setLabel('Resume & Pause')
-			.setCustomId(JSON.stringify({ ffb: 'resume&pause' }))
-			.setStyle(ButtonStyle.Danger);
-
-		const loop = new ButtonBuilder()
-			.setLabel('Loop')
-			.setCustomId(JSON.stringify({ ffb: 'loop' }))
-			.setStyle(ButtonStyle.Secondary);
-
-		const queuebutton = new ButtonBuilder()
-			.setLabel('Queue')
-			.setCustomId(JSON.stringify({ ffb: 'queue' }))
-			.setStyle(ButtonStyle.Secondary);
-
-		const row1 = new ActionRowBuilder().addComponents(back, loop, resumepause, queuebutton, skip);
 		const metadata = queue.metadata as any;
-		metadata.send({ embeds: [embed], components: [row1] });
+		metadata.send({ embeds: [embed] });
 	});
 
 	player.on('trackAdd', (queue, track) => {
