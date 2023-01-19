@@ -1,4 +1,4 @@
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'resume',

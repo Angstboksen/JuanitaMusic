@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'help',
@@ -24,7 +24,7 @@ export default {
 			.setTimestamp()
 			.setFooter({
 				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member?.avatar?.toString(),
+				iconURL: interaction.member!.avatar!.toString(),
 			});
 
 		return interaction.reply({ embeds: [embed] });

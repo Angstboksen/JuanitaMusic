@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'jump',
@@ -48,15 +48,20 @@ export default {
 					return interaction.reply({ content: `skiped to ${track} ✅` });
 				}
 			}
-            
+
 			return interaction.reply({
 				content: `could not find ${track} ${interaction.member}... try using the url or the full name of the song ? ❌`,
 				ephemeral: true,
 			});
 		}
 		if (number) {
+			if (number > queue.tracks.length)
+				return interaction.reply({
+					content: `There are only ${queue.tracks.length} songs in the queue ${interaction.member}... try again ?❌`,
+					ephemeral: true,
+				});
 			const index = number - 1;
-			const trackname = queue.tracks[index].title;
+			const trackname = queue.tracks[index]!.title;
 			if (!trackname)
 				return interaction.reply({
 					content: `This track dose not seem to exist ${interaction.member}...  try again ?❌`,
@@ -65,5 +70,6 @@ export default {
 			queue.skipTo(index);
 			return interaction.reply({ content: `Jumped to ${trackname}  ✅` });
 		}
+		return;
 	},
 } as JuanitaCommand;

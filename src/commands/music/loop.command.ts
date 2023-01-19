@@ -1,6 +1,6 @@
 import { QueueRepeatMode } from 'discord-player';
 import { ApplicationCommandOptionType } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'loop',
@@ -29,7 +29,7 @@ export default {
 				content: `No music currently playing ${interaction.member}... try again ? ❌`,
 				ephemeral: true,
 			});
-		switch ((interaction.options as any)._hoistedOptions.map((x) => x.value).toString()) {
+		switch ((interaction.options as any)._hoistedOptions.map((x: any) => x.value).toString()) {
 			case 'enable_loop_queue': {
 				if (queue.repeatMode === QueueRepeatMode.TRACK)
 					return interaction.reply({
@@ -66,6 +66,10 @@ export default {
 						: `Something went wrong ${interaction.member}... try again ? ❌`,
 				});
 			}
+			default:
+				return interaction.reply({
+					content: `Something went wrong ${interaction.member}... try again ? ❌`,
+				});
 		}
 	},
 } as JuanitaCommand;

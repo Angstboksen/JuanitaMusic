@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 import ms from 'ms';
 
 export default {
@@ -35,6 +35,6 @@ export default {
 
 		await queue.seek(timeToMS);
 
-		interaction.reply({ content: `Time set on the current song **${ms(timeToMS, { long: true })}** ✅` });
+		return interaction.reply({ content: `Time set on the current song **${ms(timeToMS, { long: true })}** ✅` });
 	},
 } as JuanitaCommand;

@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'remove',
@@ -54,8 +54,13 @@ export default {
 		}
 
 		if (number) {
+			if (number > queue.tracks.length)
+				return interaction.reply({
+					content: `There is no song in the queue with that number ${interaction.member}... try again ?❌`,
+					ephemeral: true,
+				});
 			const index = number - 1;
-			const trackname = queue.tracks[index].title;
+			const trackname = queue.tracks[index]!.title;
 
 			if (!trackname)
 				return interaction.reply({
@@ -67,5 +72,6 @@ export default {
 
 			return interaction.reply({ content: `removed ${trackname} from the queue ✅` });
 		}
+		return;
 	},
 } as JuanitaCommand;

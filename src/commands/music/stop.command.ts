@@ -1,4 +1,4 @@
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'stop',
@@ -18,6 +18,6 @@ export default {
 
 		queue.destroy();
 
-		interaction.reply({ content: `Music stopped intero this server, see you next time ✅` });
+		return interaction.reply({ content: `Music stopped intero this server, see you next time ✅` });
 	},
 } as JuanitaCommand;

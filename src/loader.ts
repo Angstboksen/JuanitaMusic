@@ -9,7 +9,7 @@ const loadClient = (Jclient: JuanitaClient) => {
 	Jclient.commands = new Collection();
 	const commandArray: any[] = [];
 
-	const events = readdirSync('./src/events/').filter((file) => file.endsWith('.js'));
+	const events = readdirSync('./src/events/').filter((file) => file.endsWith('.ts'));
 	
 	console.log(`Loading events...`);
 
@@ -26,8 +26,8 @@ const loadClient = (Jclient: JuanitaClient) => {
 	console.log(`Loading commands...`);
 
 	readdirSync('./src/commands/').forEach((dirs) => {
-		if (dirs.endsWith('.command.ts')) return
-		const commands: string[] = readdirSync(`./src/commands/${dirs}`).filter((files) => files.endsWith('.js'));
+		if (dirs.includes('.')) return
+		const commands: string[] = readdirSync(`./src/commands/${dirs}`).filter((files) => files.endsWith('.command.ts'));
 
 		for (const file of commands) {
 			const command: JuanitaCommand = require(`./commands/${dirs}/${file}`);
@@ -36,7 +36,7 @@ const loadClient = (Jclient: JuanitaClient) => {
 				console.log(`-> [Loaded Command] ${command.name.toLowerCase()}`);
 				Jclient.commands.set(command.name.toLowerCase(), command);
 				delete require.cache[require.resolve(`./commands/${dirs}/${file}`)];
-			} else console.log(`[failed Command]  ${command.name.toLowerCase()}`);
+			} else console.log(`[failed Command]  ${file}`);
 		}
 	});
 

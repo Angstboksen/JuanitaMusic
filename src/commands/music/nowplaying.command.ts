@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'nowplaying',
@@ -24,7 +24,7 @@ export default {
 		const progress = queue.createProgressBar();
 
 		const embed = new EmbedBuilder()
-			.setAuthor({ name: track.title, iconURL: client.user?.displayAvatarURL({ size: 1024, forceStatic: false }) })
+			.setAuthor({ name: track.title, iconURL: client.user!.displayAvatarURL({ size: 1024, forceStatic: false }) })
 			.setThumbnail(track.thumbnail)
 			.setDescription(
 				`Volume **${queue.volume}**%\nDuration **${trackDuration}**\nProgress ${progress}\nLoop mode **${
@@ -33,7 +33,7 @@ export default {
 			)
 			.setFooter({
 				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member?.avatar?.toString(),
+				iconURL: interaction.member!.avatar!.toString(),
 			})
 			.setColor('#ff0000')
 			.setTimestamp();
@@ -65,6 +65,6 @@ export default {
 
 		const row = new ActionRowBuilder().addComponents(volumedown, saveButton, resumepause, loop, volumeup);
 
-		interaction.reply({ embeds: [embed], components: [row as any] });
+		return interaction.reply({ embeds: [embed], components: [row as any] });
 	},
 } as JuanitaCommand;

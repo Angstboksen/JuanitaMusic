@@ -1,4 +1,4 @@
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'back',
@@ -24,7 +24,7 @@ export default {
 
 		await queue.back();
 
-		interaction.reply({ content: `Playing the **previous** track ✅` });
+		return interaction.reply({ content: `Playing the **previous** track ✅` });
 	},
 } as JuanitaCommand;
 

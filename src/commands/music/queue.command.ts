@@ -1,5 +1,5 @@
 import { EmbedBuilder } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'queue',
@@ -35,15 +35,15 @@ export default {
 			.setThumbnail(interaction.guild.iconURL({ size: 2048, forceStatic: false }))
 			.setAuthor({
 				name: `Server queue - ${interaction.guild.name} ${methods[queue.repeatMode]}`,
-				iconURL: client.user?.displayAvatarURL({ size: 1024, forceStatic: false }),
+				iconURL: client.user!.displayAvatarURL({ size: 1024, forceStatic: false }),
 			})
 			.setDescription(`Current ${queue.current.title}\n\n${tracks.slice(0, 5).join('\n')}\n\n${nextSongs}`)
 			.setTimestamp()
 			.setFooter({
 				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member.avatar?.toString(),
+				iconURL: interaction.member.avatar!.toString(),
 			});
 
-		interaction.reply({ embeds: [embed] });
+		return interaction.reply({ embeds: [embed] });
 	},
 } as JuanitaCommand;

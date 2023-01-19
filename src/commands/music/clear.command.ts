@@ -1,4 +1,4 @@
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'clear',
@@ -23,6 +23,6 @@ export default {
 			});
 
 		queue.clear();
-		interaction.reply(`The queue has just been cleared 🗑️`);
+		return interaction.reply(`The queue has just been cleared 🗑️`);
 	},
 } as JuanitaCommand;

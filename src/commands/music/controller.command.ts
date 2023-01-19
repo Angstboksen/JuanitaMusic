@@ -7,7 +7,7 @@ import {
 	EmbedBuilder,
 	PermissionsBitField,
 } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'controller',
@@ -36,7 +36,7 @@ export default {
 			.setColor('#36393e')
 			.setFooter({
 				text: 'Music comes first - Made with heart by Zerio ❤️',
-				iconURL: interaction.member.avatar?.toString(),
+				iconURL: interaction.member!.avatar!.toString(),
 			});
 
 		interaction.reply({ content: `sending controller to ${channel}... ✅`, ephemeral: true });
@@ -89,6 +89,6 @@ export default {
 		const row1 = new ActionRowBuilder().addComponents(back, queuebutton, resumepause, np, skip);
 		const row2 = new ActionRowBuilder().addComponents(volumedown, loop, save, volumeup);
 
-		channel.send({ embeds: [embed], components: [row1 as any, row2] });
+		return channel.send({ embeds: [embed], components: [row1 as any, row2] });
 	},
 } as JuanitaCommand;

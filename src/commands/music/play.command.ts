@@ -1,6 +1,6 @@
 import { QueryType } from 'discord-player';
 import { ApplicationCommandOptionType, GuildMember } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'play',
@@ -49,8 +49,9 @@ export default {
 
 		await interaction.editReply({ content: `Loading your ${res.playlist ? 'playlist' : 'track'}... 🎧` });
 
-		res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]);
+		res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]!);
 
 		if (!queue.playing) await queue.play();
+		return;
 	},
 } as JuanitaCommand;

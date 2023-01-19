@@ -1,5 +1,5 @@
 import ms from 'ms';
-import { JuanitaCommand } from '../types';
+import type{ JuanitaCommand } from '../types';
 
 export default {
 	name: 'ping',
@@ -7,7 +7,7 @@ export default {
 	async execute({ interaction, client }) {
 		if (!client) return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
 		await interaction.reply('Ping?');
-		interaction.editReply(
+		return interaction.editReply(
 			`Pong! API Latency is ${Math.round(client.ws.ping)}ms 🛰️, Last heartbeat calculated ${ms(
 				Date.now() - client.ws.shards.first()!.lastPingTimestamp,
 				{ long: true },

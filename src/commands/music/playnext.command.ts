@@ -1,6 +1,6 @@
 import { QueryType } from 'discord-player';
 import { ApplicationCommandOptionType, GuildMember } from 'discord.js';
-import { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'playnext',
@@ -43,8 +43,8 @@ export default {
 				content: `This command dose not support playlist's ${member}... try again ? ❌`,
 			});
 
-		queue.insert(res.tracks[0], 0);
+		queue.insert(res.tracks[0]!, 0);
 
-		await interaction.editReply({ content: `Track has been inserted into the queue... it will play next 🎧` });
+		return await interaction.editReply({ content: `Track has been inserted into the queue... it will play next 🎧` });
 	},
 } as JuanitaCommand;
