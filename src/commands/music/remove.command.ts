@@ -1,20 +1,20 @@
-import { ApplicationCommandOptionType } from 'discord.js';
-import type { JuanitaCommand } from '../types';
+import { ApplicationCommandOptionType } from "discord.js";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'remove',
-	description: 'remove a song from the queue',
+	name: "remove",
+	description: "remove a song from the queue",
 	voiceChannel: true,
 	options: [
 		{
-			name: 'song',
-			description: 'the name/url of the track you want to remove',
+			name: "song",
+			description: "the name/url of the track you want to remove",
 			type: ApplicationCommandOptionType.String,
 			required: false,
 		},
 		{
-			name: 'number',
-			description: 'the place in the queue the song is in',
+			name: "number",
+			description: "the place in the queue the song is in",
 			type: ApplicationCommandOptionType.Number,
 			required: false,
 		},
@@ -22,10 +22,10 @@ export default {
 
 	async execute({ interaction, player }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
+			return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
 
-		const number = (interaction.options as any).getNumber('number');
-		const track = (interaction.options as any).getString('song');
+		const number = (interaction.options as any).getNumber("number");
+		const track = (interaction.options as any).getString("song");
 		const queue = player.getQueue(interaction.guildId);
 
 		if (!queue || !queue.playing)

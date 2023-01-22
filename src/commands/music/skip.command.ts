@@ -1,10 +1,10 @@
-import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
-import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, SKIP_SUCCESS } from '../../embeds/messages';
-import type { JuanitaCommand } from '../types';
+import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
+import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, SKIP_SUCCESS } from "../../embeds/messages";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'skip',
-	description: 'Skips to the next song in the queue!',
+	name: "skip",
+	description: "Skips to the next song in the queue!",
 	voiceChannel: true,
 
 	async execute({ interaction, player, lang }) {

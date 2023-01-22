@@ -1,13 +1,13 @@
-import type { JuanitaCommand } from '../types';
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'shuffle',
-	description: 'shuffle the track',
+	name: "shuffle",
+	description: "shuffle the track",
 	voiceChannel: true,
 
 	async execute({ interaction, player }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
+			return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
 		const queue = player.getQueue(interaction.guildId);
 
 		if (!queue || !queue.playing)

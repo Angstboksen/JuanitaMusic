@@ -1,4 +1,4 @@
-import type { JuanitaButtonOptions } from './types';
+import type { JuanitaButtonOptions } from "./types";
 
 export default async ({ interaction, queue }: JuanitaButtonOptions) => {
 	if (!queue || !queue.playing)

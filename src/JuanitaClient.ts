@@ -1,7 +1,7 @@
-import { Player } from 'discord-player';
-import type { JuanitaConfig } from '../config';
-import { Client, ClientOptions, Collection } from 'discord.js';
-import loadClient from './loader';
+import { Player } from "discord-player";
+import type { JuanitaConfig } from "../config";
+import { Client, ClientOptions, Collection } from "discord.js";
+import loadClient from "./loader";
 
 type JuanitaClientOptions = ClientOptions;
 

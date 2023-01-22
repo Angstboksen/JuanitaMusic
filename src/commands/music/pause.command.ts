@@ -1,10 +1,10 @@
-import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
-import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, PAUSE_SUCCESS } from '../../embeds/messages';
-import type { JuanitaCommand } from '../types';
+import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
+import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, PAUSE_SUCCESS } from "../../embeds/messages";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'pause',
-	description: 'Pause the current track!',
+	name: "pause",
+	description: "Pause the current track!",
 	voiceChannel: true,
 
 	execute({ interaction, player, lang }) {

@@ -1,22 +1,22 @@
-import { ApplicationCommandOptionType } from 'discord.js';
-import type { JuanitaCommand } from '../types';
-import ms from 'ms';
+import { ApplicationCommandOptionType } from "discord.js";
+import type { JuanitaCommand } from "../types";
+import ms from "ms";
 
 export default {
-	name: 'seek',
-	description: 'skip back or foward in a song',
+	name: "seek",
+	description: "skip back or foward in a song",
 	voiceChannel: true,
 	options: [
 		{
-			name: 'time',
-			description: 'time that you want to skip to',
+			name: "time",
+			description: "time that you want to skip to",
 			type: ApplicationCommandOptionType.String,
 			required: true,
 		},
 	],
 	async execute({ interaction, player }) {
 		if (!interaction.guildId || !interaction.member || !player)
-			return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
+			return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
 		const queue = player.getQueue(interaction.guildId);
 
 		if (!queue || !queue.playing)
@@ -25,7 +25,7 @@ export default {
 				ephemeral: true,
 			});
 
-		const timeToMS = +ms((interaction.options as any).getString('time'));
+		const timeToMS = +ms((interaction.options as any).getString("time"));
 
 		if (timeToMS >= queue.current.durationMS)
 			return interaction.reply({

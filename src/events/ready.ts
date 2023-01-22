@@ -1,5 +1,5 @@
-import { ActivityType } from 'discord.js';
-import type JuanitaClient from '../JuanitaClient';
+import { ActivityType } from "discord.js";
+import type JuanitaClient from "../JuanitaClient";
 
 export default async (client: JuanitaClient) => {
 	console.log(

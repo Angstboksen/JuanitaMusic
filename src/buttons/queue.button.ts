@@ -1,5 +1,5 @@
-import { EmbedBuilder } from 'discord.js';
-import type { JuanitaButtonOptions } from './types';
+import { EmbedBuilder } from "discord.js";
+import type { JuanitaButtonOptions } from "./types";
 
 export default async ({ client, interaction, queue }: JuanitaButtonOptions) => {
 	if (!queue || !queue.playing)
@@ -11,7 +11,7 @@ export default async ({ client, interaction, queue }: JuanitaButtonOptions) => {
 			ephemeral: true,
 		});
 
-	const methods = ['', '🔁', '🔂'];
+	const methods = ["", "🔁", "🔂"];
 
 	const songs = queue.tracks.length;
 
@@ -22,13 +22,13 @@ export default async ({ client, interaction, queue }: JuanitaButtonOptions) => {
 	);
 
 	const embed = new EmbedBuilder()
-		.setColor('#ff0000')
+		.setColor("#ff0000")
 		.setThumbnail(interaction.guild!.iconURL({ size: 2048, forceStatic: false }))
 		.setAuthor({
 			name: `Server queue - ${interaction.guild!.name} ${methods[queue.repeatMode]}`,
 			iconURL: client.user!.displayAvatarURL({ size: 1024, forceStatic: false }),
 		})
-		.setDescription(`Current ${queue.current.title}\n\n${tracks.slice(0, 5).join('\n')}\n\n${nextSongs}`)
+		.setDescription(`Current ${queue.current.title}\n\n${tracks.slice(0, 5).join("\n")}\n\n${nextSongs}`)
 		.setTimestamp();
 
 	return interaction.reply({ embeds: [embed], ephemeral: true });

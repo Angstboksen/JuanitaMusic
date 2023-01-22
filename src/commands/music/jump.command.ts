@@ -1,21 +1,21 @@
-import { ApplicationCommandOptionType } from 'discord.js';
-import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import { ApplicationCommandOptionType } from "discord.js";
+import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
 import {
 	GENERIC_ERROR,
 	GENERIC_NO_MUSIC_PLAYING_ERROR,
 	JUMP_QUEUE_POSITION_ERROR,
 	JUMP_SUCCESS,
-} from '../../embeds/messages';
-import type { JuanitaCommand } from '../types';
+} from "../../embeds/messages";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'jump',
-	description: 'Skips to particular track in queue',
+	name: "jump",
+	description: "Skips to particular track in queue",
 	voiceChannel: true,
 	options: [
 		{
-			name: 'number',
-			description: 'The place of the song in the queue!',
+			name: "number",
+			description: "The place of the song in the queue!",
 			type: ApplicationCommandOptionType.Number,
 			required: true,
 		},
@@ -25,7 +25,7 @@ export default {
 		if (!interaction.guildId || !player)
 			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
 
-		const number = (interaction.options as any).getNumber('number');
+		const number = (interaction.options as any).getNumber("number");
 
 		const queue = player.getQueue(interaction.guildId);
 

@@ -1,10 +1,10 @@
-import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
-import { CLEAR_QUEUE_SUCCESS, GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR } from '../../embeds/messages';
-import type { JuanitaCommand } from '../types';
+import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
+import { CLEAR_QUEUE_SUCCESS, GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR } from "../../embeds/messages";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'clear',
-	description: 'Clears the queue!',
+	name: "clear",
+	description: "Clears the queue!",
 	voiceChannel: true,
 
 	async execute({ interaction, player, lang }) {

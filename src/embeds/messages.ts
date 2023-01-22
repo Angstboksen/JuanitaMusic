@@ -94,9 +94,9 @@ export const BACK_PLAYING_TRACK_SUCCESS = {
 
 // CLEAR:
 export const CLEAR_QUEUE_SUCCESS = {
-	en: '🗑️ Cleared the queue!',
-	no: '🗑️ Tømte køen!',
-	molde: '🗑️ Tømte køa!',
+	en: "🗑️ Cleared the queue!",
+	no: "🗑️ Tømte køen!",
+	molde: "🗑️ Tømte køa!",
 };
 
 // JUMP:

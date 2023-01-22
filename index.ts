@@ -1,6 +1,6 @@
-import { GatewayIntentBits } from 'discord.js';
-import envConfig from './config';
-import JuanitaClient from './src/JuanitaClient';
+import { GatewayIntentBits } from "discord.js";
+import envConfig from "./config";
+import JuanitaClient from "./src/JuanitaClient";
 
 const client = new JuanitaClient(
 	{

@@ -1,7 +1,7 @@
-import type { Player } from 'discord-player';
-import type { ApplicationCommandOption, CommandInteraction } from 'discord.js';
-import type JuanitaClient from '../JuanitaClient';
-import type { JuanitaMessage } from '../embeds/messages';
+import type { Player } from "discord-player";
+import type { ApplicationCommandOption, CommandInteraction } from "discord.js";
+import type JuanitaClient from "../JuanitaClient";
+import type { JuanitaMessage } from "../embeds/messages";
 
 export interface JuanitaCommand {
 	name: string;

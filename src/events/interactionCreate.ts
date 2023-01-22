@@ -1,17 +1,17 @@
-import { GuildMember, Interaction, InteractionType } from 'discord.js';
-import SimpleEmbed, { EmbedType } from '../embeds/embeds';
+import { GuildMember, Interaction, InteractionType } from "discord.js";
+import SimpleEmbed, { EmbedType } from "../embeds/embeds";
 import {
 	COMMAND_NOT_FOUND_ERROR,
 	GENERIC_ERROR,
 	JuanitaMessage,
 	USER_NOT_IN_SAME_VOICE,
 	USER_NOT_IN_VOICE,
-} from '../embeds/messages';
-import type JuanitaClient from '../JuanitaClient';
+} from "../embeds/messages";
+import type JuanitaClient from "../JuanitaClient";
 
 export default (client: JuanitaClient, interaction: Interaction) => {
 	// [TODO]: Implement language
-	const lang = 'no' as keyof JuanitaMessage;
+	const lang = "no" as keyof JuanitaMessage;
 	if (interaction.type === InteractionType.ApplicationCommand) {
 		const command = client.commands.get(interaction.commandName);
 		if (!command)
@@ -19,7 +19,7 @@ export default (client: JuanitaClient, interaction: Interaction) => {
 				embeds: [SimpleEmbed(COMMAND_NOT_FOUND_ERROR[lang], EmbedType.Error)],
 				ephemeral: true,
 			});
-		console.log(`[COMMAND]: Executed '${interaction.commandName}' by '${interaction.user.tag}'`);
+		console.log(`[COMMAND]: Executed "${interaction.commandName}" by "${interaction.user.tag}"`);
 		const member = interaction.member as GuildMember;
 		if (command.voiceChannel) {
 			if (!member.voice.channel)
@@ -49,7 +49,7 @@ export default (client: JuanitaClient, interaction: Interaction) => {
 
 	if (interaction.type === InteractionType.MessageComponent) {
 		const customId = JSON.parse(interaction.customId);
-		console.log(`[BUTTON]: Executed '${customId.ffb}' by '${interaction.user.tag}'`);
+		console.log(`[BUTTON]: Executed "${customId.ffb}" by "${interaction.user.tag}"`);
 		const file_of_button = customId.ffb;
 		const queue = client.player.getQueue(interaction.guildId!);
 		if (file_of_button) {

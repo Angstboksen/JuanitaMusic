@@ -1,4 +1,4 @@
-import { config } from 'dotenv';
+import { config } from "dotenv";
 config();
 
 export type JuanitaConfig = {
@@ -26,7 +26,7 @@ export type JuanitaConfig = {
 const envConfig: JuanitaConfig = {
 	app: {
 		token: process.env.BOT_TOKEN,
-		playing: 'Yeeting bangers ❤️',
+		playing: "Yeeting bangers ❤️",
 		global: process.env.DEV !== "true",
 		guild: process.env.DEV ? process.env.DEV_GUILD: undefined,
 	},
@@ -39,7 +39,7 @@ const envConfig: JuanitaConfig = {
 		defaultvolume: 50,
 		discordPlayer: {
 			ytdlOptions: {
-				quality: 'highestaudio',
+				quality: "highestaudio",
 				highWaterMark: 1 << 25,
 			},
 		},

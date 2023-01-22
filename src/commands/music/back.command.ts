@@ -1,15 +1,15 @@
-import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
 import {
 	GENERIC_NO_MUSIC_PLAYING_ERROR,
 	GENERIC_NO_PREVIOUS_TRACK_ERROR,
 	BACK_PLAYING_TRACK_SUCCESS,
 	GENERIC_ERROR,
-} from '../../embeds/messages';
-import type { JuanitaCommand } from '../types';
+} from "../../embeds/messages";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'back',
-	description: 'Plays the previous track!',
+	name: "back",
+	description: "Plays the previous track!",
 	voiceChannel: true,
 
 	async execute({ interaction, player, lang }) {

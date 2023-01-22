@@ -22,7 +22,7 @@ All commands are available using Discord slash application command interface. Th
 | __Common commands__ |
 | `/play <URL or keywords:string>` | Plays or adds to queue the song fetched based on the keywords provided | 
 | `/first <URL or keywords:string>` | Plays or puts at the top of the queue the song fetched based on the keywords provided | 
-| `/spotify <playlistURI or alias:string>` | Queues all songs in a Spotify playlist given it's URI or stored alias |
+| `/spotify <playlistURI or alias:string>` | Queues all songs in a Spotify playlist given it"s URI or stored alias |
 | `/remember <playlistURI:string> <alias:string>` | Will store the given Spotify playlist URI to a custom name for easy use |
 | `/jump <position: number>` | Jumps to the given position in the queue | 
 | `/kill <position: number>` | Removes the song at the given position from the queue | 

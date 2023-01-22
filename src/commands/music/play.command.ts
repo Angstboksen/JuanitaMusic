@@ -1,23 +1,23 @@
-import { QueryType } from 'discord-player';
-import { ApplicationCommandOptionType, GuildMember } from 'discord.js';
-import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import { QueryType } from "discord-player";
+import { ApplicationCommandOptionType, GuildMember } from "discord.js";
+import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
 import {
 	GENERIC_CANT_JOIN_CHANNEL,
 	GENERIC_ERROR,
 	PLAY_NO_TRACKS_FOUND_ERROR,
 	PLAY_PLAYLIST_SUCCESS,
 	PLAY_TRACK_SUCCESS,
-} from '../../embeds/messages';
-import type { JuanitaCommand } from '../types';
+} from "../../embeds/messages";
+import type { JuanitaCommand } from "../types";
 
 export default {
-	name: 'play',
-	description: 'Play a song based on search words or YouTube URL!',
+	name: "play",
+	description: "Play a song based on search words or YouTube URL!",
 	voiceChannel: true,
 	options: [
 		{
-			name: 'song',
-			description: 'Song name or YouTube URL',
+			name: "song",
+			description: "Song name or YouTube URL",
 			type: ApplicationCommandOptionType.String,
 			required: true,
 		},
@@ -29,7 +29,7 @@ export default {
 
 		await interaction.deferReply({ ephemeral: true });
 		const member = interaction.member as GuildMember;
-		const song = (interaction.options as any).getString('song');
+		const song = (interaction.options as any).getString("song");
 		const res = await player.search(song, {
 			requestedBy: member,
 			searchEngine: QueryType.AUTO,
