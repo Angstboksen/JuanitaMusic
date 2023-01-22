@@ -1,75 +1,56 @@
 import { ApplicationCommandOptionType } from 'discord.js';
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import {
+	GENERIC_ERROR,
+	GENERIC_NO_MUSIC_PLAYING_ERROR,
+	JUMP_QUEUE_POSITION_ERROR,
+	JUMP_SUCCESS,
+} from '../../embeds/messages';
 import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'jump',
-	description: 'Jumps to particular track in queue',
+	description: 'Skips to particular track in queue',
 	voiceChannel: true,
 	options: [
 		{
-			name: 'song',
-			description: 'the name/url of the track you want to jump to',
-			type: ApplicationCommandOptionType.String,
-			required: false,
-		},
-		{
 			name: 'number',
-			description: 'the place in the queue the song is in',
+			description: 'The place of the song in the queue!',
 			type: ApplicationCommandOptionType.Number,
-			required: false,
+			required: true,
 		},
 	],
 
-	async execute({ interaction, player }) {
+	async execute({ interaction, player, lang }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
 
-		const track = (interaction.options as any).getString('song');
 		const number = (interaction.options as any).getNumber('number');
 
 		const queue = player.getQueue(interaction.guildId);
 
 		if (!queue || !queue.playing)
 			return interaction.reply({
-				content: `No music currently playing ${interaction.member}... try again ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
-		if (!track && !number)
+		if (!number || number > queue.tracks.length)
 			interaction.reply({
-				content: `You have to use one of the options to jump to a song ${interaction.member}... try again ? ❌`,
+				embeds: [
+					SimpleEmbed(`${JUMP_QUEUE_POSITION_ERROR[lang]} \`(${`1 - ${queue.tracks.length}`})\``, EmbedType.Error),
+				],
 				ephemeral: true,
 			});
 
-		if (track) {
-			for (let song of queue.tracks) {
-				if (song.title === track || song.url === track) {
-					queue.skipTo(song);
-					return interaction.reply({ content: `skiped to ${track} ✅` });
-				}
-			}
-
+		const index = number - 1;
+		const trackname = queue.tracks[index]!.title;
+		if (!trackname)
 			return interaction.reply({
-				content: `could not find ${track} ${interaction.member}... try using the url or the full name of the song ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)],
 				ephemeral: true,
 			});
-		}
-		if (number) {
-			if (number > queue.tracks.length)
-				return interaction.reply({
-					content: `There are only ${queue.tracks.length} songs in the queue ${interaction.member}... try again ?❌`,
-					ephemeral: true,
-				});
-			const index = number - 1;
-			const trackname = queue.tracks[index]!.title;
-			if (!trackname)
-				return interaction.reply({
-					content: `This track dose not seem to exist ${interaction.member}...  try again ?❌`,
-					ephemeral: true,
-				});
-			queue.skipTo(index);
-			return interaction.reply({ content: `Jumped to ${trackname}  ✅` });
-		}
-		return;
+		queue.skipTo(index);
+		return interaction.reply({ embeds: [SimpleEmbed(`${JUMP_SUCCESS[lang]}: \`${trackname}\``, EmbedType.Success)] });
 	},
 } as JuanitaCommand;

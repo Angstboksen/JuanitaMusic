@@ -27,8 +27,8 @@ const envConfig: JuanitaConfig = {
 	app: {
 		token: process.env.BOT_TOKEN,
 		playing: 'Yeeting bangers ❤️',
-		global: !process.env.DEV,
-		guild: process.env.DEV ?? process.env.DEV_GUILD,
+		global: process.env.DEV !== "true",
+		guild: process.env.DEV ? process.env.DEV_GUILD: undefined,
 	},
 
 	opt: {

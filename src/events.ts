@@ -25,10 +25,10 @@ const loadPlayer = (client: JuanitaClient) => {
 		metadata.send({ embeds: [embed] });
 	});
 
-	player.on('trackAdd', (queue, track) => {
-		const metadata = queue.metadata as any;
-		metadata.send(`Track ${track.title} added in the queue ✅`);
-	});
+	// player.on('trackAdd', (queue, track) => {
+	// 	const metadata = queue.metadata as any;
+	// 	metadata.send(`Track ${track.title} added in the queue ✅`);
+	// });
 
 	player.on('botDisconnect', (queue) => {
 		const metadata = queue.metadata as any;

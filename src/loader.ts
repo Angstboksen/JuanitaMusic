@@ -10,7 +10,7 @@ const loadClient = (Jclient: JuanitaClient) => {
 	const commandArray: any[] = [];
 
 	const events = readdirSync('./src/events/').filter((file) => file.endsWith('.ts'));
-	
+
 	console.log(`Loading events...`);
 
 	for (const file of events) {
@@ -26,11 +26,11 @@ const loadClient = (Jclient: JuanitaClient) => {
 	console.log(`Loading commands...`);
 
 	readdirSync('./src/commands/').forEach((dirs) => {
-		if (dirs.includes('.')) return
+		if (dirs.includes('.') || dirs === 'deprecated') return;
 		const commands: string[] = readdirSync(`./src/commands/${dirs}`).filter((files) => files.endsWith('.command.ts'));
 
 		for (const file of commands) {
-			const command: {default: JuanitaCommand} = require(`./commands/${dirs}/${file}`);
+			const command: { default: JuanitaCommand } = require(`./commands/${dirs}/${file}`);
 			if (command.default.name && command.default.description) {
 				commandArray.push(command.default);
 				console.log(`-> [Loaded Command] ${command.default.name.toLowerCase()}`);
@@ -41,10 +41,13 @@ const loadClient = (Jclient: JuanitaClient) => {
 	});
 
 	Jclient.on('ready', (client) => {
-		console.log(`Logged in as ${client.user?.tag}!`);
+		console.log(
+			`Logged in as ${client.user?.tag}! MODE: ${
+				Jclient.config.app.global ? 'GLOBAL' : 'GUILD: ' + Jclient.config.app.guild
+			}`,
+		);
 		if (Jclient.config.app.global) client.application.commands.set(commandArray);
 		else {
-			console.log("based")
 			client.guilds.cache.get(Jclient.config.app.guild!)?.commands.set(commandArray);
 		}
 	});

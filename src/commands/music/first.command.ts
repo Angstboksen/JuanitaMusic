@@ -2,17 +2,16 @@ import { QueryType } from 'discord-player';
 import { ApplicationCommandOptionType, GuildMember } from 'discord.js';
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
 import {
+	FIRST_PLAYLIST_NOT_SUPPORTED,
 	GENERIC_CANT_JOIN_CHANNEL,
 	GENERIC_ERROR,
 	PLAY_NO_TRACKS_FOUND_ERROR,
-	PLAY_PLAYLIST_SUCCESS,
-	PLAY_TRACK_SUCCESS,
 } from '../../embeds/messages';
 import type { JuanitaCommand } from '../types';
 
 export default {
-	name: 'play',
-	description: 'Play a song based on search words or YouTube URL!',
+	name: 'first',
+	description: 'Add a song to the top of the queue',
 	voiceChannel: true,
 	options: [
 		{
@@ -40,6 +39,11 @@ export default {
 				embeds: [SimpleEmbed(`${PLAY_NO_TRACKS_FOUND_ERROR[lang]} ${song}`, EmbedType.Error)],
 			});
 
+		if (res.playlist)
+			return interaction.editReply({
+				embeds: [SimpleEmbed(FIRST_PLAYLIST_NOT_SUPPORTED[lang], EmbedType.Error)],
+			});
+
 		let queue = player.getQueue(interaction.guildId);
 		if (!queue) {
 			queue = player.createQueue(interaction.guild, {
@@ -58,15 +62,13 @@ export default {
 				embeds: [SimpleEmbed(GENERIC_CANT_JOIN_CHANNEL[lang], EmbedType.Error)],
 			});
 		}
-
-		const embed = res.playlist
-			? SimpleEmbed(`${PLAY_PLAYLIST_SUCCESS[lang]} \`${res.playlist.title}\``, EmbedType.Success)
-			: SimpleEmbed(`${PLAY_TRACK_SUCCESS[lang]} \`${res.tracks[0]!.title}\``, EmbedType.Success);
-
+		
 		const isPlaying = !!queue.current
-		res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]!);
+		queue.insert(res.tracks[0]!, 0);
 		if (!isPlaying) await queue.play();
 
-		return interaction.editReply({ embeds: [embed] });
+		return await interaction.editReply({
+			embeds: [SimpleEmbed(`Added \`${res.tracks[0]!.title}\` to the top of the queue!`, EmbedType.Success)],
+		});
 	},
 } as JuanitaCommand;

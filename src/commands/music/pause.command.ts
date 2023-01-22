@@ -1,36 +1,32 @@
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, PAUSE_SUCCESS } from '../../embeds/messages';
 import type { JuanitaCommand } from '../types';
 
 export default {
 	name: 'pause',
-	description: 'pause the track',
+	description: 'Pause the current track!',
 	voiceChannel: true,
 
-	execute({ interaction, player }) {
+	execute({ interaction, player, lang }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
 
 		const queue = player.getQueue(interaction.guildId);
 		if (!queue)
 			return interaction.reply({
-				content: `No music currently playing ${interaction.member}... try again ? ❌`,
-				ephemeral: true,
-			});
-
-		if (queue.connection.paused)
-			return interaction.reply({ content: 'The track is currently paused!', ephemeral: true });
-
-		if (queue.connection.paused)
-			return interaction.reply({
-				content: `The track is currently paused, ${interaction.member}... try again ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
 		const success = queue.setPaused(true);
+		if (!success)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 
 		return interaction.reply({
-			content: success
-				? `Current music ${queue.current.title} paused ✅`
-				: `Something went wrong ${interaction.member}... try again ? ❌`,
+			embeds: [SimpleEmbed(`⏸ \`${queue.current.title}\` ${PAUSE_SUCCESS[lang]}`, EmbedType.Success)],
 		});
 	},
 } as JuanitaCommand;

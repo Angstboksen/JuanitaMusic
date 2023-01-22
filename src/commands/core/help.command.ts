@@ -1,27 +1,23 @@
-import { EmbedBuilder } from 'discord.js';
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
 import type { JuanitaCommand } from '../types';
+import { GENERIC_ERROR, HELP_COMMAND_AMOUNT, HELP_COMMAND_DESCRIPTION } from '../../embeds/messages';
 
 export default {
 	name: 'help',
-	description: 'All the commands this bot has!',
+	description: 'Shows the commands this bot has!',
 	showHelp: false,
 
-	execute({ interaction, client }) {
+	execute({ interaction, client, lang }) {
 		if (!interaction.guildId || !client)
-			return interaction.reply({ content: 'Something went wrong ❌', ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
 		const commands = client.commands.filter((x) => x.showHelp !== false);
 
-		const embed = new EmbedBuilder()
-			.setColor('#ff0000')
-			.setAuthor({
-				name: client.user!.username,
-				iconURL: client.user!.displayAvatarURL({ size: 1024, forceStatic: false }),
-			})
-			.setDescription(
-				'This code comes from a GitHub project [ZerioDev/Music-bot](https://github.com/ZerioDev/Music-bot).\nThe use of this one is possible while keeping the credits for free.\nIf you want to remove the credits join the Discord support server.',
-			)
-			.addFields([{ name: `Enabled - ${commands.size}`, value: commands.map((x) => `\`${x.name}\``).join(' | ') }])
-			.setTimestamp()
+		const embed = SimpleEmbed(HELP_COMMAND_DESCRIPTION[lang], EmbedType.Info).addFields([
+			{
+				name: `${HELP_COMMAND_AMOUNT[lang]} ${commands.size}`,
+				value: commands.map((x) => `\`${x.name}\``).join(' | '),
+			},
+		]);
 
 		return interaction.reply({ embeds: [embed] });
 	},
