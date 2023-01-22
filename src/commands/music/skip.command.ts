@@ -1,10 +1,16 @@
-import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
-import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, SKIP_SUCCESS } from "../../embeds/messages";
-import type { JuanitaCommand } from "../types";
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import {
+	GENERIC_ERROR,
+	GENERIC_NO_MUSIC_PLAYING_ERROR,
+	SKIP_EMPTY_QUEUE,
+	SKIP_FROM_SUCCESS,
+	SKIP_TO_SUCCESS,
+} from '../../embeds/messages';
+import type { JuanitaCommand } from '../types';
 
 export default {
-	name: "skip",
-	description: "Skips to the next song in the queue!",
+	name: 'skip',
+	description: 'Skips to the next song in the queue!',
 	voiceChannel: true,
 
 	async execute({ interaction, player, lang }) {
@@ -17,21 +23,25 @@ export default {
 				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[lang], EmbedType.Error)],
 				ephemeral: true,
 			});
+		const songFrom = queue.current.title;
+		const songTo = queue.tracks.length === 0 ? SKIP_EMPTY_QUEUE[lang] : queue.tracks[0]!.title;
 
-		const success = queue.skip();
-		if (!success)
+		try {
+			if (queue.tracks.length === 0) await queue.destroy();
+			else await queue.forceNext();
+			return interaction.reply({
+				embeds: [
+					SimpleEmbed(
+						`${SKIP_FROM_SUCCESS[lang]} \`${songFrom}\`\n${SKIP_TO_SUCCESS[lang]} \`${songTo}\``,
+						EmbedType.Success,
+					),
+				],
+			});
+		} catch (error) {
 			return interaction.reply({
 				embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)],
 				ephemeral: true,
 			});
-
-		return interaction.reply({
-			embeds: [
-				SimpleEmbed(
-					`${SKIP_SUCCESS[lang]} \`${queue.current.title}\``,
-					EmbedType.Success,
-				),
-			],
-		});
+		}
 	},
 } as JuanitaCommand;

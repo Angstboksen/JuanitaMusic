@@ -94,9 +94,9 @@ export const BACK_PLAYING_TRACK_SUCCESS = {
 
 // CLEAR:
 export const CLEAR_QUEUE_SUCCESS = {
-	en: "🗑️ Cleared the queue!",
-	no: "🗑️ Tømte køen!",
-	molde: "🗑️ Tømte køa!",
+	en: '🗑️ Cleared the queue!',
+	no: '🗑️ Tømte køen!',
+	molde: '🗑️ Tømte køa!',
 };
 
 // JUMP:
@@ -135,7 +135,7 @@ export const PAUSE_SUCCESS = {
 // PLAY:
 export const PLAY_PLAYLIST_SUCCESS = {
 	en: `✅ Added all songs from playlist: `,
-	no: `✅ La t alle sanger fra spillelista: `,
+	no: `✅ La til alle sanger fra spillelista: `,
 	molde: `✅ La til alle sanger fra spillelista: `,
 };
 
@@ -147,6 +147,42 @@ export const PLAY_TRACK_SUCCESS = {
 
 // QUEUE:
 
+export const QUEUE_AUTHOR_NAME = {
+	en: `This is the current state of the queue`,
+	no: `Dette er nåværende status for køen`,
+	molde: `Ta er nåværende status for køa`,
+};
+
+export const QUEUE_NOW_PLAYING = {
+	en: `**🎶 Now playing:**`,
+	no: `**🎶 Spiller nå:**`,
+	molde: `**🎶 Spiller no:**`,
+};
+
+export const QUEUE_ADDED_BY = {
+	en: `**👤 Added by:**`,
+	no: `**👤 Lagt til av:**`,
+	molde: `**👤 Lagt til av:**`,
+};
+
+export const QUEUE_TOTAL_TIME = {
+	en: `Total time left:`,
+	no: `Total tid igjen:`,
+	molde: `Total tid igjen:`,
+};
+
+export const QUEUE_SONG_AMOUNT = {
+	en: `Amount of songs in queue:`,
+	no: `Antall sanger i køen:`,
+	molde: `Antall sanger i køa:`,
+};
+
+export const QUEUE_SELECT_PLACEHOLDER = {
+	en: `Open me to view the queue`,
+	no: `Åpne meg for å se køen`,
+	molde: `Åpne me for å se køa`,
+};
+
 // REMOVE:
 
 // RESUME:
@@ -157,8 +193,20 @@ export const PLAY_TRACK_SUCCESS = {
 
 // SKIP:
 
-export const SKIP_SUCCESS = {
-	en: `⏭️ Skipped track: `,
-	no: `⏭️ Skippet sang: `,
-	molde: `⏭️ Skippet sang: `,
+export const SKIP_FROM_SUCCESS = {
+	en: `⏭️ Skipping track: `,
+	no: `⏭️ Skipper sang: `,
+	molde: `⏭️ Skipper sang: `,
+};
+
+export const SKIP_TO_SUCCESS = {
+	en: `🎶 Next track: `,
+	no: `🎶 Neste sang: `,
+	molde: `🎶 Neste sang: `,
+};
+
+export const SKIP_EMPTY_QUEUE = {
+	en: `😢 The queue is empty!`,
+	no: `😢 Køen er tom!`,
+	molde: `😢 Køa er tom!`,
 };
