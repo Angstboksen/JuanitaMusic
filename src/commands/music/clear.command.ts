@@ -7,18 +7,18 @@ export default {
 	description: "Clears the queue!",
 	voiceChannel: true,
 
-	async execute({ interaction, player, lang }) {
+	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)], ephemeral: true });
 
 		const queue = player.getQueue(interaction.guildId);
 		if (!queue || !queue.playing)
 			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
 		queue.clear();
-		return interaction.reply({ embeds: [SimpleEmbed(CLEAR_QUEUE_SUCCESS[lang], EmbedType.Success)] });
+		return interaction.reply({ embeds: [SimpleEmbed(CLEAR_QUEUE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
 	},
 } as JuanitaCommand;

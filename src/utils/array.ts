@@ -7,6 +7,5 @@ export const getSelectMenuByPage = (tracks: Track[], page: number) => {
 		const index = tracks.indexOf(track);
 		selectMenu.addOptions({ label: `${index + 1}. ${track.title.slice(0, 50)} - ${track.requestedBy}`, value: `${index}` });
 	}
-    console.log(selectMenu.options.length)
 	return selectMenu;
 };

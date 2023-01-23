@@ -1,18 +1,23 @@
-import { GuildMember, Interaction, InteractionType } from "discord.js";
-import SimpleEmbed, { EmbedType } from "../embeds/embeds";
+import { GuildMember, Interaction, InteractionType } from 'discord.js';
+import SimpleEmbed, { EmbedType } from '../embeds/embeds';
 import {
 	COMMAND_NOT_FOUND_ERROR,
 	GENERIC_ERROR,
 	JuanitaMessage,
 	USER_NOT_IN_SAME_VOICE,
 	USER_NOT_IN_VOICE,
-} from "../embeds/messages";
-import type JuanitaClient from "../JuanitaClient";
+} from '../embeds/messages';
+import type JuanitaClient from '../JuanitaClient';
 
 export default (client: JuanitaClient, interaction: Interaction) => {
 	// [TODO]: Implement language
-	const lang = "no" as keyof JuanitaMessage;
+	const lang = 'no' as keyof JuanitaMessage;
 	if (interaction.type === InteractionType.ApplicationCommand) {
+		if (!interaction.guild || !interaction.guildId)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 		const command = client.commands.get(interaction.commandName);
 		if (!command)
 			return interaction.reply({
@@ -37,7 +42,12 @@ export default (client: JuanitaClient, interaction: Interaction) => {
 				});
 		}
 		try {
-			command.execute({ interaction, client, player: client.player, lang });
+			const juanitaGuildExist = client.guildCommander.has(interaction.guildId);
+			const juanitaGuild = juanitaGuildExist
+				? client.getJuanitaGuild(interaction.guildId)
+				: client.setJuanitaGuild(interaction.guildId, interaction.guild);
+
+			command.execute({ interaction, client, player: client.player, juanitaGuild });
 		} catch (error) {
 			console.error(error);
 			interaction.reply({
@@ -48,6 +58,11 @@ export default (client: JuanitaClient, interaction: Interaction) => {
 	}
 
 	if (interaction.type === InteractionType.MessageComponent) {
+		if (!interaction.guild || !interaction.guildId)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 		const customId = JSON.parse(interaction.customId);
 		console.log(`[BUTTON]: Executed "${customId.ffb}" by "${interaction.user.tag}"`);
 		const file_of_button = customId.ffb;

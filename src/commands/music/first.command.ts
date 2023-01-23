@@ -22,9 +22,9 @@ export default {
 		},
 	],
 
-	async execute({ interaction, player, client, lang }) {
+	async execute({ interaction, player, client, juanitaGuild }) {
 		if (!interaction.guild || !interaction.guildId || !interaction.member || !player || !client)
-			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)], ephemeral: true });
 
 		await interaction.deferReply({ ephemeral: true });
 		const member = interaction.member as GuildMember;
@@ -36,12 +36,12 @@ export default {
 
 		if (!res || !res.tracks.length)
 			return interaction.editReply({
-				embeds: [SimpleEmbed(`${PLAY_NO_TRACKS_FOUND_ERROR[lang]} ${song}`, EmbedType.Error)],
+				embeds: [SimpleEmbed(`${PLAY_NO_TRACKS_FOUND_ERROR[juanitaGuild.lang]} ${song}`, EmbedType.Error)],
 			});
 
 		if (res.playlist)
 			return interaction.editReply({
-				embeds: [SimpleEmbed(FIRST_PLAYLIST_NOT_SUPPORTED[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(FIRST_PLAYLIST_NOT_SUPPORTED[juanitaGuild.lang], EmbedType.Error)],
 			});
 
 		let queue = player.getQueue(interaction.guildId);
@@ -59,7 +59,7 @@ export default {
 		} catch {
 			player.deleteQueue(interaction.guildId);
 			return interaction.editReply({
-				embeds: [SimpleEmbed(GENERIC_CANT_JOIN_CHANNEL[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(GENERIC_CANT_JOIN_CHANNEL[juanitaGuild.lang], EmbedType.Error)],
 			});
 		}
 		

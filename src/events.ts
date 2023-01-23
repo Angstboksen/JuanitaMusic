@@ -44,11 +44,6 @@ const loadPlayer = (client: JuanitaClient) => {
 		const metadata = queue.metadata as any;
 		metadata.send("I finished reading the whole queue ✅");
 	});
-
-	player.on("tracksAdd", (queue, _) => {
-		const metadata = queue.metadata as any;
-		metadata.send(`All the songs in playlist added into the queue ✅`);
-	});
 };
 
 export default loadPlayer;

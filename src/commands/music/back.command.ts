@@ -12,21 +12,21 @@ export default {
 	description: "Plays the previous track!",
 	voiceChannel: true,
 
-	async execute({ interaction, player, lang }) {
+	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)], ephemeral: true });
 
 		const queue = player.getQueue(interaction.guildId);
 		console.log(queue)
 		if (!queue || !queue.playing)
 			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
 		if (!queue.previousTracks[1])
 			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_NO_PREVIOUS_TRACK_ERROR[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(GENERIC_NO_PREVIOUS_TRACK_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
@@ -34,7 +34,7 @@ export default {
 
 		return interaction.reply({
 			embeds: [
-				SimpleEmbed(`${BACK_PLAYING_TRACK_SUCCESS[lang]}\` ${queue.previousTracks[1].title}\``, EmbedType.Success),
+				SimpleEmbed(`${BACK_PLAYING_TRACK_SUCCESS[juanitaGuild.lang]}\` ${queue.previousTracks[1].title}\``, EmbedType.Success),
 			],
 		});
 	},

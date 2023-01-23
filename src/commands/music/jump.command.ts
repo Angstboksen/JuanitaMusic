@@ -21,9 +21,9 @@ export default {
 		},
 	],
 
-	async execute({ interaction, player, lang }) {
+	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)], ephemeral: true });
+			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)], ephemeral: true });
 
 		const number = (interaction.options as any).getNumber("number");
 
@@ -31,14 +31,14 @@ export default {
 
 		if (!queue || !queue.playing)
 			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
 		if (!number || number > queue.tracks.length)
 			interaction.reply({
 				embeds: [
-					SimpleEmbed(`${JUMP_QUEUE_POSITION_ERROR[lang]} \`(${`1 - ${queue.tracks.length}`})\``, EmbedType.Error),
+					SimpleEmbed(`${JUMP_QUEUE_POSITION_ERROR[juanitaGuild.lang]} \`(${`1 - ${queue.tracks.length}`})\``, EmbedType.Error),
 				],
 				ephemeral: true,
 			});
@@ -47,10 +47,10 @@ export default {
 		const trackname = queue.tracks[index]!.title;
 		if (!trackname)
 			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_ERROR[lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 		queue.skipTo(index);
-		return interaction.reply({ embeds: [SimpleEmbed(`${JUMP_SUCCESS[lang]}: \`${trackname}\``, EmbedType.Success)] });
+		return interaction.reply({ embeds: [SimpleEmbed(`${JUMP_SUCCESS[juanitaGuild.lang]}: \`${trackname}\``, EmbedType.Success)] });
 	},
 } as JuanitaCommand;
