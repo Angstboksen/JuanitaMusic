@@ -90,6 +90,20 @@ export const SEEK_INVALID_TIME_ERROR = {
 	molde: '❌',
 };
 
+// RESUME:
+export const RESUME_ALREADY_RESUMED_ERROR = {
+	en: '❌ The song is already playing!',
+	no: '❌ Sangen spilles allerede!',
+	molde: '❌ SANGEN SPILLES ALLEREDE!',
+};
+
+// PAUSE:
+export const PAUSE_ALREADY_PAUSED_ERROR = {
+	en: '❌ The song is already paused!',
+	no: '❌ Sangen er allerede pauset!',
+	molde: '❌ SANGEN ER ALLEREDE PAUSA!',
+};
+
 // Command success messages:
 // HELP:
 export const HELP_COMMAND_DESCRIPTION = {
@@ -166,7 +180,6 @@ export const PLAY_TRACK_SUCCESS = {
 };
 
 // QUEUE:
-
 export const QUEUE_AUTHOR_NAME = {
 	en: 'This is the current state of the queue',
 	no: 'Dette er nåværende status for køen',
@@ -210,7 +223,6 @@ export const QUEUE_SILENT_SUCCESS = {
 };
 
 // REMOVE:
-
 export const REMOVE_SUCCESS = {
 	en: '🗑️ Removed track: ',
 	no: '🗑️ Fjernet sang: ',
@@ -218,7 +230,6 @@ export const REMOVE_SUCCESS = {
 };
 
 // RESUME:
-
 export const RESUME_SUCCESS = {
 	en: 'has been resumed!',
 	no: 'er satt på igjen!',
@@ -226,7 +237,6 @@ export const RESUME_SUCCESS = {
 };
 
 // SEEK:
-
 export const SEEK_SUCCESS = {
 	en: '⏩ Moved to time: ',
 	no: '⏩ Spolet til: ',

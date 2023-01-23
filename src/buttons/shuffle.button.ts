@@ -1,15 +1,20 @@
-import type { JuanitaButtonOptions } from "./types";
+import SimpleEmbed, { EmbedType } from '../embeds/embeds';
+import { GENERIC_ERROR, SHUFFLE_SUCCESS } from '../embeds/messages';
+import type { JuanitaButtonOptions } from './types';
 
-export default async ({ interaction, queue }: JuanitaButtonOptions) => {
+export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions) => {
 	if (!queue || !queue.playing)
-		return interaction.reply({ content: `No music currently playing... try again ? ❌`, ephemeral: true });
+		return interaction.reply({
+			embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+			ephemeral: true,
+		});
 
 	const success = queue.shuffle();
+	if (!success)
+		return interaction.reply({
+			embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+			ephemeral: true,
+		});
 
-	return interaction.reply({
-		content: success
-			? `Current music ${queue.current.title} shuffled ✅`
-			: `Something went wrong ${interaction.member}... try again ? ❌`,
-		ephemeral: true,
-	});
+	return interaction.reply({ embeds: [SimpleEmbed(SHUFFLE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
 };

@@ -15,7 +15,10 @@ export default {
 
 	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)], ephemeral: true });
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 
 		const queue = player.getQueue(interaction.guildId);
 		if (!queue || !queue.current)
@@ -27,12 +30,14 @@ export default {
 		const songTo = queue.tracks.length === 0 ? SKIP_EMPTY_QUEUE[juanitaGuild.lang] : queue.tracks[0]!.title;
 
 		try {
-			if (queue.tracks.length === 0) await queue.destroy();
+			if (queue.tracks.length === 0) queue.destroy();
 			else await queue.forceNext();
 			return interaction.reply({
 				embeds: [
 					SimpleEmbed(
-						`${SKIP_FROM_SUCCESS[juanitaGuild.lang]} \`${songFrom}\`\n${SKIP_TO_SUCCESS[juanitaGuild.lang]} \`${songTo}\``,
+						`${SKIP_FROM_SUCCESS[juanitaGuild.lang]} \`${songFrom}\`\n${
+							SKIP_TO_SUCCESS[juanitaGuild.lang]
+						} \`${songTo}\``,
 						EmbedType.Success,
 					),
 				],

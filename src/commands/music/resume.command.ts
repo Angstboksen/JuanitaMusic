@@ -1,5 +1,5 @@
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
-import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, RESUME_SUCCESS } from '../../embeds/messages';
+import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, RESUME_ALREADY_RESUMED_ERROR, RESUME_SUCCESS } from '../../embeds/messages';
 import type { JuanitaCommand } from '../types';
 
 export default {
@@ -24,7 +24,7 @@ export default {
 		const success = queue.setPaused(false);
 		if (!success)
 			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				embeds: [SimpleEmbed(RESUME_ALREADY_RESUMED_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
