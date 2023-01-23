@@ -39,7 +39,10 @@ export default class JuanitaGuild {
 
 	public startInterval() {
 		this.interval = setInterval(() => {
-			if (this.queueMessage) this.queueMessage.edit({ content: 'test_queue' });
+			if (!this.queueMessage) return;
+			const [embed, select, buttons] = this.generateQueuePresentation();
+			if (select && buttons) return this.queueMessage.edit({ embeds: [embed], components: [select as any, buttons] });
+			return this.queueMessage.edit({ embeds: [embed] });
 		}, 5000);
 	}
 
@@ -91,8 +94,16 @@ export default class JuanitaGuild {
 				.setCustomId('queue_select'),
 		);
 		const buttons = new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setCustomId('queue_previous').setLabel('⬅️Previous').setStyle(ButtonStyle.Primary),
-			new ButtonBuilder().setCustomId('queue_next').setLabel('Next➡️').setStyle(ButtonStyle.Primary),
+			new ButtonBuilder()
+				.setCustomId('queue_previous')
+				.setLabel('⬅️Previous')
+				.setStyle(ButtonStyle.Primary)
+				.setDisabled(currentPage === 1),
+			new ButtonBuilder()
+				.setCustomId('queue_next')
+				.setLabel('Next➡️')
+				.setStyle(ButtonStyle.Primary)
+				.setDisabled(currentPage === maxPage),
 		);
 		return [embed, queueSelect, buttons];
 	}

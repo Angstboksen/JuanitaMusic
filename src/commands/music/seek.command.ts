@@ -1,40 +1,59 @@
-import { ApplicationCommandOptionType } from "discord.js";
-import type { JuanitaCommand } from "../types";
-import ms from "ms";
+import { ApplicationCommandOptionType } from 'discord.js';
+import type { JuanitaCommand } from '../types';
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import {
+	GENERIC_ERROR,
+	GENERIC_NO_MUSIC_PLAYING_ERROR,
+	SEEK_INVALID_TIME_ERROR,
+	SEEK_SUCCESS,
+} from '../../embeds/messages';
+import { millisecondsToTime } from '../../utils/time';
 
 export default {
-	name: "seek",
-	description: "skip back or foward in a song",
+	name: 'seek',
+	description: 'Skip to a time in the current song',
 	voiceChannel: true,
 	options: [
 		{
-			name: "time",
-			description: "time that you want to skip to",
-			type: ApplicationCommandOptionType.String,
+			name: 'time',
+			description: 'Amount of seconds to skip to',
+			type: ApplicationCommandOptionType.Number,
 			required: true,
 		},
 	],
-	async execute({ interaction, player }) {
+	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !interaction.member || !player)
-			return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
-		const queue = player.getQueue(interaction.guildId);
-
-		if (!queue || !queue.playing)
 			return interaction.reply({
-				content: `No music currently playing ${interaction.reply}... try again ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
-		const timeToMS = +ms((interaction.options as any).getString("time"));
+		const queue = player.getQueue(interaction.guildId);
+		if (!queue || !queue.playing)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
+
+		const timeToMS = (interaction.options as any).getNumber('time') * 1000;
 
 		if (timeToMS >= queue.current.durationMS)
 			return interaction.reply({
-				content: `The indicated time is higher than the total time of the current song ${interaction.member}... try again ? ❌\n*Try for example a valid time like **5s, 10s, 20 seconds, 1m**...*`,
+				embeds: [SimpleEmbed(SEEK_INVALID_TIME_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
-		await queue.seek(timeToMS);
+		const success = await queue.seek(timeToMS);
+		if (!success)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 
-		return interaction.reply({ content: `Time set on the current song **${ms(timeToMS, { long: true })}** ✅` });
+		return interaction.reply({
+			embeds: [
+				SimpleEmbed(`${SEEK_SUCCESS[juanitaGuild.lang]} \`${millisecondsToTime(timeToMS)}\``, EmbedType.Success),
+			],
+		});
 	},
 } as JuanitaCommand;

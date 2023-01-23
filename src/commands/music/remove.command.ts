@@ -1,77 +1,59 @@
-import { ApplicationCommandOptionType } from "discord.js";
-import type { JuanitaCommand } from "../types";
+import { ApplicationCommandOptionType } from 'discord.js';
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import {
+	GENERIC_ERROR,
+	GENERIC_NO_MUSIC_PLAYING_ERROR,
+	JUMP_QUEUE_POSITION_ERROR,
+	REMOVE_SUCCESS,
+} from '../../embeds/messages';
+import type { JuanitaCommand } from '../types';
 
 export default {
-	name: "remove",
-	description: "remove a song from the queue",
+	name: 'remove',
+	description: 'Remove a song from the queue!',
 	voiceChannel: true,
 	options: [
 		{
-			name: "song",
-			description: "the name/url of the track you want to remove",
-			type: ApplicationCommandOptionType.String,
-			required: false,
-		},
-		{
-			name: "number",
-			description: "the place in the queue the song is in",
+			name: 'number',
+			description: 'The position of the song in the queue',
 			type: ApplicationCommandOptionType.Number,
-			required: false,
+			required: true,
 		},
 	],
 
-	async execute({ interaction, player }) {
+	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 
-		const number = (interaction.options as any).getNumber("number");
-		const track = (interaction.options as any).getString("song");
+		const number = (interaction.options as any).getNumber('number');
 		const queue = player.getQueue(interaction.guildId);
 
-		if (!queue || !queue.playing)
+		if (!queue || !queue.current)
 			return interaction.reply({
-				content: `No music currently playing ${interaction.member}... try again ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
-		if (!track && !number)
+
+		if (!number || number > queue.tracks.length)
 			interaction.reply({
-				content: `You have to use one of the options to remove a song ${interaction.member}... try again ? ❌`,
+				embeds: [
+					SimpleEmbed(
+						`${JUMP_QUEUE_POSITION_ERROR[juanitaGuild.lang]} \`(${`1 - ${queue.tracks.length}`})\``,
+						EmbedType.Error,
+					),
+				],
 				ephemeral: true,
 			});
 
-		if (track) {
-			for (let song of queue.tracks) {
-				if (song.title === track || song.url === track) {
-					queue.remove(song);
-					return interaction.reply({ content: `removed ${track} from the queue ✅` });
-				}
-			}
+		const index = number - 1;
+		const trackName = queue.tracks[index]!.title;
+		queue.remove(index);
 
-			return interaction.reply({
-				content: `could not find ${track} ${interaction.member}... try using the url or the full name of the song ? ❌`,
-				ephemeral: true,
-			});
-		}
-
-		if (number) {
-			if (number > queue.tracks.length)
-				return interaction.reply({
-					content: `There is no song in the queue with that number ${interaction.member}... try again ?❌`,
-					ephemeral: true,
-				});
-			const index = number - 1;
-			const trackname = queue.tracks[index]!.title;
-
-			if (!trackname)
-				return interaction.reply({
-					content: `This track dose not seem to exist ${interaction.member}...  try again ?❌`,
-					ephemeral: true,
-				});
-
-			queue.remove(index);
-
-			return interaction.reply({ content: `removed ${trackname} from the queue ✅` });
-		}
-		return;
+		return interaction.reply({
+			embeds: [SimpleEmbed(`${REMOVE_SUCCESS[juanitaGuild.lang]} \`${trackName}\``, EmbedType.Success)],
+		});
 	},
 } as JuanitaCommand;

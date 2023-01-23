@@ -1,29 +1,44 @@
-import type { JuanitaCommand } from "../types";
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import {
+	GENERIC_EMPTY_QUEUE,
+	GENERIC_ERROR,
+	GENERIC_NO_MUSIC_PLAYING_ERROR,
+	SHUFFLE_SUCCESS,
+} from '../../embeds/messages';
+import type { JuanitaCommand } from '../types';
 
 export default {
-	name: "shuffle",
-	description: "shuffle the track",
+	name: 'shuffle',
+	description: 'Shuffle the current queue!',
 	voiceChannel: true,
 
-	async execute({ interaction, player }) {
+	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 		const queue = player.getQueue(interaction.guildId);
 
-		if (!queue || !queue.playing)
+		if (!queue || !queue.current)
 			return interaction.reply({
-				content: `No music currently playing ${interaction.member}... try again ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
 		if (!queue.tracks[0])
 			return interaction.reply({
-				content: `No music in the queue after the current one ${interaction.member}... try again ? ❌`,
+				embeds: [SimpleEmbed(GENERIC_EMPTY_QUEUE[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
-		queue.shuffle();
+		const success = queue.shuffle();
+		if (!success)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 
-		return interaction.reply({ content: `Queue shuffled **${queue.tracks.length}** song(s) ! ✅` });
+		return interaction.reply({ embeds: [SimpleEmbed(SHUFFLE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
 	},
 } as JuanitaCommand;

@@ -23,6 +23,12 @@ export const GENERIC_NO_TEXT_CHANNEL = {
 	molde: '❌ FAEN E DU DUM! I KAN IKKJE GJØRE NOKKA I DENNE KANALEN!',
 };
 
+export const GENERIC_EMPTY_QUEUE = {
+	en: '❌ The queue is empty!',
+	no: '❌ Køen er tom!',
+	molde: '❌ KØA E TOM! FAEN E DU DUM!',
+};
+
 // User error messages:
 export const USER_NOT_IN_VOICE: JuanitaMessage = {
 	en: '❌ You are not in a Voice Channel',
@@ -75,6 +81,13 @@ export const FIRST_PLAYLIST_NOT_SUPPORTED = {
 	en: '❌ This command does not support playlists!',
 	no: '❌ Denne kommandoen støtter ikke spillelister!',
 	molde: '❌ FAEN I FITTE! KOMMANDOEN STØTTE IKKJE SPILLELISTER!',
+};
+
+// SEEK:
+export const SEEK_INVALID_TIME_ERROR = {
+	en: '❌ The time you provided is invalid for this song! Try again with a valid time.',
+	no: '❌ Tiden du oppga er ugyldig for denne sangen! Prøv igjen.',
+	molde: '❌',
 };
 
 // Command success messages:
@@ -198,14 +211,36 @@ export const QUEUE_SILENT_SUCCESS = {
 
 // REMOVE:
 
+export const REMOVE_SUCCESS = {
+	en: '🗑️ Removed track: ',
+	no: '🗑️ Fjernet sang: ',
+	molde: '🗑️ Fjerna sang: ',
+};
+
 // RESUME:
+
+export const RESUME_SUCCESS = {
+	en: 'has been resumed!',
+	no: 'er satt på igjen!',
+	molde: 'e satt på igjen!',
+};
 
 // SEEK:
 
+export const SEEK_SUCCESS = {
+	en: '⏩ Moved to time: ',
+	no: '⏩ Spolet til: ',
+	molde: '⏩ Spolet til: ',
+};
+
 // SHUFFLE:
+export const SHUFFLE_SUCCESS = {
+	en: '🔀 Shuffled the queue!',
+	no: '🔀 Shufflet køen!',
+	molde: '🔀 Shuffla køa!',
+};
 
 // SKIP:
-
 export const SKIP_FROM_SUCCESS = {
 	en: '⏭️ Skipping track: ',
 	no: '⏭️ Skipper sang: ',
@@ -222,4 +257,11 @@ export const SKIP_EMPTY_QUEUE = {
 	en: '😢 The queue is empty!',
 	no: '😢 Køen er tom!',
 	molde: '😢 Køa er tom!',
+};
+
+// KYS:
+export const KYS_SUCCESS = {
+	en: '👋 Ait I`m out',
+	no: '👋 Chattes a!',
+	molde: '👋 Chattes a!',
 };

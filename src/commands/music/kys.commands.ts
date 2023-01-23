@@ -1,10 +1,10 @@
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
-import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, RESUME_SUCCESS } from '../../embeds/messages';
+import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR, KYS_SUCCESS } from '../../embeds/messages';
 import type { JuanitaCommand } from '../types';
 
 export default {
-	name: 'resume',
-	description: 'Resume the current track!',
+	name: 'kys',
+	description: 'Forces the bot to leave the channel!',
 	voiceChannel: true,
 
 	execute({ interaction, player, juanitaGuild }) {
@@ -15,21 +15,14 @@ export default {
 			});
 
 		const queue = player.getQueue(interaction.guildId);
-		if (!queue || !queue.current)
+		if (!queue || !queue.playing)
 			return interaction.reply({
 				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
 
-		const success = queue.setPaused(false);
-		if (!success)
-			return interaction.reply({
-				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
-				ephemeral: true,
-			});
+		queue.destroy();
 
-		return interaction.reply({
-			embeds: [SimpleEmbed(`▶️ \`${queue.current.title}\` ${RESUME_SUCCESS[juanitaGuild.lang]}`, EmbedType.Success)],
-		});
+		return interaction.reply({ embeds: [SimpleEmbed(KYS_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
 	},
 } as JuanitaCommand;
