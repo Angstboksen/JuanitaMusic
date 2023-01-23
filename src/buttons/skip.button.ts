@@ -15,13 +15,6 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			ephemeral: true,
 		});
 
-	const success = queue.skip();
-	if (!success)
-		return interaction.reply({
-			embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
-			ephemeral: true,
-		});
-		
 	const songFrom = queue.current.title;
 	const songTo = queue.tracks.length === 0 ? SKIP_EMPTY_QUEUE[juanitaGuild.lang] : queue.tracks[0]!.title;
 
