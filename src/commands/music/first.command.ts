@@ -66,7 +66,8 @@ export default {
 		const isPlaying = !!queue.current
 		queue.insert(res.tracks[0]!, 0);
 		if (!isPlaying) await queue.play();
-
+		
+		juanitaGuild.updateQueueMessage();
 		return await interaction.editReply({
 			embeds: [SimpleEmbed(`Added \`${res.tracks[0]!.title}\` to the top of the queue!`, EmbedType.Success)],
 		});

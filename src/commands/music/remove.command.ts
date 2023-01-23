@@ -51,7 +51,8 @@ export default {
 		const index = number - 1;
 		const trackName = queue.tracks[index]!.title;
 		queue.remove(index);
-
+		
+		juanitaGuild.updateQueueMessage();
 		return interaction.reply({
 			embeds: [SimpleEmbed(`${REMOVE_SUCCESS[juanitaGuild.lang]} \`${trackName}\``, EmbedType.Success)],
 		});

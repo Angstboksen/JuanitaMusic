@@ -8,7 +8,9 @@ import {
 	PREVIOUS_BUTTON_LABEL,
 	QUEUE_ADDED_BY,
 	QUEUE_AUTHOR_NAME,
+	QUEUE_NEXT_SONG,
 	QUEUE_NOW_PLAYING,
+	QUEUE_NO_SONGS,
 	QUEUE_SELECT_PLACEHOLDER,
 	QUEUE_SONG_AMOUNT,
 	QUEUE_TOTAL_TIME,
@@ -27,7 +29,7 @@ export default class JuanitaGuild {
 	public queue: Queue | null = null;
 	public interval: NodeJS.Timeout | null = null;
 	public queuePage: number = 0;
-	public lang: keyof JuanitaMessage = 'molde';
+	public lang: keyof JuanitaMessage = 'no';
 
 	constructor(public client: JuanitaClient, public guild: Guild) {
 		this.id = guild.id;
@@ -111,7 +113,16 @@ export default class JuanitaGuild {
 			timeToMilliseconds(this.queue.getPlayerTimestamp().end) -
 			timeToMilliseconds(this.queue.getPlayerTimestamp().current);
 		const queueTime = this.queue.tracks.reduce((acc: number, track: Track) => acc + track.durationMS, 0);
-		const embed = SimpleEmbed(`${currentString}\n${this.queue.createProgressBar()}`, EmbedType.Info)
+		const nextSongString =
+			this.queue.tracks.length > 0
+				? `${QUEUE_NEXT_SONG[this.lang]} \`${this.queue.tracks[0]!.title}\`\n${QUEUE_ADDED_BY[this.lang]} ${
+						this.queue.tracks[0]!.requestedBy
+				  }`
+				: QUEUE_NO_SONGS[this.lang];
+		const embed = SimpleEmbed(
+			`${currentString}\n${this.queue.createProgressBar()}\n\n${nextSongString}\n`,
+			EmbedType.Info,
+		)
 			.setAuthor({
 				name: QUEUE_AUTHOR_NAME[this.lang],
 				iconURL: this.client.user!.displayAvatarURL(),
@@ -141,7 +152,7 @@ export default class JuanitaGuild {
 				.setCustomId(JSON.stringify({ ffb: 'pause&resume' })),
 			new ButtonBuilder()
 				.setLabel(SHUFFLE_BUTTON_LABEL[this.lang])
-				.setStyle(ButtonStyle.Secondary)
+				.setStyle(ButtonStyle.Primary)
 				.setCustomId(JSON.stringify({ ffb: 'shuffle' }))
 				.setDisabled(this.queue.tracks.length === 0),
 		);
@@ -151,7 +162,12 @@ export default class JuanitaGuild {
 		const maxPage = Math.ceil(this.queue.tracks.length / 25);
 		const queueSelect = new ActionRowBuilder().addComponents(
 			getSelectMenuByPage(this.queue.tracks, currentPage)
-				.setPlaceholder(`${QUEUE_SELECT_PLACEHOLDER[this.lang]} ${currentPage+1}/${maxPage}`)
+				.setPlaceholder(
+					`${QUEUE_SELECT_PLACEHOLDER[this.lang]} ${currentPage * 25 + 1}/${Math.min(
+						(currentPage + 1) * 25,
+						this.queue.tracks.length,
+					)}`,
+				)
 				.setCustomId('queue_select'),
 		);
 

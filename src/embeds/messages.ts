@@ -69,6 +69,12 @@ export const JUMP_QUEUE_POSITION_ERROR: JuanitaMessage = {
 	molde: '❌ HERREGUD DU E DUM! GI ME EN GYLDIG POSISJON I KØA MELLOM:',
 };
 
+export const JUMP_QUEUE_EMPTY_ERROR = {
+	en: '❌ The queue is empty! You cannot skip multiple songs.',
+	no: '❌ Køen er tom! Du kan ikke hoppe lengre inn i den.',
+	molde: '❌ FAEN DA! DU KAN IKKJE SKIPPE LANGT INN I EI TOM KØ FORBANNA IDIOT!',
+};
+
 // PLAY:
 export const PLAY_NO_TRACKS_FOUND_ERROR = {
 	en: '❌ No results found for search: ',
@@ -201,8 +207,8 @@ export const QUEUE_AUTHOR_NAME = {
 
 export const QUEUE_NOW_PLAYING = {
 	en: '**🎶 Now playing:**',
-	no: '**🎶 Spiller akkurat nå:**',
-	molde: '**🎶 SPILLES AKKURAT NO:**',
+	no: '**🎶 Akkurat nå:**',
+	molde: '**🎶 AKKURAT NO:**',
 };
 
 export const QUEUE_ADDED_BY = {
@@ -224,15 +230,27 @@ export const QUEUE_SONG_AMOUNT = {
 };
 
 export const QUEUE_SELECT_PLACEHOLDER = {
-	en: 'Open me to view the queue | Page:',
-	no: 'Åpne meg for å se køen | Side:)',
-	molde: 'ÅPNE ME FOR Å SE KØA DI HORE | SIDE:',
+	en: 'Open me to view the queue | Songs:',
+	no: 'Åpne meg for å se køen | Sanger:',
+	molde: 'ÅPNE ME FOR Å SE KØA DI HORE | Sanga:',
 };
 
 export const QUEUE_SILENT_SUCCESS = {
 	en: '✅ Sending queue message!',
 	no: '✅ Sender kømelding!',
 	molde: '✅ SENDE KØMELDING!',
+};
+
+export const QUEUE_NEXT_SONG = {
+	en: '**⏭️ Next song in queue:**',
+	no: '**⏭️ Neste sang i køen:**',
+	molde: '**⏭️ NESTE SANG I KØA:**',
+};
+
+export const QUEUE_NO_SONGS = {
+	en: '😢 The queue is empty! use `/play <song or YouTube URL>` to add a song!',
+	no: '😢 Køen er tom! Bruk `/play <sang eller YouTube URL>` for å legge til en sang!',
+	molde: '😢 KØA E TOM! BRUK `/play <sang eller YouTube URL>` FOR Å LEGGE TE EN SANG!',
 };
 
 // REMOVE:

@@ -22,7 +22,7 @@ export default {
 			});
 
 		queue.destroy();
-
+		juanitaGuild.removeQueueMessage();
 		return interaction.reply({ embeds: [SimpleEmbed(KYS_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
 	},
 } as JuanitaCommand;

@@ -70,6 +70,7 @@ export default {
 		res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]!);
 		if (!isPlaying) await queue.play();
 		
+		juanitaGuild.updateQueueMessage();
 		return interaction.editReply({ embeds: [embed] });
 	},
 } as JuanitaCommand;

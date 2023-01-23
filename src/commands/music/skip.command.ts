@@ -28,10 +28,11 @@ export default {
 			});
 		const songFrom = queue.current.title;
 		const songTo = queue.tracks.length === 0 ? SKIP_EMPTY_QUEUE[juanitaGuild.lang] : queue.tracks[0]!.title;
-
+		
 		try {
 			if (queue.tracks.length === 0) queue.destroy();
 			else await queue.forceNext();
+			juanitaGuild.updateQueueMessage();
 			return interaction.reply({
 				embeds: [
 					SimpleEmbed(

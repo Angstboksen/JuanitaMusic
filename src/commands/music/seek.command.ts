@@ -50,6 +50,7 @@ export default {
 				ephemeral: true,
 			});
 
+		juanitaGuild.updateQueueMessage();
 		return interaction.reply({
 			embeds: [
 				SimpleEmbed(`${SEEK_SUCCESS[juanitaGuild.lang]} \`${millisecondsToTime(timeToMS)}\``, EmbedType.Success),

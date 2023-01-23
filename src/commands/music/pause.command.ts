@@ -33,6 +33,7 @@ export default {
 				ephemeral: true,
 			});
 
+		juanitaGuild.updateQueueMessage();
 		return interaction.reply({
 			embeds: [SimpleEmbed(`⏸ \`${queue.current.title}\` ${PAUSE_SUCCESS[juanitaGuild.lang]}`, EmbedType.Success)],
 		});

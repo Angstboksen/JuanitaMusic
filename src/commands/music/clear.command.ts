@@ -19,6 +19,7 @@ export default {
 			});
 
 		queue.clear();
+		juanitaGuild.updateQueueMessage();
 		return interaction.reply({ embeds: [SimpleEmbed(CLEAR_QUEUE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
 	},
 } as JuanitaCommand;

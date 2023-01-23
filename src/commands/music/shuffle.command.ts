@@ -32,6 +32,7 @@ export default {
 				ephemeral: true,
 			});
 
+		juanitaGuild.updateQueueMessage();
 		const success = queue.shuffle();
 		if (!success)
 			return interaction.reply({

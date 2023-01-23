@@ -1,11 +1,5 @@
 import SimpleEmbed, { EmbedType } from '../embeds/embeds';
-import {
-	GENERIC_ERROR,
-	GENERIC_NO_MUSIC_PLAYING_ERROR,
-	SKIP_EMPTY_QUEUE,
-	SKIP_FROM_SUCCESS,
-	SKIP_TO_SUCCESS,
-} from '../embeds/messages';
+import { GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR } from '../embeds/messages';
 import type { JuanitaButtonOptions } from './types';
 
 export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions) => {
@@ -15,13 +9,10 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			ephemeral: true,
 		});
 
-	const songFrom = queue.current.title;
-	const songTo = queue.tracks.length === 0 ? SKIP_EMPTY_QUEUE[juanitaGuild.lang] : queue.tracks[0]!.title;
-
 	try {
 		if (queue.tracks.length === 0) queue.destroy();
 		else await queue.forceNext();
-		juanitaGuild.updateQueueMessage()
+		juanitaGuild.updateQueueMessage();
 		return interaction.deferUpdate();
 	} catch (error) {
 		return interaction.reply({

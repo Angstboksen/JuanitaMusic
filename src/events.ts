@@ -35,8 +35,6 @@ const loadPlayer = (client: JuanitaClient) => {
 	player.on("queueEnd", (queue) => {
 		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
 		guild.removeQueueMessage();
-		const metadata = queue.metadata as any;
-		metadata.send("I finished reading the whole queue ✅");
 	});
 };
 
