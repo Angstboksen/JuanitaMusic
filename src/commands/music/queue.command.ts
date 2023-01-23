@@ -40,7 +40,7 @@ export default {
 				ephemeral: true,
 			});
 		}
-		const [embed, queueSelect, buttons] = juanitaGuild.generateQueuePresentation();
+		const [embed, buttons, queueSelect, queueButtons] = juanitaGuild.generateQueuePresentation();
 
 		await interaction.reply({
 			embeds: [SimpleEmbed(QUEUE_SILENT_SUCCESS[juanitaGuild.lang], EmbedType.Success)],
@@ -48,9 +48,9 @@ export default {
 		});
 		await juanitaGuild.removeQueueMessage();
 		const message =
-			queueSelect && buttons
-				? await channel.send({ embeds: [embed], components: [queueSelect as any, buttons] })
-				: await channel.send({ embeds: [embed] });
+			queueSelect && queueButtons
+				? await channel.send({ embeds: [embed], components: [buttons as any, queueSelect, queueButtons] })
+				: await channel.send({ embeds: [embed], components: [buttons as any] });
 		return juanitaGuild.setQueueMessage(message);
 	},
 } as JuanitaCommand;

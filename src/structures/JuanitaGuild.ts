@@ -1,5 +1,5 @@
 import type { Queue, Track } from 'discord-player';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Guild, Message } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Guild, Message, TextChannel } from 'discord.js';
 import {
 	JuanitaMessage,
 	KYS_BUTTON_LABEL,
@@ -26,8 +26,8 @@ export default class JuanitaGuild {
 	public queueMessage: Message | null = null;
 	public queue: Queue | null = null;
 	public interval: NodeJS.Timeout | null = null;
-	public queuePage: number = 1;
-	public lang: keyof JuanitaMessage = 'en';
+	public queuePage: number = 0;
+	public lang: keyof JuanitaMessage = 'molde';
 
 	constructor(public client: JuanitaClient, public guild: Guild) {
 		this.id = guild.id;
@@ -49,8 +49,21 @@ export default class JuanitaGuild {
 		}
 		const [embed, buttons, queueSelect, queueButtons] = this.generateQueuePresentation();
 		if (queueSelect && queueButtons)
-			return await this.queueMessage.edit({ embeds: [embed], components: [queueSelect as any, buttons] });
+			return await this.queueMessage.edit({ embeds: [embed], components: [buttons as any, queueSelect, queueButtons] });
 		return await this.queueMessage.edit({ embeds: [embed] });
+	}
+
+	public async sendQueueMessage(channel: TextChannel) {
+		if (!channel) return;
+		if (this.queueMessage) return this.updateQueueMessage();
+		const [embed, buttons, queueSelect, queueButtons] = this.generateQueuePresentation();
+		if (queueSelect && queueButtons)
+			return (this.queueMessage = await channel.send({
+				embeds: [embed],
+				components: [buttons as any, queueSelect, queueButtons],
+			}));
+		console.log(embed);
+		return (this.queueMessage = await channel.send({ embeds: [embed] }));
 	}
 
 	public async removeQueueMessage() {
@@ -137,8 +150,8 @@ export default class JuanitaGuild {
 		const currentPage = this.queuePage;
 		const maxPage = Math.ceil(this.queue.tracks.length / 25);
 		const queueSelect = new ActionRowBuilder().addComponents(
-			getSelectMenuByPage(this.queue.tracks, 1)
-				.setPlaceholder(`${QUEUE_SELECT_PLACEHOLDER[this.lang]} ${currentPage}/${maxPage}`)
+			getSelectMenuByPage(this.queue.tracks, currentPage)
+				.setPlaceholder(`${QUEUE_SELECT_PLACEHOLDER[this.lang]} ${currentPage+1}/${maxPage}`)
 				.setCustomId('queue_select'),
 		);
 
@@ -147,12 +160,12 @@ export default class JuanitaGuild {
 				.setCustomId(JSON.stringify({ ffb: 'previous' }))
 				.setLabel(PREVIOUS_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Primary)
-				.setDisabled(currentPage === 1),
+				.setDisabled(currentPage === 0),
 			new ButtonBuilder()
 				.setCustomId(JSON.stringify({ ffb: 'next' }))
 				.setLabel(NEXT_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Primary)
-				.setDisabled(currentPage === maxPage),
+				.setDisabled(currentPage === maxPage - 1),
 		);
 
 		return [embed, queueSelect, controlButtons, queueButtons];

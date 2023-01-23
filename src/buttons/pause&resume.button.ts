@@ -12,5 +12,6 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 	const success = queue.setPaused(true);
 	if (!success) queue.setPaused(false);
 
+	juanitaGuild.updateQueueMessage();
 	return interaction.deferUpdate();
 };

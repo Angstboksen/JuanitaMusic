@@ -1,5 +1,5 @@
 import SimpleEmbed, { EmbedType } from '../embeds/embeds';
-import { GENERIC_ERROR, SHUFFLE_SUCCESS } from '../embeds/messages';
+import { GENERIC_ERROR } from '../embeds/messages';
 import type { JuanitaButtonOptions } from './types';
 
 export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions) => {
@@ -16,5 +16,5 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			ephemeral: true,
 		});
 
-	return interaction.reply({ embeds: [SimpleEmbed(SHUFFLE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
+	return interaction.deferUpdate();
 };

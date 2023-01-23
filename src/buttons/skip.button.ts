@@ -21,16 +21,8 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 	try {
 		if (queue.tracks.length === 0) queue.destroy();
 		else await queue.forceNext();
-		return interaction.reply({
-			embeds: [
-				SimpleEmbed(
-					`${SKIP_FROM_SUCCESS[juanitaGuild.lang]} \`${songFrom}\`\n${
-						SKIP_TO_SUCCESS[juanitaGuild.lang]
-					} \`${songTo}\``,
-					EmbedType.Success,
-				),
-			],
-		});
+		juanitaGuild.updateQueueMessage()
+		return interaction.deferUpdate();
 	} catch (error) {
 		return interaction.reply({
 			embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],

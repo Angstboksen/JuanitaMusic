@@ -9,12 +9,13 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			ephemeral: true,
 		});
 
-	const success = juanitaGuild.nextQueuePage();
+	const success = juanitaGuild.previousQueuePage();
 	if (!success)
 		return interaction.reply({
 			embeds: [SimpleEmbed(QUEUE_PREV_PAGE_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			ephemeral: true,
 		});
 
+	juanitaGuild.updateQueueMessage();
 	return interaction.deferUpdate();
 };

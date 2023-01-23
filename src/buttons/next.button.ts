@@ -15,6 +15,6 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			embeds: [SimpleEmbed(QUEUE_NEXT_PAGE_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			ephemeral: true,
 		});
-
+	juanitaGuild.updateQueueMessage();
 	return interaction.deferUpdate();
 };

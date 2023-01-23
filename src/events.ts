@@ -1,4 +1,3 @@
-import { EmbedBuilder } from "discord.js";
 import type JuanitaClient from "./JuanitaClient";
 
 const loadPlayer = (client: JuanitaClient) => {
@@ -12,17 +11,10 @@ const loadPlayer = (client: JuanitaClient) => {
 		console.log(`Error emitted from the connection ${error.message}`);
 	});
 
-	player.on("trackStart", (queue, track) => {
+	player.on("trackStart", (queue, _) => {
 		if (!client.config.opt.loopMessage && queue.repeatMode !== 0) return;
-		const embed = new EmbedBuilder()
-			.setAuthor({
-				name: `Started playing ${track.title} in ${queue.connection.channel.name} 🎧`,
-				iconURL: track.requestedBy.avatarURL()!,
-			})
-			.setColor("#13f857");
-
-		const metadata = queue.metadata as any;
-		metadata.send({ embeds: [embed] });
+		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
+		guild.updateQueueMessage()
 	});
 
 	// player.on("trackAdd", (queue, track) => {
@@ -41,6 +33,8 @@ const loadPlayer = (client: JuanitaClient) => {
 	});
 
 	player.on("queueEnd", (queue) => {
+		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
+		guild.removeQueueMessage();
 		const metadata = queue.metadata as any;
 		metadata.send("I finished reading the whole queue ✅");
 	});
