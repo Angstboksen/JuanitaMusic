@@ -288,3 +288,46 @@ export const KYS_SUCCESS = {
 	no: '👋 Chattes a!',
 	molde: '👋 Chattes a!',
 };
+
+// BUTTON LABELS:
+export const KYS_BUTTON_LABEL = {
+	en: '💀KYS',
+	no: '💀KYS',
+	molde: '💀KYS',
+};
+
+export const NEXT_BUTTON_LABEL = {
+	en: '➡️Next',
+	no: '➡️Neste',
+	molde: '➡️Neste',
+};
+
+export const PREVIOUS_BUTTON_LABEL = {
+	en: '⬅️Previous',
+	no: '⬅️Forrige',
+	molde: '⬅️Forrige',
+};
+
+export const PAUSE_BUTTON_LABEL = {
+	en: '⏸️Pause',
+	no: '⏸️Pause',
+	molde: '⏸️Pause',
+};
+
+export const RESUME_BUTTON_LABEL = {
+	en: '▶️Resume',
+	no: '▶️Resume',
+	molde: '▶️Resume',
+};
+
+export const SHUFFLE_BUTTON_LABEL = {
+	en: '🔀Shuffle',
+	no: '🔀Shuffle',
+	molde: '🔀Shuffle',
+};
+
+export const SKIP_BUTTON_LABEL = {
+	en: '⏭️Skip',
+	no: '⏭️Skip',
+	molde: '⏭️Skip',
+};

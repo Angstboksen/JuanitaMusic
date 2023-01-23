@@ -2,12 +2,19 @@ import type { Queue, Track } from 'discord-player';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Guild, Message } from 'discord.js';
 import {
 	JuanitaMessage,
+	KYS_BUTTON_LABEL,
+	NEXT_BUTTON_LABEL,
+	PAUSE_BUTTON_LABEL,
+	PREVIOUS_BUTTON_LABEL,
 	QUEUE_ADDED_BY,
 	QUEUE_AUTHOR_NAME,
 	QUEUE_NOW_PLAYING,
 	QUEUE_SELECT_PLACEHOLDER,
 	QUEUE_SONG_AMOUNT,
 	QUEUE_TOTAL_TIME,
+	RESUME_BUTTON_LABEL,
+	SHUFFLE_BUTTON_LABEL,
+	SKIP_BUTTON_LABEL,
 } from '../embeds/messages';
 import SimpleEmbed, { EmbedType } from '../embeds/embeds';
 import { getSelectMenuByPage } from '../utils/array';
@@ -66,8 +73,13 @@ export default class JuanitaGuild {
 		this.lang = language;
 	}
 
-	public generateQueuePresentation(): [EmbedBuilder, ActionRowBuilder | null, ActionRowBuilder | null] {
-		if (!this.queue) return [new EmbedBuilder(), new ActionRowBuilder(), new ActionRowBuilder()];
+	public generateQueuePresentation(): [
+		EmbedBuilder,
+		ActionRowBuilder,
+		ActionRowBuilder | null,
+		ActionRowBuilder | null,
+	] {
+		if (!this.queue) return [new EmbedBuilder(), new ActionRowBuilder(), null, null];
 		const currentString = `${QUEUE_NOW_PLAYING[this.lang]} \`${this.queue.current.title}\`\n${`${
 			QUEUE_ADDED_BY[this.lang]
 		} ${this.queue.current.requestedBy}`}\n`;
@@ -89,7 +101,26 @@ export default class JuanitaGuild {
 				{ name: QUEUE_SONG_AMOUNT[this.lang], value: `\`${this.queue.tracks.length.toString()}\``, inline: true },
 			);
 
-		if (this.queue.tracks.length === 0) return [embed, null, null];
+		const controlButtons = new ActionRowBuilder().addComponents(
+			new ButtonBuilder()
+				.setLabel(KYS_BUTTON_LABEL[this.lang])
+				.setStyle(ButtonStyle.Danger)
+				.setCustomId(JSON.stringify({ ffb: 'kys' })),
+			new ButtonBuilder()
+				.setLabel(SKIP_BUTTON_LABEL[this.lang])
+				.setStyle(ButtonStyle.Primary)
+				.setCustomId(JSON.stringify({ ffb: 'skip' })),
+			new ButtonBuilder()
+				.setLabel(this.queue.connection.paused ? RESUME_BUTTON_LABEL[this.lang] : PAUSE_BUTTON_LABEL[this.lang])
+				.setStyle(this.queue.connection.paused ? ButtonStyle.Success : ButtonStyle.Danger)
+				.setCustomId(JSON.stringify({ ffb: 'pause&resume' })),
+			new ButtonBuilder()
+				.setLabel(SHUFFLE_BUTTON_LABEL[this.lang])
+				.setStyle(ButtonStyle.Secondary)
+				.setCustomId(JSON.stringify({ ffb: 'shuffle' })),
+		);
+
+		if (this.queue.tracks.length === 0) return [embed, controlButtons, null, null];
 		const currentPage = this.queuePage;
 		const maxPage = Math.ceil(this.queue.tracks.length / 25);
 		const queueSelect = new ActionRowBuilder().addComponents(
@@ -97,18 +128,20 @@ export default class JuanitaGuild {
 				.setPlaceholder(`${QUEUE_SELECT_PLACEHOLDER[this.lang]} ${currentPage}/${maxPage}`)
 				.setCustomId('queue_select'),
 		);
-		const buttons = new ActionRowBuilder().addComponents(
+
+		const queueButtons = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId('previous')
-				.setLabel('⬅️Previous')
+				.setCustomId(JSON.stringify({ ffb: 'previous' }))
+				.setLabel(PREVIOUS_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Primary)
 				.setDisabled(currentPage === 1),
 			new ButtonBuilder()
-				.setCustomId('next')
-				.setLabel('Next➡️')
+				.setCustomId(JSON.stringify({ ffb: 'next' }))
+				.setLabel(NEXT_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Primary)
 				.setDisabled(currentPage === maxPage),
 		);
-		return [embed, queueSelect, buttons];
+
+		return [embed, queueSelect, controlButtons, queueButtons];
 	}
 }
