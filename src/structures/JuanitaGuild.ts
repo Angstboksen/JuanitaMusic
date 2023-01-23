@@ -50,12 +50,16 @@ export default class JuanitaGuild {
 		if (this.interval) clearInterval(this.interval);
 	}
 
-	public nextQueuePage() {
+	public nextQueuePage(): boolean {
+		if (this.queuePage * 25 > this.queue!.tracks.length) return false;
 		this.queuePage++;
+		return true;
 	}
 
 	public previousQueuePage() {
-		if (this.queuePage > 1) this.queuePage--;
+		if (this.queuePage === 0) return false;
+		this.queuePage--;
+		return true;
 	}
 
 	public setLanguage(language: keyof JuanitaMessage) {
@@ -95,12 +99,12 @@ export default class JuanitaGuild {
 		);
 		const buttons = new ActionRowBuilder().addComponents(
 			new ButtonBuilder()
-				.setCustomId('queue_previous')
+				.setCustomId('previous')
 				.setLabel('⬅️Previous')
 				.setStyle(ButtonStyle.Primary)
 				.setDisabled(currentPage === 1),
 			new ButtonBuilder()
-				.setCustomId('queue_next')
+				.setCustomId('next')
 				.setLabel('Next➡️')
 				.setStyle(ButtonStyle.Primary)
 				.setDisabled(currentPage === maxPage),

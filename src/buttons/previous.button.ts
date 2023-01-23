@@ -1,5 +1,5 @@
 import SimpleEmbed, { EmbedType } from '../embeds/embeds';
-import { GENERIC_ERROR, SHUFFLE_SUCCESS } from '../embeds/messages';
+import { GENERIC_ERROR, QUEUE_PREV_PAGE_ERROR } from '../embeds/messages';
 import type { JuanitaButtonOptions } from './types';
 
 export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions) => {
@@ -9,12 +9,12 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			ephemeral: true,
 		});
 
-	const success = queue.shuffle();
+	const success = juanitaGuild.nextQueuePage();
 	if (!success)
 		return interaction.reply({
-			embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+			embeds: [SimpleEmbed(QUEUE_PREV_PAGE_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			ephemeral: true,
 		});
 
-	return interaction.reply({ embeds: [SimpleEmbed(SHUFFLE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
+	return interaction.deferUpdate();
 };

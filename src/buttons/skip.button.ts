@@ -9,7 +9,7 @@ import {
 import type { JuanitaButtonOptions } from './types';
 
 export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions) => {
-	if (!queue || !queue.playing)
+	if (!queue || !queue.current)
 		return interaction.reply({
 			embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			ephemeral: true,

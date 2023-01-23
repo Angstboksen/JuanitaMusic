@@ -104,6 +104,19 @@ export const PAUSE_ALREADY_PAUSED_ERROR = {
 	molde: '❌ SANGEN ER ALLEREDE PAUSA!',
 };
 
+// QUEUE:
+export const QUEUE_PREV_PAGE_ERROR = {
+	en: '❌ There is no previous page!',
+	no: '❌ Det er ingen forrige side!',
+	molde: '❌ DET FINNES IKKJE EN FORRIGE SIDE!',
+};
+
+export const QUEUE_NEXT_PAGE_ERROR = {
+	en: '❌ There is no next page!',
+	no: '❌ Det er ingen neste side!',
+	molde: '❌ DET FINNES IKKJE EN NESTE SIDE!',
+};
+
 // Command success messages:
 // HELP:
 export const HELP_COMMAND_DESCRIPTION = {
