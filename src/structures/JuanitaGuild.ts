@@ -36,7 +36,21 @@ export default class JuanitaGuild {
 
 	public setQueueMessage(message: Message) {
 		this.queueMessage = message;
-		this.queueMessage.edit({ content: 'test_queue' });
+		this.stopInterval();
+		this.startInterval();
+	}
+
+	public async updateQueueMessage() {
+		if (!this.queueMessage) return;
+		if (!this.queue || (!this.queue.current && !this.queue.tracks.length)) {
+			await this.queueMessage.delete();
+			this.queueMessage = null;
+			return;
+		}
+		const [embed, buttons, queueSelect, queueButtons] = this.generateQueuePresentation();
+		if (queueSelect && queueButtons)
+			return await this.queueMessage.edit({ embeds: [embed], components: [queueSelect as any, buttons] });
+		return await this.queueMessage.edit({ embeds: [embed] });
 	}
 
 	public async removeQueueMessage() {
@@ -46,11 +60,8 @@ export default class JuanitaGuild {
 
 	public startInterval() {
 		this.interval = setInterval(() => {
-			if (!this.queueMessage) return;
-			const [embed, select, buttons] = this.generateQueuePresentation();
-			if (select && buttons) return this.queueMessage.edit({ embeds: [embed], components: [select as any, buttons] });
-			return this.queueMessage.edit({ embeds: [embed] });
-		}, 5000);
+			this.updateQueueMessage();
+		}, 2000);
 	}
 
 	public stopInterval() {
@@ -109,7 +120,8 @@ export default class JuanitaGuild {
 			new ButtonBuilder()
 				.setLabel(SKIP_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Primary)
-				.setCustomId(JSON.stringify({ ffb: 'skip' })),
+				.setCustomId(JSON.stringify({ ffb: 'skip' }))
+				.setDisabled(this.queue.tracks.length === 0),
 			new ButtonBuilder()
 				.setLabel(this.queue.connection.paused ? RESUME_BUTTON_LABEL[this.lang] : PAUSE_BUTTON_LABEL[this.lang])
 				.setStyle(this.queue.connection.paused ? ButtonStyle.Success : ButtonStyle.Danger)
@@ -117,7 +129,8 @@ export default class JuanitaGuild {
 			new ButtonBuilder()
 				.setLabel(SHUFFLE_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Secondary)
-				.setCustomId(JSON.stringify({ ffb: 'shuffle' })),
+				.setCustomId(JSON.stringify({ ffb: 'shuffle' }))
+				.setDisabled(this.queue.tracks.length === 0),
 		);
 
 		if (this.queue.tracks.length === 0) return [embed, controlButtons, null, null];
