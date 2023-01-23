@@ -1,17 +1,19 @@
-import ms from "ms";
-import type{ JuanitaCommand } from "../types";
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import { GENERIC_ERROR } from '../../embeds/messages';
+import type { JuanitaCommand } from '../types';
 
 export default {
-	name: "ping",
-	description: "Get the ping of the bot!",
-	async execute({ interaction, client }) {
-		if (!client) return interaction.reply({ content: "Something went wrong ❌", ephemeral: true });
-		await interaction.reply("Ping?");
-		return interaction.editReply(
-			`Pong! API Latency is ${Math.round(client.ws.ping)}ms 🛰️, Last heartbeat calculated ${ms(
-				Date.now() - client.ws.shards.first()!.lastPingTimestamp,
-				{ long: true },
-			)} ago`,
-		);
+	name: 'ping',
+	description: 'Get the ping of the bot!',
+	async execute({ interaction, client, juanitaGuild }) {
+		if (!client)
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
+
+		return interaction.reply({
+			embeds: [SimpleEmbed(`**Pong!** \`${Math.round(client.ws.ping)}ms\` 🛰️`, EmbedType.Info)],
+		});
 	},
 } as JuanitaCommand;
