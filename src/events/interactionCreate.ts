@@ -1,11 +1,6 @@
 import { GuildMember, Interaction, InteractionType } from 'discord.js';
 import SimpleEmbed, { EmbedType } from '../embeds/embeds';
-import {
-	COMMAND_NOT_FOUND_ERROR,
-	GENERIC_ERROR,
-	USER_NOT_IN_SAME_VOICE,
-	USER_NOT_IN_VOICE,
-} from '../embeds/messages';
+import { COMMAND_NOT_FOUND_ERROR, GENERIC_ERROR, USER_NOT_IN_SAME_VOICE, USER_NOT_IN_VOICE } from '../embeds/messages';
 import type JuanitaClient from '../JuanitaClient';
 
 export default (client: JuanitaClient, interaction: Interaction) => {
@@ -62,6 +57,11 @@ export default (client: JuanitaClient, interaction: Interaction) => {
 				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
 			});
+
+		if (interaction.customId == 'queue_select') {
+			const selectMenu = require('../selectmenu/selectMenu').default;
+			return selectMenu({ client, interaction, juanitaGuild });
+		}
 
 		const customId = JSON.parse(interaction.customId);
 		console.log(`[BUTTON]: Executed "${customId.ffb}" by "${interaction.user.tag}"`);

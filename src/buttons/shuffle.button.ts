@@ -16,5 +16,6 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 			ephemeral: true,
 		});
 
+	juanitaGuild.updateQueueMessage();
 	return interaction.deferUpdate();
 };

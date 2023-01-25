@@ -84,7 +84,7 @@ export default class JuanitaGuild {
 		this.stopInterval();
 		this.interval = setInterval(() => {
 			this.updateQueueMessage(channel);
-		}, 2000);
+		}, 5000);
 	}
 
 	public stopInterval() {
@@ -105,6 +105,10 @@ export default class JuanitaGuild {
 
 	public setLanguage(language: keyof JuanitaMessage) {
 		this.lang = language;
+	}
+
+	public validateSelectMenuValue(value: number): boolean {
+		return value >= 0 && value < this.queue!.tracks.length;
 	}
 
 	public generateQueuePresentation(): [
