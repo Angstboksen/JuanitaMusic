@@ -10,6 +10,7 @@ export default async ({ interaction, queue, juanitaGuild }: JuanitaButtonOptions
 		});
 
 	queue.destroy();
+	juanitaGuild.queue = null;
 	juanitaGuild.removeQueueMessage();
 	return interaction.reply({
 		embeds: [SimpleEmbed(KYS_SUCCESS[juanitaGuild.lang], EmbedType.Success)],

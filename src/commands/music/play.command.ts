@@ -1,5 +1,5 @@
 import { QueryType } from 'discord-player';
-import { ApplicationCommandOptionType, GuildMember } from 'discord.js';
+import { ApplicationCommandOptionType, CommandInteractionOptionResolver, GuildMember, TextChannel } from 'discord.js';
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
 import {
 	GENERIC_CANT_JOIN_CHANNEL,
@@ -32,8 +32,8 @@ export default {
 
 		await interaction.deferReply({ ephemeral: true });
 		const member = interaction.member as GuildMember;
-		const song = (interaction.options as any).getString('song');
-		const res = await player.search(song, {
+		const song = (interaction.options as CommandInteractionOptionResolver).getString('song');
+		const res = await player.search(song!, {
 			requestedBy: member,
 			searchEngine: QueryType.AUTO,
 		});
@@ -69,8 +69,9 @@ export default {
 		const isPlaying = !!queue.current;
 		res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0]!);
 		if (!isPlaying) await queue.play();
-		
-		juanitaGuild.updateQueueMessage();
+
+		juanitaGuild.queue = queue
+		juanitaGuild.startInterval(interaction.channel as TextChannel);
 		return interaction.editReply({ embeds: [embed] });
 	},
 } as JuanitaCommand;

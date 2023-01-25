@@ -55,6 +55,7 @@ export default {
 			embeds: [
 				SimpleEmbed(`${SEEK_SUCCESS[juanitaGuild.lang]} \`${millisecondsToTime(timeToMS)}\``, EmbedType.Success),
 			],
+			ephemeral: true,
 		});
 	},
 } as JuanitaCommand;

@@ -20,7 +20,6 @@ export default {
 			});
 
 		const queue = player.getQueue(interaction.guildId);
-		console.log(queue);
 		if (!queue || !queue.current)
 			return interaction.reply({
 				embeds: [SimpleEmbed(GENERIC_NO_MUSIC_PLAYING_ERROR[juanitaGuild.lang], EmbedType.Error)],

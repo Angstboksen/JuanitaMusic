@@ -1,5 +1,15 @@
 import type { Queue, Track } from 'discord-player';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Guild, Message, TextChannel } from 'discord.js';
+import {
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	EmbedBuilder,
+	Guild,
+	Message,
+	SelectMenuBuilder,
+	StringSelectMenuBuilder,
+	TextChannel,
+} from 'discord.js';
 import {
 	JuanitaMessage,
 	KYS_BUTTON_LABEL,
@@ -36,35 +46,32 @@ export default class JuanitaGuild {
 		this.guild = guild;
 	}
 
-	public setQueueMessage(message: Message) {
-		this.queueMessage = message;
-		this.stopInterval();
-		this.startInterval();
-	}
-
-	public async updateQueueMessage() {
-		if (!this.queueMessage) return;
+	public async updateQueueMessage(textChannel?: TextChannel) {
 		if (!this.queue || (!this.queue.current && !this.queue.tracks.length)) {
-			await this.queueMessage.delete();
+			if (this.queueMessage) await this.queueMessage.delete();
 			this.queueMessage = null;
+			this.stopInterval();
 			return;
 		}
+		if (!this.queueMessage && textChannel) return await this.sendQueueMessage(textChannel);
 		const [embed, buttons, queueSelect, queueButtons] = this.generateQueuePresentation();
 		if (queueSelect && queueButtons)
-			return await this.queueMessage.edit({ embeds: [embed], components: [buttons as any, queueSelect, queueButtons] });
-		return await this.queueMessage.edit({ embeds: [embed] });
+			return await this.queueMessage?.edit({
+				embeds: [embed],
+				components: [buttons, queueSelect, queueButtons],
+			});
+		return await this.queueMessage?.edit({ embeds: [embed], components: [buttons] });
 	}
 
-	public async sendQueueMessage(channel: TextChannel) {
+	public async sendQueueMessage(channel: TextChannel): Promise<Message | undefined> {
 		if (!channel) return;
 		if (this.queueMessage) return this.updateQueueMessage();
 		const [embed, buttons, queueSelect, queueButtons] = this.generateQueuePresentation();
 		if (queueSelect && queueButtons)
 			return (this.queueMessage = await channel.send({
 				embeds: [embed],
-				components: [buttons as any, queueSelect, queueButtons],
+				components: [buttons, queueSelect, queueButtons],
 			}));
-		console.log(embed);
 		return (this.queueMessage = await channel.send({ embeds: [embed] }));
 	}
 
@@ -73,9 +80,10 @@ export default class JuanitaGuild {
 		this.queueMessage = null;
 	}
 
-	public startInterval() {
+	public startInterval(channel: TextChannel) {
+		this.stopInterval();
 		this.interval = setInterval(() => {
-			this.updateQueueMessage();
+			this.updateQueueMessage(channel);
 		}, 2000);
 	}
 
@@ -101,28 +109,26 @@ export default class JuanitaGuild {
 
 	public generateQueuePresentation(): [
 		EmbedBuilder,
-		ActionRowBuilder,
-		ActionRowBuilder | null,
-		ActionRowBuilder | null,
+		ActionRowBuilder<ButtonBuilder>,
+		ActionRowBuilder<SelectMenuBuilder> | null,
+		ActionRowBuilder<ButtonBuilder> | null,
 	] {
 		if (!this.queue) return [new EmbedBuilder(), new ActionRowBuilder(), null, null];
-		const currentString = `${QUEUE_NOW_PLAYING[this.lang]} \`${this.queue.current.title}\`\n${`${
-			QUEUE_ADDED_BY[this.lang]
-		} ${this.queue.current.requestedBy}`}\n`;
+		const currentString = `${QUEUE_NOW_PLAYING[this.lang]} [${this.queue.current.title}](${
+			this.queue.current.url
+		})\n${`${QUEUE_ADDED_BY[this.lang]} ${this.queue.current.requestedBy}`}\n`;
 		const currentTime =
 			timeToMilliseconds(this.queue.getPlayerTimestamp().end) -
 			timeToMilliseconds(this.queue.getPlayerTimestamp().current);
 		const queueTime = this.queue.tracks.reduce((acc: number, track: Track) => acc + track.durationMS, 0);
+		// link to song url with title shown
 		const nextSongString =
 			this.queue.tracks.length > 0
-				? `${QUEUE_NEXT_SONG[this.lang]} \`${this.queue.tracks[0]!.title}\`\n${QUEUE_ADDED_BY[this.lang]} ${
-						this.queue.tracks[0]!.requestedBy
-				  }`
+				? `[${this.queue.tracks[0]!.title}](${this.queue.tracks[0]!.url})`
 				: QUEUE_NO_SONGS[this.lang];
-		const embed = SimpleEmbed(
-			`${currentString}\n${this.queue.createProgressBar()}\n\n${nextSongString}\n`,
-			EmbedType.Info,
-		)
+
+		const embed = SimpleEmbed(`${currentString}\n${this.queue.createProgressBar()}\n\n`, EmbedType.Info)
+			.setThumbnail(this.queue.current.thumbnail)
 			.setAuthor({
 				name: QUEUE_AUTHOR_NAME[this.lang],
 				iconURL: this.client.user!.displayAvatarURL(),
@@ -134,9 +140,10 @@ export default class JuanitaGuild {
 					inline: true,
 				},
 				{ name: QUEUE_SONG_AMOUNT[this.lang], value: `\`${this.queue.tracks.length.toString()}\``, inline: true },
+				{ name: QUEUE_NEXT_SONG[this.lang], value: nextSongString, inline: false },
 			);
 
-		const controlButtons = new ActionRowBuilder().addComponents(
+		const controlButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setLabel(KYS_BUTTON_LABEL[this.lang])
 				.setStyle(ButtonStyle.Danger)
@@ -160,7 +167,7 @@ export default class JuanitaGuild {
 		if (this.queue.tracks.length === 0) return [embed, controlButtons, null, null];
 		const currentPage = this.queuePage;
 		const maxPage = Math.ceil(this.queue.tracks.length / 25);
-		const queueSelect = new ActionRowBuilder().addComponents(
+		const queueSelect = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 			getSelectMenuByPage(this.queue.tracks, currentPage)
 				.setPlaceholder(
 					`${QUEUE_SELECT_PLACEHOLDER[this.lang]} ${currentPage * 25 + 1}/${Math.min(
@@ -171,7 +178,7 @@ export default class JuanitaGuild {
 				.setCustomId('queue_select'),
 		);
 
-		const queueButtons = new ActionRowBuilder().addComponents(
+		const queueButtons = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setCustomId(JSON.stringify({ ffb: 'previous' }))
 				.setLabel(PREVIOUS_BUTTON_LABEL[this.lang])
@@ -184,6 +191,6 @@ export default class JuanitaGuild {
 				.setDisabled(currentPage === maxPage - 1),
 		);
 
-		return [embed, queueSelect, controlButtons, queueButtons];
+		return [embed, controlButtons, queueSelect, queueButtons];
 	}
 }

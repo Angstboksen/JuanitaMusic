@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, CommandInteractionOptionResolver } from 'discord.js';
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
 import {
 	GENERIC_ERROR,
@@ -29,7 +29,7 @@ export default {
 				ephemeral: true,
 			});
 
-		const number = (interaction.options as any).getNumber('number');
+		const number = (interaction.options as CommandInteractionOptionResolver).getNumber('number');
 
 		const queue = player.getQueue(interaction.guildId);
 
@@ -59,7 +59,7 @@ export default {
 
 		const index = number - 1;
 		const trackname = queue.tracks[index]!.title;
-		console.log(trackname)
+
 		if (!trackname)
 			return interaction.reply({
 				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],

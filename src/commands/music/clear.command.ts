@@ -1,15 +1,18 @@
-import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
-import { CLEAR_QUEUE_SUCCESS, GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR } from "../../embeds/messages";
-import type { JuanitaCommand } from "../types";
+import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
+import { CLEAR_QUEUE_SUCCESS, GENERIC_ERROR, GENERIC_NO_MUSIC_PLAYING_ERROR } from '../../embeds/messages';
+import type { JuanitaCommand } from '../types';
 
 export default {
-	name: "clear",
-	description: "Clears the queue!",
+	name: 'clear',
+	description: 'Clears the queue!',
 	voiceChannel: true,
 
 	async execute({ interaction, player, juanitaGuild }) {
 		if (!interaction.guildId || !player)
-			return interaction.reply({ embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)], ephemeral: true });
+			return interaction.reply({
+				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
+				ephemeral: true,
+			});
 
 		const queue = player.getQueue(interaction.guildId);
 		if (!queue || !queue.current)
@@ -20,6 +23,9 @@ export default {
 
 		queue.clear();
 		juanitaGuild.updateQueueMessage();
-		return interaction.reply({ embeds: [SimpleEmbed(CLEAR_QUEUE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
+		return interaction.reply({
+			embeds: [SimpleEmbed(CLEAR_QUEUE_SUCCESS[juanitaGuild.lang], EmbedType.Success)],
+			ephemeral: true,
+		});
 	},
 } as JuanitaCommand;

@@ -242,9 +242,9 @@ export const QUEUE_SILENT_SUCCESS = {
 };
 
 export const QUEUE_NEXT_SONG = {
-	en: '**⏭️ Next song in queue:**',
-	no: '**⏭️ Neste sang i køen:**',
-	molde: '**⏭️ NESTE SANG I KØA:**',
+	en: '**Next song in queue:**',
+	no: '**Neste sang i køen:**',
+	molde: '**NESTE SANG I KØA:**',
 };
 
 export const QUEUE_NO_SONGS = {
@@ -315,15 +315,15 @@ export const KYS_BUTTON_LABEL = {
 };
 
 export const NEXT_BUTTON_LABEL = {
-	en: '➡️Next',
-	no: '➡️Neste',
-	molde: '➡️NESTE',
+	en: '➡️Next page',
+	no: '➡️Neste side',
+	molde: '➡️NESTE SIDE',
 };
 
 export const PREVIOUS_BUTTON_LABEL = {
-	en: '⬅️Previous',
-	no: '⬅️Forrige',
-	molde: '⬅️FORRIGE',
+	en: '⬅️Previous page',
+	no: '⬅️Forrige side',
+	molde: '⬅️FORRIGE SIDE',
 };
 
 export const PAUSE_BUTTON_LABEL = {

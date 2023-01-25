@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, CommandInteractionOptionResolver } from 'discord.js';
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
 import {
 	GENERIC_ERROR,
@@ -28,7 +28,7 @@ export default {
 				ephemeral: true,
 			});
 
-		const number = (interaction.options as any).getNumber('number');
+		const number = (interaction.options as CommandInteractionOptionResolver).getNumber('number');
 		const queue = player.getQueue(interaction.guildId);
 
 		if (!queue || !queue.current)
@@ -48,13 +48,25 @@ export default {
 				ephemeral: true,
 			});
 
+		if (!number || number > queue.tracks.length)
+			return interaction.reply({
+				embeds: [
+					SimpleEmbed(
+						`${JUMP_QUEUE_POSITION_ERROR[juanitaGuild.lang]} \`(${`1 - ${queue.tracks.length}`})\``,
+						EmbedType.Error,
+					),
+				],
+				ephemeral: true,
+			});
+
 		const index = number - 1;
 		const trackName = queue.tracks[index]!.title;
 		queue.remove(index);
-		
+
 		juanitaGuild.updateQueueMessage();
 		return interaction.reply({
 			embeds: [SimpleEmbed(`${REMOVE_SUCCESS[juanitaGuild.lang]} \`${trackName}\``, EmbedType.Success)],
+			ephemeral: true,
 		});
 	},
 } as JuanitaCommand;

@@ -1,5 +1,5 @@
 import { QueueRepeatMode } from "discord-player";
-import { ApplicationCommandOptionType } from "discord.js";
+import { ApplicationCommandOptionType, CommandInteractionOptionResolver } from "discord.js";
 import SimpleEmbed, { EmbedType } from "../../embeds/embeds";
 import {
 	GENERIC_ERROR,

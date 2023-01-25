@@ -40,6 +40,9 @@ export default {
 				ephemeral: true,
 			});
 
-		return interaction.reply({ embeds: [SimpleEmbed(SHUFFLE_SUCCESS[juanitaGuild.lang], EmbedType.Success)] });
+		return interaction.reply({
+			embeds: [SimpleEmbed(SHUFFLE_SUCCESS[juanitaGuild.lang], EmbedType.Success)],
+			ephemeral: true,
+		});
 	},
 } as JuanitaCommand;

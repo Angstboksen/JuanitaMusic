@@ -17,21 +17,6 @@ const loadPlayer = (client: JuanitaClient) => {
 		guild.updateQueueMessage()
 	});
 
-	// player.on("trackAdd", (queue, track) => {
-	// 	const metadata = queue.metadata as any;
-	// 	metadata.send(`Track ${track.title} added in the queue ✅`);
-	// });
-
-	player.on("botDisconnect", (queue) => {
-		const metadata = queue.metadata as any;
-		metadata.send("I was manually disconnected from the voice channel, clearing queue... ❌");
-	});
-
-	player.on("channelEmpty", (queue) => {
-		const metadata = queue.metadata as any;
-		metadata.send("Nobody is in the voice channel, leaving the voice channel... ❌");
-	});
-
 	player.on("queueEnd", (queue) => {
 		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
 		guild.removeQueueMessage();
