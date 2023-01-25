@@ -10,7 +10,7 @@
 		"dev": "nodemon index.ts",
 		"test": "jest --passWithNoTests",
 		"build": "tsc",
-		"eslint:github-action": "eslint . --ext .ts --fix"
+		"eslint:github-action": "eslint"
 	},
 	"dependencies": {
 		"@discordjs/opus": "^0.9.0",
