@@ -42,5 +42,5 @@
 		"useDefineForClassFields": true
 	},
 	"include": ["src/*.ts", "src/events/events.ts"],
-	"exclude": [".github"]
+	"exclude": [".github", "node_modules"]
 }
