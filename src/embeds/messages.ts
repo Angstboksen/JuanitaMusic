@@ -123,6 +123,14 @@ export const QUEUE_NEXT_PAGE_ERROR = {
 	molde: '❌ DET FINNES IKKJE EN NESTE SIDE DIN MONGOLOIDE NISSE!',
 };
 
+// SPOTIFY
+
+export const SPOTIFY_PLAYLIST_NOT_PROVIDED_ERROR = {
+	en: '❌ No playlist provided!',
+	no: '❌ Du må gi meg en spilleliste',
+	molde: '❌ FAEN DA! E DU HEILT TARD! GI ME EI LISTE!',
+}
+
 // Command success messages:
 // HELP:
 export const HELP_COMMAND_DESCRIPTION = {
