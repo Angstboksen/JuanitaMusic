@@ -129,7 +129,13 @@ export const SPOTIFY_PLAYLIST_NOT_PROVIDED_ERROR = {
 	en: '❌ No playlist provided!',
 	no: '❌ Du må gi meg en spilleliste',
 	molde: '❌ FAEN DA! E DU HEILT TARD! GI ME EI LISTE!',
-}
+};
+
+export const SPOTIFY_PLAYLIST_NOT_EXIST_ERROR = {
+	en: '❌ Could not find the provided playlist',
+	no: '❌ Fant ingen spilleliste med gjeldende ID eller alias',
+	molde: '❌ NA SPILLELISA FINNES IKKJE!',
+};
 
 // Command success messages:
 // HELP:
@@ -313,6 +319,19 @@ export const KYS_SUCCESS = {
 	en: '👋 Ait I`m out',
 	no: '👋 Chattes a!',
 	molde: '🍆 SUG PÅ DENNA!',
+};
+
+// SPOTIFY:
+export const SPOTIFY_PLAYING_BY_ID = {
+	en: '🎶 Loaded songs from playlist with ID: ',
+	no: '🎶 Lastet inn sanger fra spilleliste med ID: ',
+	molde: '🎶 LASTA INN SANGA FRÅ SPILLELISTA MED ID: ',
+};
+
+export const SPOTIFY_LOADING_ALIAS = {
+	en: '🎶 Loading songs from playlist: ',
+	no: '🎶 Laster inn sanger fra spilleliste: ',
+	molde: '🎶 LASTE INN SANGA FRA SPILLELISTA: ',
 };
 
 // BUTTON LABELS:

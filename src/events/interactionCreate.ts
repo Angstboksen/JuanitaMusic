@@ -3,7 +3,7 @@ import SimpleEmbed, { EmbedType } from '../embeds/embeds';
 import { COMMAND_NOT_FOUND_ERROR, GENERIC_ERROR, USER_NOT_IN_SAME_VOICE, USER_NOT_IN_VOICE } from '../embeds/messages';
 import type JuanitaClient from '../JuanitaClient';
 
-export default (client: JuanitaClient, interaction: Interaction) => {
+export default async (client: JuanitaClient, interaction: Interaction) => {
 	if (!interaction.isCommand() && !interaction.isMessageComponent()) return;
 	if (!interaction.guild || !interaction.guildId)
 		return interaction.reply({
@@ -14,7 +14,7 @@ export default (client: JuanitaClient, interaction: Interaction) => {
 	const juanitaGuildExist = client.guildCommander.has(interaction.guildId);
 	const juanitaGuild = juanitaGuildExist
 		? client.getJuanitaGuild(interaction.guildId)
-		: client.setJuanitaGuild(interaction.guildId, interaction.guild);
+		: await client.setJuanitaGuild(interaction.guildId, interaction.guild);
 
 	if (interaction.type === InteractionType.ApplicationCommand) {
 		const command = client.commands.get(interaction.commandName);

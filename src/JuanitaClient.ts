@@ -4,6 +4,7 @@ import { Client, ClientOptions, Collection, Guild } from 'discord.js';
 import loadClient from './loader';
 import JuanitaGuildCommander from './structures/JuanitaGuildCommander';
 import JuanitaGuild from './structures/JuanitaGuild';
+import { setGuildIfNotExists } from './service/guildService';
 
 type JuanitaClientOptions = ClientOptions;
 
@@ -24,7 +25,8 @@ export default class JuanitaClient extends Client {
 		return this.guildCommander.get(guildId)!;
 	}
 
-	public setJuanitaGuild(guildId: string, guild: Guild): JuanitaGuild {
+	public async setJuanitaGuild(guildId: string, guild: Guild): Promise<JuanitaGuild> {
+		await setGuildIfNotExists(guild);
 		this.guildCommander.set(guildId, new JuanitaGuild(this, guild));
 		return this.getJuanitaGuild(guildId);
 	}

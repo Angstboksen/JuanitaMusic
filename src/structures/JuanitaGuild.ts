@@ -84,7 +84,7 @@ export default class JuanitaGuild {
 		this.stopInterval();
 		this.interval = setInterval(() => {
 			this.updateQueueMessage(channel);
-		}, 5000);
+		}, 2500);
 	}
 
 	public stopInterval() {
