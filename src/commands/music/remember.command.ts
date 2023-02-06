@@ -1,12 +1,7 @@
-import { QueryType } from 'discord-player';
-import { ApplicationCommandOptionType, CommandInteractionOptionResolver, GuildMember, TextChannel } from 'discord.js';
+import { ApplicationCommandOptionType, CommandInteractionOptionResolver } from 'discord.js';
 import SimpleEmbed, { EmbedType } from '../../embeds/embeds';
 import {
-	GENERIC_CANT_JOIN_CHANNEL,
 	GENERIC_ERROR,
-	PLAY_NO_TRACKS_FOUND_ERROR,
-	PLAY_PLAYLIST_SUCCESS,
-	PLAY_TRACK_SUCCESS,
 	REMEMBER_OPTIONS_ERROR,
 	REMEMBER_SPOTIFY_FORMAT_ERROR,
 	REMEMBER_SUCCESS_ONE,
@@ -16,11 +11,11 @@ import { createAlias, validateAlias } from '../../service/aliasService';
 import type { JuanitaCommand } from '../types';
 
 export default {
-	name: 'remember',
+	name: 'store',
 	description: 'Store a spotify playlist with an alias!',
 	options: [
 		{
-			name: 'playlistURI',
+			name: 'uri',
 			description: 'The URI of the playlist you want to store',
 			type: ApplicationCommandOptionType.String,
 			required: true,
@@ -33,8 +28,8 @@ export default {
 		},
 	],
 
-	async execute({ interaction, player, client, juanitaGuild }) {
-		if (!interaction.guild || !interaction.guildId || !interaction.member || !player || !client)
+	async execute({ interaction, juanitaGuild }) {
+		if (!interaction.guild || !interaction.guildId || !interaction.member)
 			return interaction.reply({
 				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
 				ephemeral: true,
@@ -42,7 +37,7 @@ export default {
 
 		await interaction.deferReply({ ephemeral: true });
 
-		const uri = (interaction.options as CommandInteractionOptionResolver).getString('playlistURI');
+		const uri = (interaction.options as CommandInteractionOptionResolver).getString('uri');
 		const alias = (interaction.options as CommandInteractionOptionResolver).getString('alias');
 		if (!uri || !alias)
 			return interaction.editReply({
@@ -60,7 +55,7 @@ export default {
 				embeds: [SimpleEmbed(REMEMBER_OPTIONS_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
 
-		const created = await createAlias(interaction.guildId, alias, uri[2]!);
+		const created = await createAlias(interaction.guildId, alias, uri);
 		if (!created)
 			return interaction.editReply({
 				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],

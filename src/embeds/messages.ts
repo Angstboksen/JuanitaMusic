@@ -142,13 +142,20 @@ export const REMEMBER_OPTIONS_ERROR = {
 	en: '❌ Give a valid playlistID and an alias not already used in this guild!',
 	no: '❌ Gi en gyldig spillelisteID og et alias som ikke allerede er brukt',
 	molde: '❌ FAEN! DU MÅ GI ME EI GYLDIG SPILLELISTEID OG ET ALIAS SOM IKKJE E BRUKT!',
-}
+};
 
 export const REMEMBER_SPOTIFY_FORMAT_ERROR = {
 	en: '❌ You must provide a spotify URI on the format: `spotify:playlist:<id>`',
 	no: '❌ Du må gi meg en spotify URI på format: `spotify:playlist:<id>`',
 	molde: '❌ GI DE! GI ME EN URI PÅ FORMATET: `spotify:playlist:<id>`',
-}
+};
+
+//LANGUAGE
+export const LANGUAGE_NOT_EXISTING_ERROR = {
+	en: '❌ You have to provide a valid language string.\nThe current supported languages are: ',
+	no: '❌ Du må gi et gyldig språk.\nSpråk som støttes nå er: ',
+	molde: '❌ DU MÅ GI ME ET GYLDIG SPRÅK.\nSPRÅKA SOM STØTTES NO ER: ',
+};
 
 // Command success messages:
 // HELP:
@@ -349,15 +356,35 @@ export const SPOTIFY_LOADING_ALIAS = {
 
 // REMEMBER
 export const REMEMBER_SUCCESS_ONE = {
-	en: '📝 I will now remember: ',
-	no: '📝 Jeg husker nå: ',
-	molde: '📝 I HUSKE NO: ',
+	en: '📝 I will now remember:',
+	no: '📝 Jeg husker nå:',
+	molde: '📝 I HUSKE NO:',
 };
 
 export const REMEMBER_SUCCESS_TWO = {
-	en: 'as: ',
-	no: 'som: ',
-	molde: 'SOM: ',
+	en: 'as:',
+	no: 'som:',
+	molde: 'SOM:',
+};
+
+// LISTS
+export const LISTS_NO_ALIASES_STORED = {
+	en: '😢 No aliases is stored in this guild!\nUse `/store <uri> <alias>` to store a playlist!`',
+	no: '😢 Ingen alias er lagret i denne guilden!\nBruk `/store <uri> <alias>` for å lagre en spilleliste!`',
+	molde: '😢 INGEN ALIAS E LAGRA I DENNE GUILDEN!\nBRUK `/store <uri> <alias>` FOR Å LAGRE EI SPILLELISTE!`',
+};
+
+export const LISTS_EMBED_TITLE = {
+	en: '📝 You can use `/spotify <alias>` to queue the playlist!',
+	no: '📝 Du kan bruke `/spotify <alias>` for å legge til spillelisten i køen!',
+	molde: '📝 DU KAN BRUKE `/spotify <alias>` FOR Å LEGGE TE SPILLELISTA I KØA!',
+};
+
+// LANGUAGE
+export const LANGUAGE_SUCCESS = {
+	en: '🌐 Language set to:',
+	no: '🌐 Språk satt til:',
+	molde: '🌐 SPRÅK SATT TE:',
 };
 
 // BUTTON LABELS:

@@ -5,6 +5,7 @@ import loadClient from './loader';
 import JuanitaGuildCommander from './structures/JuanitaGuildCommander';
 import JuanitaGuild from './structures/JuanitaGuild';
 import { setGuildIfNotExists } from './service/guildService';
+import type { JuanitaMessage } from './embeds/messages';
 
 type JuanitaClientOptions = ClientOptions;
 
@@ -26,8 +27,10 @@ export default class JuanitaClient extends Client {
 	}
 
 	public async setJuanitaGuild(guildId: string, guild: Guild): Promise<JuanitaGuild> {
-		await setGuildIfNotExists(guild);
-		this.guildCommander.set(guildId, new JuanitaGuild(this, guild));
+		const modelsGuild = await setGuildIfNotExists(guild);
+		const juanitaGuild = new JuanitaGuild(this, guild);
+		if (modelsGuild) juanitaGuild.lang = modelsGuild.language as keyof JuanitaMessage;
+		this.guildCommander.set(guildId, juanitaGuild);
 		return this.getJuanitaGuild(guildId);
 	}
 
