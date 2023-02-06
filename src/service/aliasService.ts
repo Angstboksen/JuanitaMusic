@@ -4,14 +4,31 @@ import { apiInstance, baseURL } from './ApiHttpBase';
 const aliasApi = new AliasApi(undefined, baseURL, apiInstance);
 
 export const getAliasesByGuild = async (guildId: string): Promise<ModelsAlias[]> => {
-	const res = await aliasApi.getAliases(guildId);
-	if (res.status === 200) {
-		return res.data;
+	try {
+		const res = await aliasApi.getAliases(guildId);
+		return res.status === 200 ? res.data : [];
+	} catch (_) {
+		return [];
 	}
-	return [];
 };
 
 export const validateAlias = async (guildId: string, alias: string): Promise<boolean> => {
-	const res = await aliasApi.getByAlias(guildId, alias);
-	return res.status === 200;
+	try {
+		const res = await aliasApi.getByAlias(guildId, alias);
+		return res.status === 200;
+	} catch (_) {
+		return false;
+	}
+};
+
+export const createAlias = async (guildId: string, alias: string, playlistid: string): Promise<ModelsAlias | null> => {
+	try {
+		const res = await aliasApi.createAlias(guildId, {
+			alias,
+			playlistid,
+		});
+		return res.status === 201 ? res.data : null;
+	} catch (_) {
+		return null;
+	}
 };

@@ -137,6 +137,19 @@ export const SPOTIFY_PLAYLIST_NOT_EXIST_ERROR = {
 	molde: '❌ NA SPILLELISA FINNES IKKJE!',
 };
 
+// REMEMBER
+export const REMEMBER_OPTIONS_ERROR = {
+	en: '❌ Give a valid playlistID and an alias not already used in this guild!',
+	no: '❌ Gi en gyldig spillelisteID og et alias som ikke allerede er brukt',
+	molde: '❌ FAEN! DU MÅ GI ME EI GYLDIG SPILLELISTEID OG ET ALIAS SOM IKKJE E BRUKT!',
+}
+
+export const REMEMBER_SPOTIFY_FORMAT_ERROR = {
+	en: '❌ You must provide a spotify URI on the format: `spotify:playlist:<id>`',
+	no: '❌ Du må gi meg en spotify URI på format: `spotify:playlist:<id>`',
+	molde: '❌ GI DE! GI ME EN URI PÅ FORMATET: `spotify:playlist:<id>`',
+}
+
 // Command success messages:
 // HELP:
 export const HELP_COMMAND_DESCRIPTION = {
@@ -332,6 +345,19 @@ export const SPOTIFY_LOADING_ALIAS = {
 	en: '🎶 Loading songs from playlist: ',
 	no: '🎶 Laster inn sanger fra spilleliste: ',
 	molde: '🎶 LASTE INN SANGA FRA SPILLELISTA: ',
+};
+
+// REMEMBER
+export const REMEMBER_SUCCESS_ONE = {
+	en: '📝 I will now remember: ',
+	no: '📝 Jeg husker nå: ',
+	molde: '📝 I HUSKE NO: ',
+};
+
+export const REMEMBER_SUCCESS_TWO = {
+	en: 'as: ',
+	no: 'som: ',
+	molde: 'SOM: ',
 };
 
 // BUTTON LABELS:
