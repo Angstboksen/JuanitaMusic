@@ -59,10 +59,8 @@ export default {
 		const spotifyUrl = `https://open.spotify.com/playlist/${query}`;
 		const res = await player.search(spotifyUrl, {
 			requestedBy: member,
-			searchEngine: QueryType.AUTO,
+			searchEngine: QueryType.SPOTIFY_PLAYLIST,
 		});
-
-		console.log(res)
 
 		if (!res || !res.tracks.length)
 			return interaction.editReply({
@@ -94,8 +92,8 @@ export default {
 
 		const isPlaying = !!queue.current;
 		queue.addTracks(res.tracks);
-		if (!isPlaying) await queue.play();
 		queue.shuffle();
+		if (!isPlaying) await queue.play();
 
 		juanitaGuild.queue = queue;
 		juanitaGuild.startInterval(interaction.channel as TextChannel);
