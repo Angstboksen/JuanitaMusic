@@ -17,7 +17,7 @@ export const retrieveSpotifyPlaylistId = (uri: string): string | null => {
 	const regex2 = /open.spotify.com\/playlist\/([a-zA-Z0-9]+)/;
 	const match = uri.match(regex);
 	const match2 = uri.match(regex2);
-	if (match) return match[1];
-	if (match2) return match2[1];
+	if (match) return match[1]!;
+	if (match2) return match2[1]!;
 	return null;
 };
