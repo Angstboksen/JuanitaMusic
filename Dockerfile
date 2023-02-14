@@ -8,7 +8,7 @@ RUN apt-get update && \
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64/
 RUN export JAVA_HOME
 
-RUN apt-get install ffmpeg
+RUN apt-get install ffmpeg -y
 
 WORKDIR /app
 
