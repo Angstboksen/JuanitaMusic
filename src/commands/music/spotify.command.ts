@@ -48,12 +48,21 @@ export default {
 			return interaction.editReply({
 				embeds: [SimpleEmbed(SPOTIFY_PLAYLIST_NOT_PROVIDED_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
-			
+
 		const query = existingAlias ? existingAlias.playlistid : await validateSpotifyURI(retrievedId);
-		const res = await player.search(`https://open.spotify.com/playlist/${query}`, {
+
+		if (!query)
+			return interaction.editReply({
+				embeds: [SimpleEmbed(SPOTIFY_PLAYLIST_NOT_EXIST_ERROR[juanitaGuild.lang], EmbedType.Error)],
+			});
+
+		const spotifyUrl = `https://open.spotify.com/playlist/${query}`;
+		const res = await player.search(spotifyUrl, {
 			requestedBy: member,
-			searchEngine: QueryType.SPOTIFY_PLAYLIST,
+			searchEngine: QueryType.AUTO,
 		});
+
+		console.log(res)
 
 		if (!res || !res.tracks.length)
 			return interaction.editReply({
@@ -86,7 +95,7 @@ export default {
 		const isPlaying = !!queue.current;
 		queue.addTracks(res.tracks);
 		if (!isPlaying) await queue.play();
-		queue.shuffle()
+		queue.shuffle();
 
 		juanitaGuild.queue = queue;
 		juanitaGuild.startInterval(interaction.channel as TextChannel);

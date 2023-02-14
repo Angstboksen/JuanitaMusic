@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-export const validateSpotifyURI = async (uri: string | null): Promise<string> => {
-	if (!uri) return '';
+export const validateSpotifyURI = async (uri: string | null): Promise<string | null> => {
+	if (!uri) return null;
 	const URL = `https://open.spotify.com/playlist/${uri}`;
 	try {
 		const res = await axios.get(URL);
 		return res.status === 200 ? uri : '';
-	} catch (_) {
-		return '';
+	} catch {
+		return null;
 	}
 };
 
