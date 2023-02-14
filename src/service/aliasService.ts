@@ -7,7 +7,7 @@ export const getAliasesByGuild = async (guildId: string): Promise<ModelsAlias[]>
 	try {
 		const res = await aliasApi.getAliases(guildId);
 		return res.status === 200 ? res.data : [];
-	} catch (_) {
+	} catch {
 		return [];
 	}
 };
@@ -16,7 +16,7 @@ export const validateAlias = async (guildId: string, alias: string): Promise<boo
 	try {
 		const res = await aliasApi.getByAlias(guildId, alias);
 		return res.status === 200;
-	} catch (_) {
+	} catch {
 		return false;
 	}
 };
@@ -27,8 +27,9 @@ export const createAlias = async (guildId: string, alias: string, playlistid: st
 			alias,
 			playlistid,
 		});
+		console.log(res)
 		return res.status === 201 ? res.data : null;
-	} catch (_) {
+	} catch {
 		return null;
 	}
 };

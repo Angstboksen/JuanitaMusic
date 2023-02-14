@@ -8,7 +8,7 @@ export const validateGuild = async (guildId: string): Promise<ModelsGuild | null
 	try {
 		const res = await guildApi.getGuild(guildId);
 		return res.status === 200 ? res.data : null;
-	} catch (_) {
+	} catch {
 		return null;
 	}
 };
@@ -25,7 +25,7 @@ export const setGuildIfNotExists = async (guild: Guild): Promise<ModelsGuild | n
 			aliases: [],
 		});
 		return res.status === 201 ? res.data : null;
-	} catch (_) {
+	} catch {
 		return null;
 	}
 };
@@ -34,7 +34,7 @@ export const getAllGuilds = async (): Promise<ModelsGuild[] | null> => {
 	try {
 		const res = await guildApi.getGuilds();
 		return res.status === 200 ? res.data : null;
-	} catch (_) {
+	} catch {
 		return null;
 	}
 };
@@ -43,7 +43,7 @@ export const changeGuildLanguage = async (guildId: string, language: ModelsLangu
 	try {
 		const res = await guildApi.updateGuildLanguage(guildId, { language });
 		return res.status === 200;
-	} catch (_) {
+	} catch {
 		return false;
 	}
 };

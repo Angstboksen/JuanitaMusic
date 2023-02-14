@@ -7,7 +7,7 @@ export const storeSearch = async (search: ModelsSearch): Promise<boolean> => {
     try {
         const res = await searchApi.createSearch(search);
         return res.status === 201;
-    } catch (_) {
+    } catch {
         return false;
     }
 }
