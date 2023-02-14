@@ -42,7 +42,6 @@ export const getAllGuilds = async (): Promise<ModelsGuild[] | null> => {
 export const changeGuildLanguage = async (guildId: string, language: ModelsLanguage): Promise<boolean> => {
 	try {
 		const res = await guildApi.updateGuildLanguage(guildId, { language });
-		console.log(res);
 		return res.status === 200;
 	} catch (_) {
 		return false;
