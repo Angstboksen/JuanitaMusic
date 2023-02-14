@@ -40,7 +40,7 @@ export default class JuanitaGuild {
 	public interval: NodeJS.Timeout | null = null;
 	public queuePage: number = 0;
 	public lang: keyof JuanitaMessage = 'no';
-
+	
 	constructor(public client: JuanitaClient, public guild: Guild) {
 		this.id = guild.id;
 		this.guild = guild;
@@ -48,7 +48,7 @@ export default class JuanitaGuild {
 
 	public async updateQueueMessage(textChannel?: TextChannel) {
 		if (!this.queue || (!this.queue.current && !this.queue.tracks.length)) {
-			this.removeQueueMessage()
+			this.removeQueueMessage();
 			this.stopInterval();
 			return;
 		}
@@ -75,7 +75,13 @@ export default class JuanitaGuild {
 	}
 
 	public async removeQueueMessage() {
-		if (this.queueMessage) await this.queueMessage.delete();
+		if (this.queueMessage) {
+			try {
+				await this.queueMessage.delete();
+			} catch {
+				// Ignore
+			}
+		}
 		this.queueMessage = null;
 	}
 

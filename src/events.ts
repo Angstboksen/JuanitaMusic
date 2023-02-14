@@ -14,10 +14,14 @@ const loadPlayer = (client: JuanitaClient) => {
 		console.log(`Error emitted from the connection ${error.message}`);
 	});
 
-	player.on('trackStart', (queue, track) => {
+	player.on('trackStart', async (queue, _) => {
 		if (!client.config.opt.loopMessage && queue.repeatMode !== 0) return;
 		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
 		guild.updateQueueMessage();
+	});
+
+	player.on('trackEnd', async (queue, track) => {
+		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
 		const { title, duration, requestedBy, url } = track;
 		const searchModel: ModelsSearch = {
 			title,
@@ -31,23 +35,10 @@ const loadPlayer = (client: JuanitaClient) => {
 			guild: guild.id,
 		};
 		try {
-			storeSearch(searchModel);
+			await storeSearch(searchModel);
 		} catch {
 			console.log(`Error storing search: ${searchModel}}`);
 		}
-	});
-
-	player.on('trackEnd', (queue, _) => {
-		if (queue.tracks.length === 0) {
-			const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
-			guild.removeQueueMessage();
-			queue.destroy();
-		}
-	});
-
-	player.on('queueEnd', (queue) => {
-		const guild = client.getJuanitaGuild(queue.connection.channel.guild.id);
-		guild.removeQueueMessage();
 	});
 };
 
