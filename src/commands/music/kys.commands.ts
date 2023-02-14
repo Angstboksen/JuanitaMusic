@@ -24,7 +24,9 @@ export default {
 		queue.destroy();
 		juanitaGuild.queue = null;
 		juanitaGuild.removeQueueMessage();
-		return interaction.reply({ embeds: [SimpleEmbed(KYS_SUCCESS[juanitaGuild.lang], EmbedType.Success)],
-		ephemeral: true, });
+		return interaction.reply({
+			embeds: [SimpleEmbed(KYS_SUCCESS[juanitaGuild.lang], EmbedType.Success)],
+			ephemeral: true,
+		});
 	},
 } as JuanitaCommand;

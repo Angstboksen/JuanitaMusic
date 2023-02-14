@@ -11,7 +11,7 @@ import {
 import type { JuanitaCommand } from '../types';
 import { getAliasesByGuild } from '../../service/aliasService';
 import { QueryType } from 'discord-player';
-import { validateSpotifyURI } from '../../utils/spotify';
+import { retrieveSpotifyPlaylistId, validateSpotifyURI } from '../../utils/spotify';
 
 export default {
 	name: 'spotify',
@@ -43,12 +43,13 @@ export default {
 
 		const storedAliases = await getAliasesByGuild(interaction.guildId);
 		const existingAlias = storedAliases.find((alias) => alias.alias === option);
-		if (!existingAlias && !option.startsWith('spotify:playlist:'))
+		const retrivedId = retrieveSpotifyPlaylistId(option);
+		if (!existingAlias && !retrivedId)
 			return interaction.editReply({
 				embeds: [SimpleEmbed(SPOTIFY_PLAYLIST_NOT_PROVIDED_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
-		const playlist = option.split(':')[2]!;
-		const query = existingAlias ? existingAlias.playlistid : await validateSpotifyURI(playlist);
+			
+		const query = existingAlias ? existingAlias.playlistid : await validateSpotifyURI(retrivedId!);
 		const res = await player.search(`https://open.spotify.com/playlist/${query}`, {
 			requestedBy: member,
 			searchEngine: QueryType.SPOTIFY_PLAYLIST,

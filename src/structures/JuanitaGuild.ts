@@ -48,8 +48,7 @@ export default class JuanitaGuild {
 
 	public async updateQueueMessage(textChannel?: TextChannel) {
 		if (!this.queue || (!this.queue.current && !this.queue.tracks.length)) {
-			if (this.queueMessage) await this.queueMessage.delete();
-			this.queueMessage = null;
+			this.removeQueueMessage()
 			this.stopInterval();
 			return;
 		}

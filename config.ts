@@ -26,7 +26,7 @@ export type JuanitaConfig = {
 const envConfig: JuanitaConfig = {
 	app: {
 		token: process.env.BOT_TOKEN,
-		playing: "Yeeting bangers ❤️",
+		playing: "Joe Mama❤️",
 		global: process.env.DEV !== "true",
 		guild: process.env.DEV ? process.env.DEV_GUILD: undefined,
 	},

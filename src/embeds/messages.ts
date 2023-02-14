@@ -139,15 +139,15 @@ export const SPOTIFY_PLAYLIST_NOT_EXIST_ERROR = {
 
 // REMEMBER
 export const REMEMBER_OPTIONS_ERROR = {
-	en: '❌ Give a valid playlistID and an alias not already used in this guild!',
-	no: '❌ Gi en gyldig spillelisteID og et alias som ikke allerede er brukt',
-	molde: '❌ FAEN! DU MÅ GI ME EI GYLDIG SPILLELISTEID OG ET ALIAS SOM IKKJE E BRUKT!',
+	en: '❌ Give a valid playlist URI OR URL and an alias not already used in this guild!',
+	no: '❌ Gi en gyldig URL eller URI og et alias som ikke allerede er brukt',
+	molde: '❌ FAEN! DU MÅ GI ME EI GYLDIG URI ELLER URL OG ET ALIAS SOM IKKJE E BRUKT!',
 };
 
 export const REMEMBER_SPOTIFY_FORMAT_ERROR = {
-	en: '❌ You must provide a spotify URI on the format: `spotify:playlist:<id>`',
-	no: '❌ Du må gi meg en spotify URI på format: `spotify:playlist:<id>`',
-	molde: '❌ GI DE! GI ME EN URI PÅ FORMATET: `spotify:playlist:<id>`',
+	en: '❌ You must provide a spotify URI or URL',
+	no: '❌ Du må gi meg en spotify URI eller URL',
+	molde: '❌ GI DE! GI ME EN URI PÅ FORMATET URI OG URL',
 };
 
 //LANGUAGE

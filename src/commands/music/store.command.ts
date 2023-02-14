@@ -8,6 +8,7 @@ import {
 	REMEMBER_SUCCESS_TWO,
 } from '../../embeds/messages';
 import { createAlias, validateAlias } from '../../service/aliasService';
+import { retrieveSpotifyPlaylistId } from '../../utils/spotify';
 import type { JuanitaCommand } from '../types';
 
 export default {
@@ -44,7 +45,8 @@ export default {
 				embeds: [SimpleEmbed(REMEMBER_OPTIONS_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
 
-		if (!uri.startsWith('spotify:playlist:'))
+		const retrivedId = retrieveSpotifyPlaylistId(uri);
+		if (!retrivedId)
 			return interaction.editReply({
 				embeds: [SimpleEmbed(REMEMBER_SPOTIFY_FORMAT_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
@@ -55,7 +57,7 @@ export default {
 				embeds: [SimpleEmbed(REMEMBER_OPTIONS_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
 
-		const created = await createAlias(interaction.guildId, alias, uri);
+		const created = await createAlias(interaction.guildId, alias, `spotify:playlist:${retrivedId}`);
 		if (!created)
 			return interaction.editReply({
 				embeds: [SimpleEmbed(GENERIC_ERROR[juanitaGuild.lang], EmbedType.Error)],
