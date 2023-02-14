@@ -43,13 +43,13 @@ export default {
 
 		const storedAliases = await getAliasesByGuild(interaction.guildId);
 		const existingAlias = storedAliases.find((alias) => alias.alias === option);
-		const retrivedId = retrieveSpotifyPlaylistId(option);
-		if (!existingAlias && !retrivedId)
+		const retrievedId = retrieveSpotifyPlaylistId(option);
+		if (!existingAlias && !retrievedId)
 			return interaction.editReply({
 				embeds: [SimpleEmbed(SPOTIFY_PLAYLIST_NOT_PROVIDED_ERROR[juanitaGuild.lang], EmbedType.Error)],
 			});
 			
-		const query = existingAlias ? existingAlias.playlistid : await validateSpotifyURI(retrivedId!);
+		const query = existingAlias ? existingAlias.playlistid : await validateSpotifyURI(retrievedId);
 		const res = await player.search(`https://open.spotify.com/playlist/${query}`, {
 			requestedBy: member,
 			searchEngine: QueryType.SPOTIFY_PLAYLIST,
@@ -86,6 +86,7 @@ export default {
 		const isPlaying = !!queue.current;
 		queue.addTracks(res.tracks);
 		if (!isPlaying) await queue.play();
+		queue.shuffle()
 
 		juanitaGuild.queue = queue;
 		juanitaGuild.startInterval(interaction.channel as TextChannel);

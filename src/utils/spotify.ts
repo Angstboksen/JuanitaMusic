@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export const validateSpotifyURI = async (uri: string): Promise<string> => {
+export const validateSpotifyURI = async (uri: string | null): Promise<string> => {
+	if (!uri) return '';
 	const URL = `https://open.spotify.com/playlist/${uri}`;
 	try {
 		const res = await axios.get(URL);
@@ -11,8 +12,7 @@ export const validateSpotifyURI = async (uri: string): Promise<string> => {
 };
 
 export const retrieveSpotifyPlaylistId = (uri: string): string | null => {
-	// parse out playlistid in spotify uri and url when url looks likehttps://open.spotify.com/playlist/4BGFC3yiyQVNTDeMDirTfl?si=0a0a0a0a0a0a0a0a
-	// and uri looks like spotify:playlist:4BGFC3yiyQVNTDeMDirTfl
+	if (!uri) return null;
 	const regex = /spotify:playlist:([a-zA-Z0-9]+)/;
 	const regex2 = /open.spotify.com\/playlist\/([a-zA-Z0-9]+)/;
 	const match = uri.match(regex);
