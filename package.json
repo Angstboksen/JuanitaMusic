@@ -29,7 +29,7 @@
 		"dotenv": "^16.0.3",
 		"eslint": "^8.32.0",
 		"ffmpeg-static": "^5.1.0",
-		"nodemon": "^2.0.20",
+		"nodemon": "^2.0.21",
 		"opusscript": "^0.0.8",
 		"prettier": "^2.8.3",
 		"readable-stream": "^4.3.0",
