@@ -1,4 +1,4 @@
-pyvenv.cfg
-Include
-Lib
-Scripts
+tmp
+.air.toml
+go.sum
+.env
