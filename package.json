@@ -35,7 +35,7 @@
 		"readable-stream": "^4.3.0",
 		"sodium-native": "^4.0.1",
 		"soundcloud-scraper": "^5.0.3",
-		"spotify-url-info": "^3.2.3",
+		"spotify-url-info": "^3.2.5",
 		"ts-node": "^10.9.1",
 		"youtube-sr": "^4.3.4",
 		"ytdl-core": "^4.11.2"
