@@ -5,10 +5,7 @@ import "github.com/bwmarrin/discordgo"
 func LoadCommands() []*discordgo.ApplicationCommand {
 	return []*discordgo.ApplicationCommand{
 		{
-			Name: "ping",
-			// All commands and options must have a description
-			// Commands/options without description will fail the registration
-			// of the command.
+			Name:        "ping",
 			Description: "Will pong you back!",
 		},
 	}
