@@ -1,7 +1,6 @@
 package interactions
 
 import (
-	"juanitamusic/db"
 	"juanitamusic/interactions/commands"
 	"juanitamusic/models"
 
@@ -22,7 +21,6 @@ func LoadCommands() []*discordgo.ApplicationCommand {
 }
 
 func LoadCommandHandlers(config *models.Config) map[string]func(session *discordgo.Session, interaction *discordgo.InteractionCreate) {
-	db.Init(config)
 	return map[string]func(session *discordgo.Session, interaction *discordgo.InteractionCreate){
 		"ping": func(session *discordgo.Session, interaction *discordgo.InteractionCreate) {
 			session.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
