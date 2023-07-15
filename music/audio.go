@@ -65,10 +65,8 @@ func GlobalPlay(songSig chan InstanceSong) {
 }
 
 func (v *VoiceInstance) PlayQueue(song Song) {
-	// add song to queue
 	v.QueueAdd(song)
 	if v.speaking {
-		// the bot is playing
 		return
 	}
 	go func() {
@@ -76,11 +74,9 @@ func (v *VoiceInstance) PlayQueue(song Song) {
 		defer v.audioMutex.Unlock()
 		for {
 			if len(v.queue) == 0 {
-				//ChMessageSend(v.nowPlaying.ChannelID, "[**Music**] End of queue!")
 				return
 			}
 			v.nowPlaying = v.QueueGetSong()
-			//go ChMessageSend(v.nowPlaying.ChannelID, "[**Music**] Playing, **`"+ v.nowPlaying.Title+"`  -  `("+v.nowPlaying.Duration+")`  -  **<@"+v.nowPlaying.ID+">\n") //*`"+ v.nowPlaying.User +"`***")
 
 			v.stop = false
 			v.skip = false

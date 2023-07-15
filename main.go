@@ -1,7 +1,7 @@
 package main
 
 import (
-	"juanitamusic/commands"
+	"juanitamusic/interactions"
 	"juanitamusic/utils"
 	"log"
 	"os"
@@ -11,15 +11,15 @@ import (
 )
 
 var (
-	config      = utils.LoadConfig()
+	Config      = utils.LoadConfig()
 	session     *discordgo.Session
-	cmds        = commands.LoadCommands()
-	cmdHandlers = commands.LoadCommandHandlers()
+	cmds        = interactions.LoadCommands()
+	cmdHandlers = interactions.LoadCommandHandlers(&Config)
 )
 
 func init() {
 	var err error
-	session, err = discordgo.New("Bot " + config.JUANITA_TOKEN)
+	session, err = discordgo.New("Bot " + Config.JUANITA_TOKEN)
 	if err != nil {
 		log.Fatalf("Failed to start Discord session! Error: %v", err)
 	}
@@ -48,7 +48,7 @@ func main() {
 	log.Println("Registering commands...")
 	regCmds := make([]*discordgo.ApplicationCommand, len(cmds))
 	for i, v := range cmds {
-		cmd, err := session.ApplicationCommandCreate(session.State.User.ID, config.TEST_GUILD, v)
+		cmd, err := session.ApplicationCommandCreate(session.State.User.ID, Config.TEST_GUILD, v)
 		if err != nil {
 			log.Fatalf("Failed to register command %v! Error: %v", v.Name, err)
 		}

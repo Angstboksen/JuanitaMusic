@@ -1,6 +1,12 @@
-package commands
+package interactions
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"juanitamusic/db"
+	"juanitamusic/interactions/commands"
+	"juanitamusic/models"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 func LoadCommands() []*discordgo.ApplicationCommand {
 	return []*discordgo.ApplicationCommand{
@@ -8,10 +14,15 @@ func LoadCommands() []*discordgo.ApplicationCommand {
 			Name:        "ping",
 			Description: "Will pong you back!",
 		},
+		{
+			Name:        "play",
+			Description: "Will pong you back!",
+		},
 	}
 }
 
-func LoadCommandHandlers() map[string]func(session *discordgo.Session, interaction *discordgo.InteractionCreate) {
+func LoadCommandHandlers(config *models.Config) map[string]func(session *discordgo.Session, interaction *discordgo.InteractionCreate) {
+	db.Init(config)
 	return map[string]func(session *discordgo.Session, interaction *discordgo.InteractionCreate){
 		"ping": func(session *discordgo.Session, interaction *discordgo.InteractionCreate) {
 			session.InteractionRespond(interaction.Interaction, &discordgo.InteractionResponse{
@@ -20,6 +31,9 @@ func LoadCommandHandlers() map[string]func(session *discordgo.Session, interacti
 					Content: "Pong!",
 				},
 			})
+		},
+		"play": func(session *discordgo.Session, interaction *discordgo.InteractionCreate) {
+			commands.Play(session, interaction)
 		},
 	}
 }
