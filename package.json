@@ -38,6 +38,6 @@
 		"spotify-url-info": "^3.2.3",
 		"ts-node": "^10.9.1",
 		"youtube-sr": "^4.3.4",
-		"ytdl-core": "^4.11.2"
+		"ytdl-core": "^4.11.5"
 	}
 }
