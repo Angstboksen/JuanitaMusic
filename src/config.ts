@@ -13,6 +13,10 @@ export interface JuanitaConfig {
   database: {
     url: string;
   };
+  openrouter?: {
+    apiKey: string;
+    model: string;
+  };
 }
 
 function requireEnv(key: string): string {
@@ -34,4 +38,10 @@ export const config: JuanitaConfig = {
   database: {
     url: requireEnv("DATABASE_URL"),
   },
+  openrouter: process.env.OPENROUTER_API_KEY
+    ? {
+        apiKey: process.env.OPENROUTER_API_KEY,
+        model: process.env.OPENROUTER_MODEL ?? "openai/gpt-4o-mini",
+      }
+    : undefined,
 };
