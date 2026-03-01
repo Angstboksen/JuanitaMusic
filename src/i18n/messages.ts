@@ -245,3 +245,35 @@ export const HELP_DESCRIPTION: LocalizedString = {
   no: "**Her er en liste over alle kommandoer**\nBruk `/help <kommando>` for mer info",
   molde: "**HER E LISTA MED ALLE KOMMANDOA LILLE TØS**\nBRUK `/help <kommando>` HVIS DU E RETARD",
 };
+
+// === Alias messages ===
+
+export const ALIAS_SAVED: LocalizedString = {
+  en: "Alias saved!",
+  no: "Alias lagret!",
+  molde: "ALIAS LAGRA!",
+};
+
+export const ALIAS_DELETED: LocalizedString = {
+  en: "Alias deleted!",
+  no: "Alias slettet!",
+  molde: "ALIAS SLETTA!",
+};
+
+export const ALIAS_NOT_FOUND: LocalizedString = {
+  en: "Alias not found!",
+  no: "Alias ikke funnet!",
+  molde: "FANT IKKJE ALIASET DANSEN!",
+};
+
+export const ALIAS_LIST_EMPTY: LocalizedString = {
+  en: "No aliases saved for this server.",
+  no: "Ingen alias lagret for denne serveren.",
+  molde: "INGEN ALIAS LAGRA FOR DENNA SERVEREN!",
+};
+
+export const ALIAS_LIST_TITLE: LocalizedString = {
+  en: "Saved aliases",
+  no: "Lagrede alias",
+  molde: "LAGRA ALIAS",
+};
