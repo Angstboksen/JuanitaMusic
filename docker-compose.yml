@@ -1,0 +1,44 @@
+services:
+  lavalink:
+    image: ghcr.io/lavalink-devs/lavalink:4-alpine
+    container_name: juanita-lavalink
+    restart: unless-stopped
+    environment:
+      - _JAVA_OPTIONS=-Xmx1G
+    volumes:
+      - ./lavalink/application.yml:/opt/Lavalink/application.yml
+      - ./lavalink/plugins/:/opt/Lavalink/plugins/
+    expose:
+      - "2333"
+    ports:
+      - "2333:2333"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: juanita-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: juanita
+      POSTGRES_USER: juanita
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-juanita}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  juanita:
+    build: .
+    container_name: juanita-bot
+    restart: unless-stopped
+    depends_on:
+      - lavalink
+      - postgres
+    environment:
+      - LAVALINK_HOST=lavalink
+      - LAVALINK_PORT=2333
+      - LAVALINK_PASSWORD=youshallnotpass
+      - DATABASE_URL=postgres://juanita:${POSTGRES_PASSWORD:-juanita}@postgres:5432/juanita
+    env_file: .env
+
+volumes:
+  pgdata:
