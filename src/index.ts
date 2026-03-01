@@ -25,7 +25,8 @@ client.kazagumo.on("playerStart", (player, track) => {
 });
 
 client.kazagumo.on("playerEnd", async (player) => {
-  const track = player.queue.previous;
+  const previousTracks = player.queue.previous;
+  const track = Array.isArray(previousTracks) ? previousTracks[0] : previousTracks;
   if (track) {
     try {
       await logPlay({

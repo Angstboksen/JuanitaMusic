@@ -1,4 +1,4 @@
-import type { CommandInteraction, ApplicationCommandOptionData } from "discord.js";
+import type { ChatInputCommandInteraction, ApplicationCommandOptionData } from "discord.js";
 import type { JuanitaClient } from "../client.js";
 import type { Language } from "../i18n/types.js";
 
@@ -11,7 +11,7 @@ export interface JuanitaCommand {
 }
 
 export interface CommandContext {
-  interaction: CommandInteraction;
+  interaction: ChatInputCommandInteraction;
   client: JuanitaClient;
   lang: Language;
 }

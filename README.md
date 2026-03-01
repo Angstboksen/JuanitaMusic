@@ -1,43 +1,92 @@
+# JuanitaMusic
 
-# 🎵 JuanitaMusic (aka. Juanita)
-![Build badge](https://github.com/Angstboksen/JuanitaMusic/actions/workflows/main.yml/badge.svg)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6f012ea4b47d45ab88391d2fd7794812)](https://app.codacy.com/gh/Angstboksen/JuanitaMusic?utm_source=github.com&utm_medium=referral&utm_content=Angstboksen/JuanitaMusic&utm_campaign=Badge_Grade)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/AngstBoksen/JuanitaMusic/graphs/commit-activity)
-[![GitHub contributors](https://img.shields.io/github/contributors/Angstboksen/JuanitaMusic.svg)](https://GitHub.com/Angstboksen/JuanitaMusic/graphs/contributors/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/Angstboksen/JuanitaMusic/pulls)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-![Juanita in all her glory](https://cdn.discordapp.com/app-icons/708320525285457950/3dda5c526be85c3a9de9734250d28965.png?size=512)
+A Discord music bot for playing music with friends. Built with TypeScript, Discord.js v14, and Lavalink v4.
 
-A Discord bot for playing music with friends on discord. 
+## Prerequisites
 
-Invite the bot to your discord server [by following this link.](https://discord.com/api/oauth2/authorize?client_id=708320525285457950&permissions=8&scope=bot%20applications.commands)
+- Node.js 22+
+- Docker & Docker Compose
+- A Discord bot token ([Discord Developer Portal](https://discord.com/developers/applications))
 
-## 📰 Commands
+## Quick Start
 
-All commands are available using Discord slash application command interface. The commands, and their description, can be seen in the table below.
+### 1. Clone and install
+
+```bash
+git clone https://github.com/Angstboksen/JuanitaMusic.git
+cd JuanitaMusic
+npm install
+```
+
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+# Edit .env with your BOT_TOKEN and optionally DEV_GUILD_ID
+```
+
+### 3. Start infrastructure
+
+```bash
+docker compose up -d lavalink postgres
+```
+
+### 4. Run database migrations
+
+```bash
+npm run db:push
+```
+
+### 5. Start the bot
+
+```bash
+npm run dev
+```
+
+## Docker (full stack)
+
+Run everything in Docker:
+
+```bash
+docker compose up -d
+```
+
+## Commands
 
 | Command | Description |
 | --- | --- |
-| __Common commands__ |
-| `/play <URL or keywords:string>` | Plays or adds to queue the song fetched based on the keywords provided | 
-| `/first <URL or keywords:string>` | Plays or puts at the top of the queue the song fetched based on the keywords provided | 
-| `/spotify <playlistURI or alias:string>` | Queues all songs in a Spotify playlist given it"s URI or stored alias |
-| `/remember <playlistURI:string> <alias:string>` | Will store the given Spotify playlist URI to a custom name for easy use |
-| `/jump <position: number>` | Jumps to the given position in the queue | 
-| `/kill <position: number>` | Removes the song at the given position from the queue | 
-| `/seek <time: number>` | Number of seconds in song to skip to. `/seek 120` will skip 2 minutes into the song |
-| `/skip` | Skips the song currently playing. The bot will leave if the queue is empty |
-| `/queue` | Shows the current queue in an embed |
-| `/shuffle` | Will shuffle the queue randomly |
-| `/clear` | Clears the queue, but not the current song |
-| `/pause` | Pauses the current song if playing |
-| `/resume` | Resumes the current song if paused |
-| `/kys` | Kicks the bot from the voice channel. This will clear the queue.|
+| `/play <song>` | Play a song from a search query or URL |
+| `/first <song>` | Add a song to the front of the queue |
+| `/skip` | Skip the current song |
+| `/back` | Play the previous song |
+| `/pause` | Toggle pause/resume |
+| `/shuffle` | Shuffle the queue |
+| `/jump <position>` | Jump to a position in the queue |
+| `/seek <seconds>` | Seek to a time in the current song |
+| `/remove <position>` | Remove a song from the queue |
+| `/clear` | Clear the queue |
+| `/queue` | Show the live queue embed |
+| `/kys` | Disconnect the bot |
+| `/ping` | Check bot latency |
+| `/help` | List all commands |
+| `/language <lang>` | Change bot language (en/no/molde) |
 
+## Languages
 
-## 💡 Misc
+JuanitaMusic supports three languages per server:
+- **en** — English
+- **no** — Norwegian
+- **molde** — Molde dialect (the bot's original personality)
 
-Made with ❤️ and Discord.js written in TypeScript
+## Tech Stack
 
-[MIT License](./LICENSE)
+- **TypeScript** + Discord.js v14
+- **Lavalink v4** via Shoukaku + Kazagumo
+- **PostgreSQL** via Drizzle ORM
+- **Docker Compose** for Lavalink + Postgres + Bot
+
+## License
+
+[MIT](./LICENSE)

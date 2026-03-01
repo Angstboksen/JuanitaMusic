@@ -16,7 +16,8 @@ export default {
       return;
     }
 
-    const previous = player.queue.previous;
+    const previousTracks = player.queue.previous;
+    const previous = Array.isArray(previousTracks) ? previousTracks[0] : previousTracks;
     if (!previous) {
       await interaction.reply({ embeds: [simpleEmbed(msg.NO_PREVIOUS_TRACK[lang], EmbedType.Error)], ephemeral: true });
       return;
