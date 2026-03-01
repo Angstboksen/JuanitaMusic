@@ -47,6 +47,30 @@ client.kazagumo.on("playerEnd", async (player) => {
 client.kazagumo.on("playerEmpty", async (player) => {
   console.log(`[Player] ${player.guildId}: Queue empty`);
   const state = guildStates.get(player.guildId);
+
+  // Auto-DJ: queue a random song from history instead of disconnecting
+  if (state?.autoDj) {
+    try {
+      const { getRandomSong } = await import("./db/repositories/historyRepo.js");
+      const url = await getRandomSong(player.guildId);
+      if (url) {
+        const result = await client.kazagumo.search(url, { requester: client.user });
+        if (result.tracks.length > 0) {
+          player.queue.add(result.tracks[0]!);
+          player.play();
+          console.log(`[Auto-DJ] ${player.guildId}: Queued ${result.tracks[0]!.title}`);
+
+          const { sendOrUpdateQueueEmbed } = await import("./embeds/queueEmbed.js");
+          sendOrUpdateQueueEmbed(state.queueEmbed, player, state.lang, undefined, client.user?.displayAvatarURL());
+          return;
+        }
+      }
+    } catch (e) {
+      console.error("[Auto-DJ] Failed to queue random song:", e);
+    }
+  }
+
+  // Default: cleanup and disconnect
   if (state) await cleanupQueueEmbed(state.queueEmbed);
   player.destroy();
 });

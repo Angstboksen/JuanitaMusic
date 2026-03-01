@@ -108,6 +108,14 @@ export const TOOL_SCHEMAS: ToolSchema[] = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "recommend",
+      description: "Get song recommendations based on this server's listening history. Use when users ask for recommendations or suggestions.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
 ];
 
 export async function executeTool(
@@ -224,6 +232,16 @@ export async function executeTool(
       }
       player.shoukaku.seekTo(seconds * 1000);
       return `Seeked to ${seconds} seconds.`;
+    }
+
+    case "recommend": {
+      const { getTopSongs } = await import("../db/repositories/historyRepo.js");
+      const topSongs = await getTopSongs(guildId, 20);
+      if (topSongs.length < 3) return "Not enough listening history to make recommendations. The server needs to play more songs first.";
+      const songList = topSongs
+        .map((s, i) => `${i + 1}. ${s.title} (${s.playCount} plays)`)
+        .join("\n");
+      return `Here are this server's most played songs:\n${songList}\n\nUse this data to recommend new songs. If they want you to play one, use the play_song tool.`;
     }
 
     default:
