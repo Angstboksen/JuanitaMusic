@@ -2,6 +2,7 @@ import { config } from "./config.js";
 import { JuanitaClient } from "./client.js";
 import { registerCommands } from "./core/commandRegistry.js";
 import { setupInteractionHandler } from "./core/interactionRouter.js";
+import { setupMentionHandler } from "./core/mentionHandler.js";
 import { logPlay } from "./db/repositories/historyRepo.js";
 import { guildStates } from "./music/guildState.js";
 import { cleanupQueueEmbed } from "./embeds/queueEmbed.js";
@@ -70,6 +71,7 @@ client.on("ready", async (c) => {
 
 // Set up interaction handling
 setupInteractionHandler(client);
+setupMentionHandler(client);
 
 // Login
 client.login(config.bot.token);

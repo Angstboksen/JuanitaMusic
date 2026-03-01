@@ -252,3 +252,17 @@ export const ALIAS_LIST_TITLE: LocalizedString = {
   no: "Lagrede alias",
   molde: "LAGRA ALIAS",
 };
+
+// === LLM messages ===
+
+export const LLM_NOT_CONFIGURED: LocalizedString = {
+  en: "LLM features are not configured on this bot.",
+  no: "LLM-funksjoner er ikke konfigurert på denne boten.",
+  molde: "LLM-GREIENE E IKKJE SATT OPP PÅ DENNA BOTEN!",
+};
+
+export const LLM_ERROR: LocalizedString = {
+  en: "I'm having trouble thinking right now, try again later!",
+  no: "Jeg har litt problemer med å tenke akkurat nå, prøv igjen senere!",
+  molde: "FAEN I HÆLVETTE, HJERNEN MIN FUNKE IKKJE NO! PRØV IGJEN SEINERE!",
+};
