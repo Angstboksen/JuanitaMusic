@@ -3,6 +3,7 @@ import { simpleEmbed, EmbedType } from "../embeds/simpleEmbed.js";
 import * as msg from "../i18n/messages.js";
 import { startQueueInterval, sendOrUpdateQueueEmbed } from "../embeds/queueEmbed.js";
 import { getOrCreateGuildState } from "../music/guildState.js";
+import { getAlias } from "../db/repositories/aliasRepo.js";
 import type { JuanitaCommand } from "./types.js";
 
 export default {
@@ -12,7 +13,7 @@ export default {
   options: [
     {
       name: "song",
-      description: "Song name, YouTube URL, or SoundCloud URL",
+      description: "Song name, URL, or saved alias",
       type: ApplicationCommandOptionType.String,
       required: true,
     },
@@ -24,7 +25,11 @@ export default {
     const member = interaction.member as GuildMember;
     const query = interaction.options.get("song", true).value as string;
 
-    const result = await client.kazagumo.search(query, { requester: member });
+    // Resolve alias if it matches
+    const alias = await getAlias(interaction.guildId!, query);
+    const searchQuery = alias ? alias.playlistId : query;
+
+    const result = await client.kazagumo.search(searchQuery, { requester: member });
     if (!result.tracks.length) {
       await interaction.editReply({
         embeds: [simpleEmbed(`${msg.NO_RESULTS[lang]} \`${query}\``, EmbedType.Error)],
