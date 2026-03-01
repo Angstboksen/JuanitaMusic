@@ -266,3 +266,65 @@ export const LLM_ERROR: LocalizedString = {
   no: "Jeg har litt problemer med å tenke akkurat nå, prøv igjen senere!",
   molde: "FAEN I HÆLVETTE, HJERNEN MIN FUNKE IKKJE NO! PRØV IGJEN SEINERE!",
 };
+
+// === Phase 4: Smart curation ===
+
+export const AUTODJ_ENABLED: LocalizedString = {
+  en: "Auto-DJ enabled! I'll keep playing when the queue runs out.",
+  no: "Auto-DJ aktivert! Jeg spiller videre når køen er tom.",
+  molde: "AUTO-DJ AKTIVERT! I SPILLE VIDERE NÅR KØA E TOM!",
+};
+
+export const AUTODJ_DISABLED: LocalizedString = {
+  en: "Auto-DJ disabled.",
+  no: "Auto-DJ deaktivert.",
+  molde: "AUTO-DJ DEAKTIVERT!",
+};
+
+export const AUTODJ_NO_HISTORY: LocalizedString = {
+  en: "No listening history yet — play some songs first!",
+  no: "Ingen lyttehistorikk ennå — spill noen sanger først!",
+  molde: "INGEN HISTORIKK ENNÅ! SPILL NOKKA SANGA FØRST DA MONGO!",
+};
+
+export const RECOMMEND_TITLE: LocalizedString = {
+  en: "Recommendations based on your taste",
+  no: "Anbefalinger basert på smaken din",
+  molde: "ANBEFALINGA BASERT PÅ SMAKEN DANSEN",
+};
+
+export const RECOMMEND_NO_HISTORY: LocalizedString = {
+  en: "Not enough listening history to make recommendations. Play more songs!",
+  no: "Ikke nok lyttehistorikk for anbefalinger. Spill flere sanger!",
+  molde: "IKKJE NOK HISTORIKK FOR ANBEFALINGA! SPILL MEIR MUSIKK DA!",
+};
+
+export const STATS_TITLE: LocalizedString = {
+  en: "Server Music Stats",
+  no: "Server musikkstatistikk",
+  molde: "SERVER MUSIKKSTATISTIKK",
+};
+
+export const STATS_TOP_SONGS: LocalizedString = {
+  en: "Top Songs",
+  no: "Topp sanger",
+  molde: "TOPP SANGA",
+};
+
+export const STATS_TOP_USERS: LocalizedString = {
+  en: "Top DJs",
+  no: "Topp DJer",
+  molde: "TOPP DJSA",
+};
+
+export const STATS_OVERVIEW: LocalizedString = {
+  en: "Overview",
+  no: "Oversikt",
+  molde: "OVERSIKT",
+};
+
+export const STATS_NO_HISTORY: LocalizedString = {
+  en: "No listening history yet!",
+  no: "Ingen lyttehistorikk ennå!",
+  molde: "INGEN HISTORIKK ENNÅ!",
+};
