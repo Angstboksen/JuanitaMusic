@@ -9,7 +9,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export async function registerCommands(client: JuanitaClient) {
   const commandsDir = join(__dirname, "..", "commands");
   const files = readdirSync(commandsDir).filter(
-    (f) => f.endsWith(".ts") && f !== "types.ts",
+    (f) => (f.endsWith(".ts") || f.endsWith(".js")) && !f.endsWith(".d.ts") && !f.startsWith("types."),
   );
 
   const commandData: JuanitaCommand[] = [];
