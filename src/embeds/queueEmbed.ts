@@ -38,7 +38,8 @@ export function buildQueueEmbed(
   if (!current) return null;
 
   const tracks = [...player.queue];
-  const totalMs = tracks.reduce((acc, t) => acc + (t.length ?? 0), 0);
+  const currentRemaining = Math.max((current.length ?? 0) - (player.shoukaku.position ?? 0), 0);
+  const totalMs = currentRemaining + tracks.reduce((acc, t) => acc + (t.length ?? 0), 0);
 
   const nextSong = tracks.length > 0
     ? `[${tracks[0]!.title}](${tracks[0]!.uri})`
