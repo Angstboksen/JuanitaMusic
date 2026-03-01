@@ -2,7 +2,7 @@ import type { ButtonInteraction } from "discord.js";
 import type { JuanitaClient } from "../../client.js";
 import type { GuildState } from "../../music/guildState.js";
 import { simpleEmbed, EmbedType } from "../../embeds/simpleEmbed.js";
-import { cleanupQueueEmbed, sendOrUpdateQueueEmbed } from "../../embeds/queueEmbed.js";
+import { cleanupQueueEmbed } from "../../embeds/queueEmbed.js";
 import * as msg from "../../i18n/messages.js";
 
 type ButtonHandler = (
@@ -11,15 +11,20 @@ type ButtonHandler = (
   state: GuildState,
 ) => Promise<void>;
 
-async function handleKys(interaction: ButtonInteraction, client: JuanitaClient, state: GuildState) {
+async function handleBack(interaction: ButtonInteraction, client: JuanitaClient, state: GuildState) {
   const player = client.getPlayer(interaction.guildId!);
-  if (!player) {
-    await interaction.reply({ embeds: [simpleEmbed(msg.GENERIC_ERROR[state.lang], EmbedType.Error)], ephemeral: true });
+  if (!player?.queue.current) {
+    await interaction.reply({ embeds: [simpleEmbed(msg.NO_MUSIC_PLAYING[state.lang], EmbedType.Error)], ephemeral: true });
     return;
   }
-  await cleanupQueueEmbed(state.queueEmbed);
-  player.destroy();
-  await interaction.reply({ embeds: [simpleEmbed(`${msg.KYS_SUCCESS[state.lang]}`, EmbedType.Success)] });
+  const previousTracks = player.queue.previous;
+  const previous = Array.isArray(previousTracks) ? previousTracks[0] : previousTracks;
+  if (!previous) {
+    await interaction.reply({ embeds: [simpleEmbed(msg.NO_PREVIOUS_TRACK[state.lang], EmbedType.Error)], ephemeral: true });
+    return;
+  }
+  player.play(previous);
+  await interaction.deferUpdate();
 }
 
 async function handleSkip(interaction: ButtonInteraction, client: JuanitaClient, state: GuildState) {
@@ -52,24 +57,21 @@ async function handleShuffle(interaction: ButtonInteraction, client: JuanitaClie
   await interaction.deferUpdate();
 }
 
-async function handlePrevPage(interaction: ButtonInteraction, _client: JuanitaClient, state: GuildState) {
-  if (state.queueEmbed.page > 0) state.queueEmbed.page--;
-  await interaction.deferUpdate();
-}
-
-async function handleNextPage(interaction: ButtonInteraction, client: JuanitaClient, state: GuildState) {
+async function handleKys(interaction: ButtonInteraction, client: JuanitaClient, state: GuildState) {
   const player = client.getPlayer(interaction.guildId!);
-  if (!player) return;
-  const maxPage = Math.ceil([...player.queue].length / 25);
-  if (state.queueEmbed.page < maxPage - 1) state.queueEmbed.page++;
-  await interaction.deferUpdate();
+  if (!player) {
+    await interaction.reply({ embeds: [simpleEmbed(msg.GENERIC_ERROR[state.lang], EmbedType.Error)], ephemeral: true });
+    return;
+  }
+  await cleanupQueueEmbed(state.queueEmbed);
+  player.destroy();
+  await interaction.reply({ embeds: [simpleEmbed(`${msg.KYS_SUCCESS[state.lang]}`, EmbedType.Success)] });
 }
 
 export const buttonHandlers: Record<string, ButtonHandler> = {
-  "btn:kys": handleKys,
+  "btn:back": handleBack,
   "btn:skip": handleSkip,
   "btn:pause": handlePause,
   "btn:shuffle": handleShuffle,
-  "btn:prev_page": handlePrevPage,
-  "btn:next_page": handleNextPage,
+  "btn:kys": handleKys,
 };

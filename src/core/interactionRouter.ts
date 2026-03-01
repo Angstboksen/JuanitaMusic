@@ -68,11 +68,5 @@ export function setupInteractionHandler(client: JuanitaClient) {
       return;
     }
 
-    // Select menus
-    if (interaction.isStringSelectMenu() && interaction.customId === "queue_select") {
-      const handler = (await import("../interactions/selectMenus/queueSelect.js")).default;
-      await handler(interaction, client, state);
-      return;
-    }
   });
 }

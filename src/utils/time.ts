@@ -7,3 +7,14 @@ export function millisecondsToTime(ms: number): string {
     ? `${hours}:${pad(minutes)}:${pad(seconds)}`
     : `${pad(minutes)}:${pad(seconds)}`;
 }
+
+export function buildProgressBar(positionMs: number, durationMs: number, paused: boolean, barLength = 16): string {
+  const ratio = durationMs > 0 ? Math.min(positionMs / durationMs, 1) : 0;
+  const filledCount = Math.round(ratio * barLength);
+  const empty = "━";
+  const knob = "●";
+  const icon = paused ? "⏸" : "▶";
+
+  const bar = empty.repeat(filledCount) + knob + empty.repeat(barLength - filledCount);
+  return `${icon} ${bar} ${millisecondsToTime(positionMs)} / ${millisecondsToTime(durationMs)}`;
+}

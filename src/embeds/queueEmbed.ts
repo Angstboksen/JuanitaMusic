@@ -3,20 +3,18 @@ import {
   ButtonBuilder,
   ButtonStyle,
   EmbedBuilder,
-  StringSelectMenuBuilder,
   type Message,
   type TextChannel,
 } from "discord.js";
-import type { KazagumoPlayer, KazagumoTrack } from "kazagumo";
+import type { KazagumoPlayer } from "kazagumo";
 import type { Language } from "../i18n/types.js";
 import {
-  BTN_KYS, BTN_SKIP, BTN_PAUSE, BTN_RESUME, BTN_SHUFFLE,
-  BTN_PREV_PAGE, BTN_NEXT_PAGE,
-  QUEUE_NOW_PLAYING, QUEUE_ADDED_BY, QUEUE_TOTAL_TIME,
-  QUEUE_SONG_COUNT, QUEUE_NEXT_SONG, QUEUE_EMPTY,
-  QUEUE_SELECT_PLACEHOLDER, QUEUE_AUTHOR,
+  BTN_KYS, BTN_SKIP, BTN_PAUSE, BTN_RESUME, BTN_SHUFFLE, BTN_BACK,
+  QUEUE_NOW_PLAYING, QUEUE_ADDED_BY, QUEUE_EMPTY, QUEUE_UP_NEXT,
 } from "../i18n/messages.js";
-import { millisecondsToTime } from "../utils/time.js";
+import { millisecondsToTime, buildProgressBar } from "../utils/time.js";
+
+const MAX_QUEUE_DISPLAY = 8;
 
 export interface QueueEmbedState {
   message: Message | null;
@@ -31,65 +29,68 @@ export function createQueueState(): QueueEmbedState {
 export function buildQueueEmbed(
   player: KazagumoPlayer,
   lang: Language,
-  page: number,
+  _page: number,
   botAvatarUrl?: string,
 ) {
   const current = player.queue.current;
   if (!current) return null;
 
   const tracks = [...player.queue];
-  const currentRemaining = Math.max((current.length ?? 0) - (player.shoukaku.position ?? 0), 0);
-  const totalMs = currentRemaining + tracks.reduce((acc, t) => acc + (t.length ?? 0), 0);
+  const position = player.shoukaku.position ?? 0;
+  const duration = current.length ?? 0;
+  const paused = player.paused;
 
-  const nextSong = tracks.length > 0
-    ? `[${tracks[0]!.title}](${tracks[0]!.uri})`
-    : QUEUE_EMPTY[lang];
+  // Build description
+  const lines: string[] = [];
+
+  // Now playing — title as hero
+  lines.push(`${QUEUE_NOW_PLAYING[lang]}`);
+  lines.push(`**[${current.title}](${current.uri})**`);
+  lines.push(`${QUEUE_ADDED_BY[lang]} ${current.requester ?? "Unknown"}`);
+  lines.push("");
+
+  // Progress bar
+  lines.push(buildProgressBar(position, duration, paused));
+  lines.push("");
+
+  // Up next section
+  if (tracks.length > 0) {
+    const queueTotalMs = tracks.reduce((acc, t) => acc + (t.length ?? 0), 0);
+    lines.push(`**${QUEUE_UP_NEXT[lang]}** (${tracks.length} songs · ${millisecondsToTime(queueTotalMs)})`);
+
+    const displayed = tracks.slice(0, MAX_QUEUE_DISPLAY);
+    for (let i = 0; i < displayed.length; i++) {
+      const t = displayed[i]!;
+      const dur = t.length ? millisecondsToTime(t.length) : "?:??";
+      lines.push(`\`${i + 1}.\` ${t.title?.slice(0, 45) ?? "Unknown"} — ${dur}`);
+    }
+
+    if (tracks.length > MAX_QUEUE_DISPLAY) {
+      lines.push(`*...and ${tracks.length - MAX_QUEUE_DISPLAY} more*`);
+    }
+  } else {
+    lines.push(QUEUE_EMPTY[lang]);
+  }
 
   const embed = new EmbedBuilder()
-    .setColor("#0000ff")
-    .setDescription(
-      `${QUEUE_NOW_PLAYING[lang]} [${current.title}](${current.uri})\n` +
-      `${QUEUE_ADDED_BY[lang]} ${current.requester ?? "Unknown"}\n`,
-    )
+    .setColor("#5865F2")
+    .setDescription(lines.join("\n"))
     .setThumbnail(current.thumbnail ?? null)
-    .setAuthor({ name: QUEUE_AUTHOR[lang], iconURL: botAvatarUrl })
-    .addFields(
-      { name: QUEUE_TOTAL_TIME[lang], value: `\`${millisecondsToTime(totalMs)}\``, inline: true },
-      { name: QUEUE_SONG_COUNT[lang], value: `\`${tracks.length}\``, inline: true },
-      { name: QUEUE_NEXT_SONG[lang], value: nextSong, inline: false },
-    );
+    .setAuthor({ name: "Juanita", iconURL: botAvatarUrl });
 
-  const paused = player.paused;
+  // Single row of controls
+  const previousTracks = player.queue.previous;
+  const hasPrevious = Array.isArray(previousTracks) ? previousTracks.length > 0 : !!previousTracks;
+
   const controlRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setLabel(`💀${BTN_KYS[lang]}`).setStyle(ButtonStyle.Danger).setCustomId("btn:kys"),
-    new ButtonBuilder().setLabel(`⏭️${BTN_SKIP[lang]}`).setStyle(ButtonStyle.Primary).setCustomId("btn:skip").setDisabled(tracks.length === 0),
-    new ButtonBuilder().setLabel(paused ? `▶️${BTN_RESUME[lang]}` : `⏸️${BTN_PAUSE[lang]}`).setStyle(paused ? ButtonStyle.Success : ButtonStyle.Danger).setCustomId("btn:pause"),
-    new ButtonBuilder().setLabel(`🔀${BTN_SHUFFLE[lang]}`).setStyle(ButtonStyle.Primary).setCustomId("btn:shuffle").setDisabled(tracks.length === 0),
+    new ButtonBuilder().setCustomId("btn:back").setLabel(BTN_BACK[lang]).setEmoji("⏮️").setStyle(ButtonStyle.Secondary).setDisabled(!hasPrevious),
+    new ButtonBuilder().setCustomId("btn:skip").setLabel(BTN_SKIP[lang]).setEmoji("⏭️").setStyle(ButtonStyle.Primary).setDisabled(tracks.length === 0),
+    new ButtonBuilder().setCustomId("btn:pause").setLabel(paused ? BTN_RESUME[lang] : BTN_PAUSE[lang]).setEmoji(paused ? "▶️" : "⏸️").setStyle(paused ? ButtonStyle.Success : ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId("btn:shuffle").setLabel(BTN_SHUFFLE[lang]).setEmoji("🔀").setStyle(ButtonStyle.Secondary).setDisabled(tracks.length < 2),
+    new ButtonBuilder().setCustomId("btn:kys").setLabel(BTN_KYS[lang]).setEmoji("💀").setStyle(ButtonStyle.Danger),
   );
 
-  if (tracks.length === 0) return { embed, components: [controlRow] };
-
-  const maxPage = Math.ceil(tracks.length / 25);
-  const pageSlice = tracks.slice(page * 25, (page + 1) * 25);
-
-  const selectMenu = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
-    new StringSelectMenuBuilder()
-      .setCustomId("queue_select")
-      .setPlaceholder(`${QUEUE_SELECT_PLACEHOLDER[lang]} ${page * 25 + 1}/${Math.min((page + 1) * 25, tracks.length)}`)
-      .addOptions(
-        pageSlice.map((track, i) => ({
-          label: `${page * 25 + i + 1}. ${track.title?.slice(0, 50) ?? "Unknown"}`,
-          value: `${page * 25 + i}`,
-        })),
-      ),
-  );
-
-  const pageRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setCustomId("btn:prev_page").setLabel(`⬅️${BTN_PREV_PAGE[lang]}`).setStyle(ButtonStyle.Primary).setDisabled(page === 0),
-    new ButtonBuilder().setCustomId("btn:next_page").setLabel(`➡️${BTN_NEXT_PAGE[lang]}`).setStyle(ButtonStyle.Primary).setDisabled(page >= maxPage - 1),
-  );
-
-  return { embed, components: [controlRow, selectMenu, pageRow] };
+  return { embed, components: [controlRow] };
 }
 
 export async function sendOrUpdateQueueEmbed(

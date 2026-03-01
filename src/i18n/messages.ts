@@ -192,22 +192,10 @@ export const QUEUE_ADDED_BY: LocalizedString = {
   molde: "**LAGT TE AV:**",
 };
 
-export const QUEUE_TOTAL_TIME: LocalizedString = {
-  en: "Total time left:",
-  no: "Total tid igjen:",
-  molde: "TOTAL TID IGJEN:",
-};
-
-export const QUEUE_SONG_COUNT: LocalizedString = {
-  en: "Songs in queue:",
-  no: "Antall sanger i køen:",
-  molde: "ANTALL SANGA I KØA:",
-};
-
-export const QUEUE_NEXT_SONG: LocalizedString = {
-  en: "**Next song in queue:**",
-  no: "**Neste sang i køen:**",
-  molde: "**NESTE SANG I KØA:**",
+export const QUEUE_UP_NEXT: LocalizedString = {
+  en: "Up Next",
+  no: "Neste opp",
+  molde: "NESTE OPP",
 };
 
 export const QUEUE_EMPTY: LocalizedString = {
@@ -216,27 +204,14 @@ export const QUEUE_EMPTY: LocalizedString = {
   molde: "KØA E TOM! BRUK `/play <sang>` FOR Å LEGGE TE EN SANG!",
 };
 
-export const QUEUE_SELECT_PLACEHOLDER: LocalizedString = {
-  en: "Open me to view the queue | Songs:",
-  no: "Åpne meg for å se køen | Sanger:",
-  molde: "ÅPNE ME FOR Å SE KØA DI HORE | Sanga:",
-};
-
-export const QUEUE_AUTHOR: LocalizedString = {
-  en: "Current queue",
-  no: "Nåværende kø",
-  molde: "NÅVÆRENDE KØ",
-};
-
 // === Button labels ===
 
 export const BTN_KYS: LocalizedString = { en: "KYS", no: "KYS", molde: "KYS" };
+export const BTN_BACK: LocalizedString = { en: "Back", no: "Tilbake", molde: "TILBAKE" };
 export const BTN_SKIP: LocalizedString = { en: "Skip", no: "Skip", molde: "SKIP" };
 export const BTN_PAUSE: LocalizedString = { en: "Pause", no: "Pause", molde: "PAUSE" };
 export const BTN_RESUME: LocalizedString = { en: "Resume", no: "Fortsett", molde: "FORTSETT" };
 export const BTN_SHUFFLE: LocalizedString = { en: "Shuffle", no: "Shuffle", molde: "SHUFFLE" };
-export const BTN_PREV_PAGE: LocalizedString = { en: "Previous", no: "Forrige", molde: "FORRIGE" };
-export const BTN_NEXT_PAGE: LocalizedString = { en: "Next", no: "Neste", molde: "NESTE" };
 
 // === Help ===
 
