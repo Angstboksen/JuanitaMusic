@@ -1,9 +1,10 @@
-import { pgTable, text, serial, integer, timestamp, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, timestamp, unique, boolean } from "drizzle-orm/pg-core";
 
 export const guilds = pgTable("guilds", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   language: text("language").notNull().default("no"),
+  autoDj: boolean("auto_dj").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

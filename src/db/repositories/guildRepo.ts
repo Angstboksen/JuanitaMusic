@@ -19,3 +19,15 @@ export async function getGuildLanguage(guildId: string): Promise<Language> {
 export async function setGuildLanguage(guildId: string, language: Language) {
   await db.update(guilds).set({ language }).where(eq(guilds.id, guildId));
 }
+
+export async function getAutoDj(guildId: string): Promise<boolean> {
+  const result = await db.select({ autoDj: guilds.autoDj }).from(guilds).where(eq(guilds.id, guildId)).limit(1);
+  return result[0]?.autoDj ?? false;
+}
+
+export async function toggleAutoDj(guildId: string): Promise<boolean> {
+  const current = await getAutoDj(guildId);
+  const newValue = !current;
+  await db.update(guilds).set({ autoDj: newValue }).where(eq(guilds.id, guildId));
+  return newValue;
+}
