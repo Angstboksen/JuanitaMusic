@@ -107,15 +107,22 @@ export async function sendOrUpdateQueueEmbed(
   }
 
   const { embed, components } = result;
+  const targetChannel = channel ?? (state.message?.channel as TextChannel | undefined);
 
-  if (state.message) {
+  if (state.message && targetChannel) {
     try {
-      await state.message.edit({ embeds: [embed], components });
+      // If a newer message exists in the channel, re-send at the bottom
+      if (targetChannel.lastMessageId && targetChannel.lastMessageId !== state.message.id) {
+        try { await state.message.delete(); } catch {}
+        state.message = await targetChannel.send({ embeds: [embed], components });
+      } else {
+        await state.message.edit({ embeds: [embed], components });
+      }
     } catch {
       state.message = null;
     }
-  } else if (channel) {
-    state.message = await channel.send({ embeds: [embed], components });
+  } else if (targetChannel) {
+    state.message = await targetChannel.send({ embeds: [embed], components });
   }
 }
 
