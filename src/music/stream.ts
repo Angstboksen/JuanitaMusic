@@ -10,9 +10,24 @@ export interface StreamResult {
 const COOKIES_PATH = "/tmp/yt-cookies.txt";
 
 function getCookiesArgs(): string[] {
-  // Write cookies file from env var on first use
   if (process.env.YT_COOKIES && !existsSync(COOKIES_PATH)) {
-    writeFileSync(COOKIES_PATH, process.env.YT_COOKIES);
+    const raw = process.env.YT_COOKIES.trim();
+    // If it looks like raw "key=value; key=value" from document.cookie, convert to Netscape format
+    if (!raw.startsWith("#") && raw.includes("=") && !raw.includes("\t")) {
+      const lines = ["# Netscape HTTP Cookie File"];
+      for (const pair of raw.split(/;\s*/)) {
+        const eqIdx = pair.indexOf("=");
+        if (eqIdx < 0) continue;
+        const name = pair.slice(0, eqIdx).trim();
+        const value = pair.slice(eqIdx + 1).trim();
+        const secure = name.startsWith("__Secure") ? "TRUE" : "FALSE";
+        lines.push(`.youtube.com\tTRUE\t/\t${secure}\t2147483647\t${name}\t${value}`);
+      }
+      writeFileSync(COOKIES_PATH, lines.join("\n") + "\n");
+    } else {
+      // Already in Netscape format
+      writeFileSync(COOKIES_PATH, raw);
+    }
   }
   return existsSync(COOKIES_PATH) ? ["--cookies", COOKIES_PATH] : [];
 }
