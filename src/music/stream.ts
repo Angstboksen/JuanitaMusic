@@ -1,9 +1,20 @@
 import { spawn, type ChildProcess } from "child_process";
+import { writeFileSync, existsSync } from "fs";
 import type { Readable } from "stream";
 
 export interface StreamResult {
   stream: Readable;
   process: ChildProcess;
+}
+
+const COOKIES_PATH = "/tmp/yt-cookies.txt";
+
+function getCookiesArgs(): string[] {
+  // Write cookies file from env var on first use
+  if (process.env.YT_COOKIES && !existsSync(COOKIES_PATH)) {
+    writeFileSync(COOKIES_PATH, process.env.YT_COOKIES);
+  }
+  return existsSync(COOKIES_PATH) ? ["--cookies", COOKIES_PATH] : [];
 }
 
 /**
@@ -15,6 +26,7 @@ export async function getStreamUrl(url: string): Promise<string> {
       "-g",
       "-f", "bestaudio[acodec=opus]/bestaudio",
       "--no-playlist",
+      ...getCookiesArgs(),
       url,
     ]);
 
