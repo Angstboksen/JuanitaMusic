@@ -41,7 +41,7 @@ services:
       - LAVALINK_PASSWORD=youshallnotpass
       - DATABASE_URL=postgres://juanita:${POSTGRES_PASSWORD:-juanita}@postgres:5432/juanita
       - PICOVOICE_ACCESS_KEY=${PICOVOICE_ACCESS_KEY:-}
-      - GOOGLE_APPLICATION_CREDENTIALS=${GOOGLE_APPLICATION_CREDENTIALS:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
     env_file: .env
 
 volumes:

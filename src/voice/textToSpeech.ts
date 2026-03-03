@@ -1,13 +1,8 @@
-import { TextToSpeechClient } from "@google-cloud/text-to-speech";
+import OpenAI from "openai";
+import { config } from "../config.js";
 import type { Language } from "../i18n/types.js";
 
-const client = new TextToSpeechClient();
-
-const VOICE_MAP: Record<Language, { languageCode: string; name: string }> = {
-  en: { languageCode: "en-US", name: "en-US-Neural2-F" },
-  no: { languageCode: "nb-NO", name: "nb-NO-Wavenet-A" },
-  molde: { languageCode: "nb-NO", name: "nb-NO-Wavenet-A" },
-};
+const openai = new OpenAI({ apiKey: config.voice?.openaiApiKey });
 
 /**
  * Synthesize text to Opus audio for Discord playback.
@@ -23,27 +18,19 @@ export async function synthesize(
   const truncated = text.length > 300 ? text.slice(0, 297) + "..." : text;
 
   try {
-    const voice = VOICE_MAP[lang];
-    const [response] = await client.synthesizeSpeech({
-      input: { text: truncated },
-      voice: {
-        languageCode: voice.languageCode,
-        name: voice.name,
-      },
-      audioConfig: {
-        audioEncoding: "OGG_OPUS",
-        sampleRateHertz: 48000, // Discord standard
-        speakingRate: 1.1, // Slightly faster for assistant-like feel
-      },
+    const response = await openai.audio.speech.create({
+      model: "tts-1",
+      voice: "nova",
+      input: truncated,
+      response_format: "opus",
     });
 
-    if (!response.audioContent) return null;
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
 
     console.log(`[TTS] Synthesized ${truncated.length} chars`);
 
-    return Buffer.isBuffer(response.audioContent)
-      ? response.audioContent
-      : Buffer.from(response.audioContent as Uint8Array);
+    return buffer;
   } catch (error) {
     console.error("[TTS] Synthesis failed:", error);
     return null;

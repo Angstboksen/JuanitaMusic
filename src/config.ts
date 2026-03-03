@@ -19,7 +19,7 @@ export interface JuanitaConfig {
   };
   voice?: {
     picovoiceAccessKey: string;
-    googleCredentialsPath: string;
+    openaiApiKey: string;
   };
 }
 
@@ -48,10 +48,11 @@ export const config: JuanitaConfig = {
         model: process.env.OPENROUTER_MODEL ?? "openai/gpt-4o-mini",
       }
     : undefined,
-  voice: process.env.PICOVOICE_ACCESS_KEY
-    ? {
-        picovoiceAccessKey: process.env.PICOVOICE_ACCESS_KEY,
-        googleCredentialsPath: process.env.GOOGLE_APPLICATION_CREDENTIALS ?? "",
-      }
-    : undefined,
+  voice:
+    process.env.PICOVOICE_ACCESS_KEY && process.env.OPENAI_API_KEY
+      ? {
+          picovoiceAccessKey: process.env.PICOVOICE_ACCESS_KEY,
+          openaiApiKey: process.env.OPENAI_API_KEY,
+        }
+      : undefined,
 };
