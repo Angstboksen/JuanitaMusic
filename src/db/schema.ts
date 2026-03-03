@@ -5,6 +5,7 @@ export const guilds = pgTable("guilds", {
   name: text("name").notNull(),
   language: text("language").notNull().default("no"),
   autoDj: boolean("auto_dj").notNull().default(false),
+  voiceEnabled: boolean("voice_enabled").notNull().default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
