@@ -38,37 +38,6 @@ export class WakeWordDetector {
   }
 
   /**
-   * Process a PCM audio buffer and check for wake word.
-   * Audio must be 16kHz, 16-bit, mono.
-   * Returns true if wake word was detected.
-   */
-  detect(pcmBuffer: Buffer): boolean {
-    if (!this.porcupine) return false;
-
-    // Convert Buffer to Int16Array
-    const samples = new Int16Array(
-      pcmBuffer.buffer,
-      pcmBuffer.byteOffset,
-      pcmBuffer.byteLength / 2,
-    );
-
-    // Process in frames
-    for (
-      let i = 0;
-      i + this.frameLength <= samples.length;
-      i += this.frameLength
-    ) {
-      const frame = samples.slice(i, i + this.frameLength);
-      const keywordIndex = this.porcupine.process(frame);
-      if (keywordIndex >= 0) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  /**
    * Given a full PCM buffer, find where the wake word occurs
    * and return the audio AFTER the wake word.
    */

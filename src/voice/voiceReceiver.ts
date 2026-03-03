@@ -1,6 +1,5 @@
 import {
   joinVoiceChannel,
-  getVoiceConnection,
   VoiceConnectionStatus,
   entersState,
   type VoiceConnection,
@@ -10,25 +9,10 @@ import { EventEmitter } from "events";
 import { OpusEncoder } from "@discordjs/opus";
 
 const SAMPLE_RATE = 16000;
-const FRAME_SIZE = 480; // 30ms at 16kHz
-
-interface UserAudioStream {
-  userId: string;
-  pcmChunks: Buffer[];
-}
-
-export interface VoiceReceiverEvents {
-  userAudio: (userId: string, pcmBuffer: Buffer) => void;
-}
 
 export class VoiceReceiverManager extends EventEmitter {
   private connections = new Map<string, VoiceConnection>();
-  private encoder: OpusEncoder;
-
-  constructor() {
-    super();
-    this.encoder = new OpusEncoder(SAMPLE_RATE, 1); // mono
-  }
+  private activeSubscriptions = new Set<string>();
 
   async join(guild: Guild, channel: VoiceBasedChannel): Promise<VoiceConnection | null> {
     // Don't create duplicate connections
@@ -62,6 +46,13 @@ export class VoiceReceiverManager extends EventEmitter {
     const receiver = connection.receiver;
 
     receiver.speaking.on("start", (userId) => {
+      const subscriptionKey = `${guildId}:${userId}`;
+      if (this.activeSubscriptions.has(subscriptionKey)) return;
+      this.activeSubscriptions.add(subscriptionKey);
+
+      // Per-user encoder to avoid corrupting PCM for concurrent users
+      const encoder = new OpusEncoder(SAMPLE_RATE, 1); // mono
+
       // Subscribe to this user's audio
       const audioStream = receiver.subscribe(userId, {
         end: { behavior: 1, duration: 2000 }, // AfterSilence, 2s
@@ -72,7 +63,7 @@ export class VoiceReceiverManager extends EventEmitter {
       audioStream.on("data", (chunk: Buffer) => {
         try {
           // Decode Opus to PCM
-          const pcm = this.encoder.decode(chunk);
+          const pcm = encoder.decode(chunk);
           chunks.push(pcm);
         } catch {
           // Skip malformed packets
@@ -80,9 +71,10 @@ export class VoiceReceiverManager extends EventEmitter {
       });
 
       audioStream.on("end", () => {
+        this.activeSubscriptions.delete(subscriptionKey);
         if (chunks.length > 0) {
           const fullBuffer = Buffer.concat(chunks);
-          this.emit("userAudio", userId, fullBuffer);
+          this.emit("userAudio", guildId, userId, fullBuffer);
         }
       });
     });

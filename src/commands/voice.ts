@@ -18,10 +18,9 @@ export default {
     if (newValue) {
       // If bot is in a voice channel, start listening immediately
       const player = client.getPlayer(guildId);
-      const voiceHandler = (client as any).voiceHandler;
-      if (player && voiceHandler) {
+      if (player && client.voiceHandler) {
         const guild = interaction.guild!;
-        await voiceHandler.startListening(
+        await client.voiceHandler.startListening(
           client,
           guild,
           player.voiceId!,
@@ -41,8 +40,7 @@ export default {
       });
     } else {
       // Stop listening
-      const voiceHandler = (client as any).voiceHandler;
-      voiceHandler?.stopListening(guildId);
+      client.voiceHandler?.stopListening(guildId);
 
       await interaction.reply({
         embeds: [simpleEmbed(

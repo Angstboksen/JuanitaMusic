@@ -1,4 +1,4 @@
-import type { Guild, GuildMember, TextChannel } from "discord.js";
+import type { Guild, TextChannel } from "discord.js";
 import type { JuanitaClient } from "../client.js";
 import { VoiceReceiverManager } from "./voiceReceiver.js";
 import { WakeWordDetector } from "./wakeWordDetector.js";
@@ -40,8 +40,8 @@ export class VoiceCommandHandler {
     }
 
     // Listen for user audio from the receiver
-    this.receiver.on("userAudio", (userId: string, pcmBuffer: Buffer) => {
-      this.handleUserAudio(userId, pcmBuffer);
+    this.receiver.on("userAudio", (guildId: string, userId: string, pcmBuffer: Buffer) => {
+      this.handleUserAudio(guildId, userId, pcmBuffer);
     });
 
     console.log("[VoiceCmd] Voice assistant initialized");
@@ -85,21 +85,9 @@ export class VoiceCommandHandler {
     voiceChannelId: string;
   }>();
 
-  private async handleUserAudio(userId: string, pcmBuffer: Buffer): Promise<void> {
-    // Find which guild this user is in
-    let guildId: string | null = null;
-    let ctx: { client: JuanitaClient; guild: Guild; textChannelId: string; voiceChannelId: string } | undefined;
-
-    for (const [id, context] of this.guildContexts) {
-      const member = context.guild.members.cache.get(userId);
-      if (member?.voice.channelId === context.voiceChannelId) {
-        guildId = id;
-        ctx = context;
-        break;
-      }
-    }
-
-    if (!guildId || !ctx) return;
+  private async handleUserAudio(guildId: string, userId: string, pcmBuffer: Buffer): Promise<void> {
+    const ctx = this.guildContexts.get(guildId);
+    if (!ctx) return;
 
     // Debounce: don't process if already handling a command from this user
     const processingKey = `${guildId}:${userId}`;

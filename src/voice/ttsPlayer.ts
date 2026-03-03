@@ -4,6 +4,7 @@ import {
   AudioPlayerStatus,
   type VoiceConnection,
   type AudioPlayer,
+  type PlayerSubscription,
   StreamType,
 } from "@discordjs/voice";
 import { Readable } from "stream";
@@ -15,6 +16,7 @@ const FADE_INTERVAL_MS = 40; // ~200ms total fade
 
 export class TtsPlayer {
   private player: AudioPlayer;
+  private subscription: PlayerSubscription | null = null;
   private playing = false;
 
   constructor() {
@@ -37,7 +39,8 @@ export class TtsPlayer {
 
     try {
       // Subscribe the connection to our TTS player
-      connection.subscribe(this.player);
+      this.subscription?.unsubscribe();
+      this.subscription = connection.subscribe(this.player) ?? null;
 
       // Fade music volume down
       if (musicPlayer) {
