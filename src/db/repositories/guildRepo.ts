@@ -31,3 +31,15 @@ export async function toggleAutoDj(guildId: string): Promise<boolean> {
   await db.update(guilds).set({ autoDj: newValue }).where(eq(guilds.id, guildId));
   return newValue;
 }
+
+export async function getVoiceEnabled(guildId: string): Promise<boolean> {
+  const result = await db.select({ voiceEnabled: guilds.voiceEnabled }).from(guilds).where(eq(guilds.id, guildId)).limit(1);
+  return result[0]?.voiceEnabled ?? false;
+}
+
+export async function toggleVoice(guildId: string): Promise<boolean> {
+  const current = await getVoiceEnabled(guildId);
+  const newValue = !current;
+  await db.update(guilds).set({ voiceEnabled: newValue }).where(eq(guilds.id, guildId));
+  return newValue;
+}

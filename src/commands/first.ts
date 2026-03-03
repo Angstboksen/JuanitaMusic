@@ -4,6 +4,7 @@ import * as msg from "../i18n/messages.js";
 import { startQueueInterval, sendOrUpdateQueueEmbed } from "../embeds/queueEmbed.js";
 import { getOrCreateGuildState } from "../music/guildState.js";
 import { getAlias } from "../db/repositories/aliasRepo.js";
+import { searchTracks } from "../music/search.js";
 import type { JuanitaCommand } from "./types.js";
 
 export default {
@@ -29,7 +30,7 @@ export default {
     const alias = await getAlias(interaction.guildId!, query);
     const searchQuery = alias ? alias.playlistId : query;
 
-    const result = await client.kazagumo.search(searchQuery, { requester: member });
+    const result = await searchTracks(searchQuery, member);
     if (!result.tracks.length) {
       await interaction.editReply({
         embeds: [simpleEmbed(`${msg.NO_RESULTS[lang]} \`${query}\``, EmbedType.Error)],
@@ -39,10 +40,11 @@ export default {
 
     let player = client.getPlayer(interaction.guildId!);
     if (!player) {
-      player = await client.kazagumo.createPlayer({
+      player = client.playerManager.create({
         guildId: interaction.guildId!,
-        textId: interaction.channelId,
-        voiceId: member.voice.channel!.id,
+        textChannelId: interaction.channelId,
+        voiceChannelId: member.voice.channel!.id,
+        adapterCreator: interaction.guild!.voiceAdapterCreator,
         volume: 50,
       });
     }

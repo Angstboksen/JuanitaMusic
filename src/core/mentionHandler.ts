@@ -5,7 +5,7 @@ import { config } from "../config.js";
 import { getOrCreateGuildState } from "../music/guildState.js";
 import { buildSystemPrompt } from "../llm/systemPrompts.js";
 import { getHistory, pushExchange } from "../llm/conversationCache.js";
-import { chatCompletion } from "../llm/openrouter.js";
+import { chatCompletion } from "../llm/openai.js";
 import type { ToolContext } from "../llm/tools.js";
 import * as msg from "../i18n/messages.js";
 
@@ -15,7 +15,7 @@ export function setupMentionHandler(client: JuanitaClient) {
   client.on("messageCreate", async (message: Message) => {
     // Ignore: no guild, from a bot, LLM not configured, bot not mentioned
     if (!message.guild || message.author.bot) return;
-    if (!config.openrouter) return;
+    if (!config.openai) return;
     if (!message.mentions.has(client.user!)) return;
 
     // Strip the bot mention from the message

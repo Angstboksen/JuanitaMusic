@@ -6,7 +6,7 @@ import {
   type Message,
   type TextChannel,
 } from "discord.js";
-import type { KazagumoPlayer } from "kazagumo";
+import type { MusicPlayer } from "../music/player.js";
 import type { Language } from "../i18n/types.js";
 import {
   BTN_KYS, BTN_SKIP, BTN_PAUSE, BTN_RESUME, BTN_SHUFFLE, BTN_BACK,
@@ -27,7 +27,7 @@ export function createQueueState(): QueueEmbedState {
 }
 
 export function buildQueueEmbed(
-  player: KazagumoPlayer,
+  player: MusicPlayer,
   lang: Language,
   _page: number,
   botAvatarUrl?: string,
@@ -36,8 +36,8 @@ export function buildQueueEmbed(
   if (!current) return null;
 
   const tracks = [...player.queue];
-  const position = player.shoukaku.position ?? 0;
-  const duration = current.length ?? 0;
+  const position = player.position ?? 0;
+  const duration = current.duration ?? 0;
   const paused = player.paused;
 
   // Build description
@@ -45,7 +45,7 @@ export function buildQueueEmbed(
 
   // Now playing — title as hero
   lines.push(`${QUEUE_NOW_PLAYING[lang]}`);
-  lines.push(`**[${current.title}](${current.uri})**`);
+  lines.push(`**[${current.title}](${current.url})**`);
   lines.push(`${QUEUE_ADDED_BY[lang]} ${current.requester ?? "Unknown"}`);
   lines.push("");
 
@@ -55,13 +55,13 @@ export function buildQueueEmbed(
 
   // Up next section
   if (tracks.length > 0) {
-    const queueTotalMs = tracks.reduce((acc, t) => acc + (t.length ?? 0), 0);
+    const queueTotalMs = tracks.reduce((acc, t) => acc + (t.duration ?? 0), 0);
     lines.push(`**${QUEUE_UP_NEXT[lang]}** (${tracks.length} songs · ${millisecondsToTime(queueTotalMs)})`);
 
     const displayed = tracks.slice(0, MAX_QUEUE_DISPLAY);
     for (let i = 0; i < displayed.length; i++) {
       const t = displayed[i]!;
-      const dur = t.length ? millisecondsToTime(t.length) : "?:??";
+      const dur = t.duration ? millisecondsToTime(t.duration) : "?:??";
       lines.push(`\`${i + 1}.\` ${t.title?.slice(0, 45) ?? "Unknown"} — ${dur}`);
     }
 
@@ -79,8 +79,7 @@ export function buildQueueEmbed(
     .setAuthor({ name: "Juanita", iconURL: botAvatarUrl });
 
   // Single row of controls
-  const previousTracks = player.queue.previous;
-  const hasPrevious = Array.isArray(previousTracks) ? previousTracks.length > 0 : !!previousTracks;
+  const hasPrevious = player.queue.previous.length > 0;
 
   const controlRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder().setCustomId("btn:back").setLabel(BTN_BACK[lang]).setEmoji("⏮️").setStyle(ButtonStyle.Secondary).setDisabled(!hasPrevious),
@@ -95,7 +94,7 @@ export function buildQueueEmbed(
 
 export async function sendOrUpdateQueueEmbed(
   state: QueueEmbedState,
-  player: KazagumoPlayer,
+  player: MusicPlayer,
   lang: Language,
   channel?: TextChannel,
   botAvatarUrl?: string,
@@ -140,7 +139,7 @@ export async function cleanupQueueEmbed(state: QueueEmbedState) {
 
 export function startQueueInterval(
   state: QueueEmbedState,
-  player: KazagumoPlayer,
+  player: MusicPlayer,
   lang: Language,
   channel: TextChannel,
   botAvatarUrl?: string,

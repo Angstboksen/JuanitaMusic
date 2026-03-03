@@ -3,7 +3,7 @@ import * as msg from "../i18n/messages.js";
 import { simpleEmbed, EmbedType } from "../embeds/simpleEmbed.js";
 import { getTopSongs } from "../db/repositories/historyRepo.js";
 import { buildSystemPrompt } from "../llm/systemPrompts.js";
-import { chatCompletion } from "../llm/openrouter.js";
+import { chatCompletion } from "../llm/openai.js";
 import { config } from "../config.js";
 import type { ToolContext } from "../llm/tools.js";
 import type { JuanitaCommand } from "./types.js";
@@ -16,7 +16,7 @@ export default {
   async execute({ interaction, client, lang }) {
     await interaction.deferReply();
 
-    if (!config.openrouter) {
+    if (!config.openai) {
       await interaction.editReply({
         embeds: [simpleEmbed(msg.LLM_NOT_CONFIGURED[lang], EmbedType.Error)],
       });
