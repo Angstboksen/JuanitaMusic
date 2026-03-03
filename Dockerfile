@@ -10,7 +10,9 @@ RUN npm run build
 FROM node:22-slim
 WORKDIR /app
 # Required for native modules (sodium-native, @discordjs/opus) and audio streaming
-RUN apt-get update && apt-get install -y python3 make g++ libopus-dev ffmpeg yt-dlp && rm -rf /var/lib/apt/lists/*
+# Install yt-dlp via pip for latest version (apt version is too old for YouTube)
+RUN apt-get update && apt-get install -y python3 python3-pip make g++ libopus-dev ffmpeg && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --break-system-packages yt-dlp
 COPY package.json package-lock.json* ./
 RUN npm install --production && npm install drizzle-kit tsx
 COPY --from=build /app/dist ./dist
