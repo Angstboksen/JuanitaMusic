@@ -51,6 +51,7 @@ export async function getStreamUrl(url: string): Promise<string> {
       "-g",
       "-f", "bestaudio[acodec=opus]/bestaudio",
       "--no-playlist",
+      "--js-runtimes", "node",
       ...getCookiesArgs(),
       url,
     ]);
