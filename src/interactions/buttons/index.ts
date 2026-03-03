@@ -17,8 +17,7 @@ async function handleBack(interaction: ButtonInteraction, client: JuanitaClient,
     await interaction.reply({ embeds: [simpleEmbed(msg.NO_MUSIC_PLAYING[state.lang], EmbedType.Error)], ephemeral: true });
     return;
   }
-  const previousTracks = player.queue.previous;
-  const previous = Array.isArray(previousTracks) ? previousTracks[0] : previousTracks;
+  const previous = player.queue.previous[0];
   if (!previous) {
     await interaction.reply({ embeds: [simpleEmbed(msg.NO_PREVIOUS_TRACK[state.lang], EmbedType.Error)], ephemeral: true });
     return;

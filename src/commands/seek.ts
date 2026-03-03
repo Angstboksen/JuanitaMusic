@@ -26,7 +26,7 @@ export default {
     }
 
     const seconds = interaction.options.get("seconds", true).value as number;
-    const durationMs = player.queue.current.length ?? 0;
+    const durationMs = player.queue.current.duration ?? 0;
 
     if (seconds * 1000 > durationMs) {
       await interaction.reply({
@@ -36,7 +36,7 @@ export default {
       return;
     }
 
-    player.shoukaku.seekTo(seconds * 1000);
+    await player.seekTo(seconds * 1000);
 
     await interaction.reply({
       embeds: [simpleEmbed(`⏱️ ${msg.SEEK_SUCCESS[lang]} \`${millisecondsToTime(seconds * 1000)}\``, EmbedType.Success)],

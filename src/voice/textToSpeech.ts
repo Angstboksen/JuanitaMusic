@@ -2,7 +2,11 @@ import OpenAI from "openai";
 import { config } from "../config.js";
 import type { Language } from "../i18n/types.js";
 
-const openai = new OpenAI({ apiKey: config.voice?.openaiApiKey });
+let openai: OpenAI | null = null;
+function getClient(): OpenAI {
+  if (!openai) openai = new OpenAI({ apiKey: config.openai!.apiKey });
+  return openai;
+}
 
 /**
  * Synthesize text to Opus audio for Discord playback.
@@ -18,7 +22,7 @@ export async function synthesize(
   const truncated = text.length > 300 ? text.slice(0, 297) + "..." : text;
 
   try {
-    const response = await openai.audio.speech.create({
+    const response = await getClient().audio.speech.create({
       model: "tts-1",
       voice: "nova",
       input: truncated,

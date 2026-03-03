@@ -23,7 +23,7 @@ export default {
         await client.voiceHandler.startListening(
           client,
           guild,
-          player.voiceId!,
+          player.voiceChannelId,
           interaction.channelId,
         );
       }

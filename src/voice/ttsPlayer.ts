@@ -8,11 +8,6 @@ import {
   StreamType,
 } from "@discordjs/voice";
 import { Readable } from "stream";
-import type { KazagumoPlayer } from "kazagumo";
-
-const DUCKED_VOLUME = 15; // Volume during TTS (out of 100)
-const FADE_STEPS = 5;
-const FADE_INTERVAL_MS = 40; // ~200ms total fade
 
 export class TtsPlayer {
   private player: AudioPlayer;
@@ -25,27 +20,19 @@ export class TtsPlayer {
 
   /**
    * Play a TTS audio buffer through the voice connection.
-   * Ducks the music player volume while speaking, then restores it.
+   * Music should already be paused by the caller before invoking this.
    */
   async speak(
     connection: VoiceConnection,
     audioBuffer: Buffer,
-    musicPlayer?: KazagumoPlayer,
   ): Promise<void> {
     if (this.playing) return; // Don't overlap TTS
     this.playing = true;
 
-    const originalVolume = musicPlayer ? musicPlayer.volume : 50;
-
     try {
-      // Subscribe the connection to our TTS player
+      // Subscribe the TTS player to the connection
       this.subscription?.unsubscribe();
       this.subscription = connection.subscribe(this.player) ?? null;
-
-      // Fade music volume down
-      if (musicPlayer) {
-        await this.fadeVolume(musicPlayer, originalVolume, DUCKED_VOLUME);
-      }
 
       // Create audio resource from buffer
       const stream = Readable.from(audioBuffer);
@@ -70,32 +57,13 @@ export class TtsPlayer {
           resolve();
         }, 15_000);
       });
-
-      // Fade music volume back up
-      if (musicPlayer) {
-        await this.fadeVolume(musicPlayer, DUCKED_VOLUME, originalVolume);
-      }
     } catch (error) {
       console.error("[TtsPlayer] Playback error:", error);
-      // Restore volume on error
-      if (musicPlayer) {
-        await musicPlayer.setVolume(originalVolume);
-      }
     } finally {
+      // Clean up TTS subscription
+      this.subscription?.unsubscribe();
+      this.subscription = null;
       this.playing = false;
-    }
-  }
-
-  private async fadeVolume(
-    player: KazagumoPlayer,
-    from: number,
-    to: number,
-  ): Promise<void> {
-    const step = (to - from) / FADE_STEPS;
-    for (let i = 1; i <= FADE_STEPS; i++) {
-      const volume = Math.round(from + step * i);
-      await player.setVolume(volume);
-      await new Promise((r) => setTimeout(r, FADE_INTERVAL_MS));
     }
   }
 

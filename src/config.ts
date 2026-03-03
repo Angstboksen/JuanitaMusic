@@ -5,21 +5,15 @@ export interface JuanitaConfig {
     token: string;
     devGuildId?: string;
   };
-  lavalink: {
-    host: string;
-    port: number;
-    password: string;
-  };
   database: {
     url: string;
   };
-  openrouter?: {
+  openai?: {
     apiKey: string;
     model: string;
   };
   voice?: {
     picovoiceAccessKey: string;
-    openaiApiKey: string;
   };
 }
 
@@ -34,25 +28,18 @@ export const config: JuanitaConfig = {
     token: requireEnv("BOT_TOKEN"),
     devGuildId: process.env.DEV_GUILD_ID,
   },
-  lavalink: {
-    host: process.env.LAVALINK_HOST ?? "localhost",
-    port: parseInt(process.env.LAVALINK_PORT ?? "2333"),
-    password: process.env.LAVALINK_PASSWORD ?? "youshallnotpass",
-  },
   database: {
     url: requireEnv("DATABASE_URL"),
   },
-  openrouter: process.env.OPENROUTER_API_KEY
+  openai: process.env.OPENAI_API_KEY
     ? {
-        apiKey: process.env.OPENROUTER_API_KEY,
-        model: process.env.OPENROUTER_MODEL ?? "openai/gpt-4o-mini",
+        apiKey: process.env.OPENAI_API_KEY,
+        model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
       }
     : undefined,
-  voice:
-    process.env.PICOVOICE_ACCESS_KEY && process.env.OPENAI_API_KEY
-      ? {
-          picovoiceAccessKey: process.env.PICOVOICE_ACCESS_KEY,
-          openaiApiKey: process.env.OPENAI_API_KEY,
-        }
-      : undefined,
+  voice: process.env.PICOVOICE_ACCESS_KEY
+    ? {
+        picovoiceAccessKey: process.env.PICOVOICE_ACCESS_KEY,
+      }
+    : undefined,
 };

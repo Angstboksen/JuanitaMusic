@@ -2,6 +2,7 @@ import type { GuildMember, TextChannel } from "discord.js";
 import type { JuanitaClient } from "../client.js";
 import type { Language } from "../i18n/types.js";
 import { getOrCreateGuildState, guildStates } from "../music/guildState.js";
+import { searchTracks } from "../music/search.js";
 import { startQueueInterval, sendOrUpdateQueueEmbed, cleanupQueueEmbed } from "../embeds/queueEmbed.js";
 import { getAlias, saveAlias as saveAliasDb, listAliases as listAliasesDb, deleteAlias as deleteAliasDb } from "../db/repositories/aliasRepo.js";
 import { setGuildLanguage, toggleAutoDj } from "../db/repositories/guildRepo.js";
@@ -239,15 +240,16 @@ export async function executeTool(
       const alias = await getAlias(guildId, query);
       const searchQuery = alias ? alias.playlistId : query;
 
-      const result = await client.kazagumo.search(searchQuery, { requester: member });
+      const result = await searchTracks(searchQuery, member);
       if (!result.tracks.length) return `No results found for: ${query}`;
 
       let player = client.getPlayer(guildId);
       if (!player) {
-        player = await client.kazagumo.createPlayer({
+        player = client.playerManager.create({
           guildId,
-          textId: textChannel.id,
-          voiceId: member.voice.channel!.id,
+          textChannelId: textChannel.id,
+          voiceChannelId: member.voice.channel!.id,
+          adapterCreator: member.guild.voiceAdapterCreator,
           volume: 50,
         });
       }
@@ -331,11 +333,11 @@ export async function executeTool(
       const player = client.getPlayer(guildId);
       if (!player?.queue.current) return "Error: No music is currently playing.";
       const seconds = Math.floor(args.seconds as number);
-      const durationMs = player.queue.current.length ?? 0;
+      const durationMs = player.queue.current.duration ?? 0;
       if (seconds < 0 || seconds * 1000 > durationMs) {
         return `Error: Invalid seek time. Song duration is ${Math.floor(durationMs / 1000)} seconds.`;
       }
-      player.shoukaku.seekTo(seconds * 1000);
+      await player.seekTo(seconds * 1000);
       return `Seeked to ${seconds} seconds.`;
     }
 
@@ -352,8 +354,7 @@ export async function executeTool(
     case "back": {
       const player = client.getPlayer(guildId);
       if (!player?.queue.current) return "Error: No music is currently playing.";
-      const previousTracks = player.queue.previous;
-      const previous = Array.isArray(previousTracks) ? previousTracks[0] : previousTracks;
+      const previous = player.queue.previous[0];
       if (!previous) return "Error: No previous track to go back to.";
       player.play(previous);
       return `Playing previous track: ${previous.title}`;
@@ -366,15 +367,16 @@ export async function executeTool(
       const alias = await getAlias(guildId, query);
       const searchQuery = alias ? alias.playlistId : query;
 
-      const result = await client.kazagumo.search(searchQuery, { requester: member });
+      const result = await searchTracks(searchQuery, member);
       if (!result.tracks.length) return `No results found for: ${query}`;
 
       let player = client.getPlayer(guildId);
       if (!player) {
-        player = await client.kazagumo.createPlayer({
+        player = client.playerManager.create({
           guildId,
-          textId: textChannel.id,
-          voiceId: member.voice.channel!.id,
+          textChannelId: textChannel.id,
+          voiceChannelId: member.voice.channel!.id,
+          adapterCreator: member.guild.voiceAdapterCreator,
           volume: 50,
         });
       }

@@ -4,6 +4,28 @@ import {
   getBuiltinKeywordPath,
 } from "@picovoice/porcupine-node";
 import { config } from "../config.js";
+import { existsSync, readdirSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+function getKeywordPath(): { path: string; name: string } {
+  const platform = process.platform === "darwin" ? "mac" : "linux";
+  const keywordsDir = resolve(__dirname, "keywords");
+
+  if (existsSync(keywordsDir)) {
+    const files = readdirSync(keywordsDir);
+    const match = files.find((f) => f.startsWith(`juanita_en_${platform}`) && f.endsWith(".ppn"));
+    if (match) {
+      return { path: resolve(keywordsDir, match), name: "Juanita" };
+    }
+  }
+
+  // Fallback to built-in Jarvis
+  console.log(`[WakeWord] No custom Juanita keyword found for ${platform}, falling back to Jarvis`);
+  return { path: getBuiltinKeywordPath(BuiltinKeyword.JARVIS), name: "Jarvis" };
+}
 
 export class WakeWordDetector {
   private porcupine: Porcupine | null = null;
@@ -16,19 +38,16 @@ export class WakeWordDetector {
     }
 
     try {
-      // Use built-in "Jarvis" keyword as a placeholder until custom "Juanita" is trained.
-      // Custom keywords can be created at https://console.picovoice.ai/
-      // The constructor expects file paths, so we resolve the built-in keyword to its .ppn path.
-      const keywordPath = getBuiltinKeywordPath(BuiltinKeyword.JARVIS);
+      const keyword = getKeywordPath();
 
       this.porcupine = new Porcupine(
         config.voice.picovoiceAccessKey,
-        [keywordPath], // Replace with custom "Juanita" .ppn file path later
+        [keyword.path],
         [0.6], // Sensitivity (0-1, higher = more sensitive but more false positives)
       );
       this.frameLength = this.porcupine.frameLength;
       console.log(
-        `[WakeWord] Initialized (frame length: ${this.frameLength}, sample rate: ${this.porcupine.sampleRate})`,
+        `[WakeWord] Initialized with "${keyword.name}" (frame length: ${this.frameLength}, sample rate: ${this.porcupine.sampleRate})`,
       );
       return true;
     } catch (error) {

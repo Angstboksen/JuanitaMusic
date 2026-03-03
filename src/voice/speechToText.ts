@@ -2,7 +2,11 @@ import OpenAI, { toFile } from "openai";
 import { config } from "../config.js";
 import type { Language } from "../i18n/types.js";
 
-const openai = new OpenAI({ apiKey: config.voice?.openaiApiKey });
+let openai: OpenAI | null = null;
+function getClient(): OpenAI {
+  if (!openai) openai = new OpenAI({ apiKey: config.openai!.apiKey });
+  return openai;
+}
 
 const LANGUAGE_MAP: Record<Language, string> = {
   en: "en",
@@ -50,7 +54,7 @@ export async function transcribe(
     const wav = pcmToWav(pcmBuffer);
     const file = await toFile(wav, "audio.wav", { type: "audio/wav" });
 
-    const response = await openai.audio.transcriptions.create({
+    const response = await getClient().audio.transcriptions.create({
       model: "whisper-1",
       file,
       language: LANGUAGE_MAP[lang],

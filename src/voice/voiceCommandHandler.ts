@@ -8,7 +8,7 @@ import { TtsPlayer } from "./ttsPlayer.js";
 import { config } from "../config.js";
 import { getOrCreateGuildState } from "../music/guildState.js";
 import { buildVoiceSystemPrompt } from "../llm/systemPrompts.js";
-import { chatCompletion } from "../llm/openrouter.js";
+import { chatCompletion } from "../llm/openai.js";
 import type { ToolContext } from "../llm/tools.js";
 
 export class VoiceCommandHandler {
@@ -28,7 +28,7 @@ export class VoiceCommandHandler {
       console.log("[VoiceCmd] Voice config not set, voice assistant disabled");
       return false;
     }
-    if (!config.openrouter) {
+    if (!config.openai) {
       console.log("[VoiceCmd] OpenRouter not configured, voice assistant disabled");
       return false;
     }
@@ -50,7 +50,7 @@ export class VoiceCommandHandler {
 
   /**
    * Start listening in a voice channel for a guild.
-   * Call this when a Kazagumo player starts and voice is enabled.
+   * Call this when a MusicPlayer starts and voice is enabled.
    */
   async startListening(
     client: JuanitaClient,
@@ -61,8 +61,14 @@ export class VoiceCommandHandler {
     const channel = guild.channels.cache.get(voiceChannelId);
     if (!channel?.isVoiceBased()) return;
 
-    const connection = await this.receiver.join(guild, channel);
-    if (!connection) return;
+    // Get the VoiceConnection from MusicPlayer
+    const player = client.getPlayer(guild.id);
+    if (!player) {
+      console.error(`[VoiceCmd] No player for ${guild.name}, cannot attach receiver`);
+      return;
+    }
+
+    this.receiver.join(guild, channel, player.connection);
 
     // Store context for this guild so handleUserAudio can access it
     this.guildContexts.set(guild.id, {
@@ -99,6 +105,14 @@ export class VoiceCommandHandler {
 
     console.log(`[VoiceCmd] Wake word detected from user ${userId} in guild ${guildId}`);
     this.processing.add(processingKey);
+
+    // Pause music during entire voice command flow (STT + LLM + TTS)
+    // so music doesn't bleed into the microphone or drown out the response
+    const musicPlayer = ctx.client.getPlayer(guildId);
+    const wasPaused = musicPlayer?.paused ?? true;
+    if (musicPlayer && !wasPaused) {
+      musicPlayer.pause(true);
+    }
 
     try {
       const state = await getOrCreateGuildState(guildId, ctx.guild.name);
@@ -144,15 +158,19 @@ export class VoiceCommandHandler {
       const ttsAudio = await synthesize(response, state.lang);
       if (!ttsAudio) return;
 
-      // Play TTS with music ducking
+      // Play TTS response
       const connection = this.receiver.getConnection(guildId);
-      const musicPlayer = ctx.client.getPlayer(guildId);
       if (connection) {
-        await this.ttsPlayer.speak(connection, ttsAudio, musicPlayer);
+        await this.ttsPlayer.speak(connection, ttsAudio);
       }
     } catch (error) {
       console.error("[VoiceCmd] Error handling voice command:", error);
     } finally {
+      // Resume music after voice command completes
+      const player = ctx.client.getPlayer(guildId);
+      if (player && !wasPaused) {
+        player.pause(false);
+      }
       this.processing.delete(processingKey);
     }
   }
