@@ -25,6 +25,20 @@ client.kazagumo.on("playerStart", (player, track) => {
   console.log(`[Player] ${player.guildId}: Playing ${track.title}`);
 });
 
+// TEMPORARY: Voice connection spike test
+client.kazagumo.on("playerStart", async (player) => {
+  try {
+    const { testVoiceReceiver } = await import("./voice/connectionTest.js");
+    const guild = client.guilds.cache.get(player.guildId);
+    const channel = guild?.channels.cache.get(player.voiceId!);
+    if (guild && channel?.isVoiceBased()) {
+      await testVoiceReceiver(guild, channel);
+    }
+  } catch (e) {
+    console.error("[VoiceSpike] Import/run error:", e);
+  }
+});
+
 client.kazagumo.on("playerEnd", async (player) => {
   const previousTracks = player.queue.previous;
   const track = Array.isArray(previousTracks) ? previousTracks[0] : previousTracks;
