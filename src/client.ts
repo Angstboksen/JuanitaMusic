@@ -3,10 +3,12 @@ import { Kazagumo, KazagumoPlayer } from "kazagumo";
 import { Connectors } from "shoukaku";
 import { config } from "./config.js";
 import type { JuanitaCommand } from "./commands/types.js";
+import { VoiceCommandHandler } from "./voice/voiceCommandHandler.js";
 
 export class JuanitaClient extends Client {
   public kazagumo: Kazagumo;
   public commands: Collection<string, JuanitaCommand> = new Collection();
+  public voiceHandler: VoiceCommandHandler | null = null;
 
   constructor() {
     super({

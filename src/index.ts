@@ -4,8 +4,9 @@ import { registerCommands } from "./core/commandRegistry.js";
 import { setupInteractionHandler } from "./core/interactionRouter.js";
 import { setupMentionHandler } from "./core/mentionHandler.js";
 import { logPlay } from "./db/repositories/historyRepo.js";
-import { guildStates } from "./music/guildState.js";
+import { guildStates, getOrCreateGuildState } from "./music/guildState.js";
 import { cleanupQueueEmbed } from "./embeds/queueEmbed.js";
+import { VoiceCommandHandler } from "./voice/voiceCommandHandler.js";
 
 const client = new JuanitaClient();
 
@@ -21,21 +22,23 @@ client.kazagumo.shoukaku.on("disconnect", (name) =>
 );
 
 // Kazagumo player events
-client.kazagumo.on("playerStart", (player, track) => {
+client.kazagumo.on("playerStart", async (player, track) => {
   console.log(`[Player] ${player.guildId}: Playing ${track.title}`);
-});
 
-// TEMPORARY: Voice connection spike test
-client.kazagumo.on("playerStart", async (player) => {
-  try {
-    const { testVoiceReceiver } = await import("./voice/connectionTest.js");
-    const guild = client.guilds.cache.get(player.guildId);
-    const channel = guild?.channels.cache.get(player.voiceId!);
-    if (guild && channel?.isVoiceBased()) {
-      await testVoiceReceiver(guild, channel);
+  // Start voice listening if enabled for this guild
+  if (client.voiceHandler) {
+    const state = await getOrCreateGuildState(player.guildId, "");
+    if (state.voiceEnabled) {
+      const guild = client.guilds.cache.get(player.guildId);
+      if (guild && player.voiceId && player.textId) {
+        await client.voiceHandler.startListening(
+          client,
+          guild,
+          player.voiceId,
+          player.textId,
+        );
+      }
     }
-  } catch (e) {
-    console.error("[VoiceSpike] Import/run error:", e);
   }
 });
 
@@ -85,6 +88,8 @@ client.kazagumo.on("playerEmpty", async (player) => {
   }
 
   // Default: cleanup and disconnect
+  // Stop voice listening when player disconnects
+  client.voiceHandler?.stopListening(player.guildId);
   if (state) await cleanupQueueEmbed(state.queueEmbed);
   player.destroy();
 });
@@ -110,6 +115,13 @@ client.on("ready", async (c) => {
 // Set up interaction handling
 setupInteractionHandler(client);
 setupMentionHandler(client);
+
+// Initialize voice assistant
+const voiceHandler = new VoiceCommandHandler();
+const voiceReady = await voiceHandler.initialize();
+if (voiceReady) {
+  client.voiceHandler = voiceHandler;
+}
 
 // Login
 client.login(config.bot.token);
