@@ -17,6 +17,7 @@ COPY package.json package-lock.json* ./
 RUN npm install --production && npm install drizzle-kit tsx
 COPY --from=build /app/dist ./dist
 COPY src/voice/keywords ./dist/voice/keywords
+COPY cookies.tx[t] ./
 COPY drizzle.config.ts ./
 COPY src/db/schema.ts ./src/db/schema.ts
 CMD ["sh", "-c", "npx drizzle-kit push && node dist/index.js"]

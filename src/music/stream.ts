@@ -1,28 +1,45 @@
 import { spawn, type ChildProcess } from "child_process";
 import { writeFileSync, existsSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
 import type { Readable } from "stream";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface StreamResult {
   stream: Readable;
   process: ChildProcess;
 }
 
-const COOKIES_PATH = "/tmp/yt-cookies.txt";
+const RUNTIME_COOKIES_PATH = "/tmp/yt-cookies.txt";
+// cookies.txt in project root (gitignored)
+const LOCAL_COOKIES_PATH = resolve(__dirname, "../../cookies.txt");
 
 function getCookiesArgs(): string[] {
-  if (process.env.YT_COOKIES && !existsSync(COOKIES_PATH)) {
+  // Already written from a previous call
+  if (existsSync(RUNTIME_COOKIES_PATH)) return ["--cookies", RUNTIME_COOKIES_PATH];
+
+  // Local cookies.txt file (for dev or Docker with COPY)
+  if (existsSync(LOCAL_COOKIES_PATH)) {
+    console.log("[Stream] Using local cookies.txt");
+    return ["--cookies", LOCAL_COOKIES_PATH];
+  }
+
+  // Env var fallback (for Railway / cloud hosting)
+  if (process.env.YT_COOKIES) {
     let content = process.env.YT_COOKIES.trim();
     // Fix tabs that may have been mangled to spaces by hosting platforms
-    // Netscape cookie lines have exactly 6 tab-separated fields after domain
     if (content.startsWith("#") && !content.includes("\t")) {
       content = content.replace(/^([^#\n].+)$/gm, (line) => {
         return line.replace(/ {2,}/g, "\t");
       });
     }
-    writeFileSync(COOKIES_PATH, content + "\n");
-    console.log(`[Stream] Wrote cookies file (${content.length} bytes)`);
+    writeFileSync(RUNTIME_COOKIES_PATH, content + "\n");
+    console.log(`[Stream] Wrote cookies from env var (${content.length} bytes)`);
+    return ["--cookies", RUNTIME_COOKIES_PATH];
   }
-  return existsSync(COOKIES_PATH) ? ["--cookies", COOKIES_PATH] : [];
+
+  return [];
 }
 
 /**
