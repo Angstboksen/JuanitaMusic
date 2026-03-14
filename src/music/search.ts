@@ -1,5 +1,7 @@
+import { spawn } from "child_process";
 import { YouTube } from "youtube-sr";
 import type { Track } from "./track.js";
+import { getCookiesArgs } from "./stream.js";
 
 export interface SearchResult {
   type: "TRACK" | "PLAYLIST";
@@ -19,20 +21,11 @@ export async function searchTracks(query: string, requester: any): Promise<Searc
     return resolveSpotify(spotifyMatch[1]!, spotifyMatch[2]!, requester);
   }
 
-  // Check for YouTube playlist URL
+  // Check for YouTube playlist URL — use yt-dlp for reliability
   if (query.includes("youtube.com/playlist") || query.includes("list=")) {
-    try {
-      const playlist = await YouTube.getPlaylist(query);
-      await playlist.fetch();
-      const tracks = playlist.videos.map((v) => videoToTrack(v, requester));
-      return {
-        type: "PLAYLIST",
-        tracks,
-        playlistName: playlist.title ?? "Unknown Playlist",
-      };
-    } catch {
-      // Fall through to search
-    }
+    const playlist = await fetchYtDlpPlaylist(query, requester);
+    if (playlist) return playlist;
+    // Fall through to single video / search
   }
 
   // Check for direct YouTube video URL
@@ -70,6 +63,69 @@ function videoToTrack(video: any, requester: any): Track {
     thumbnail: video.thumbnail?.url ?? null,
     requester,
   };
+}
+
+// --- yt-dlp playlist fetching ---
+
+interface YtDlpEntry {
+  id: string;
+  title: string;
+  url?: string;
+  duration?: number;
+  thumbnails?: { url: string }[];
+}
+
+async function fetchYtDlpPlaylist(url: string, requester: any): Promise<SearchResult | null> {
+  return new Promise((resolve) => {
+    const proc = spawn("yt-dlp", [
+      "--flat-playlist",
+      "-J",
+      "--no-warnings",
+      "--js-runtimes", "node",
+      ...getCookiesArgs(),
+      url,
+    ]);
+
+    let stdout = "";
+    let stderr = "";
+    proc.stdout.on("data", (chunk: Buffer) => (stdout += chunk));
+    proc.stderr.on("data", (chunk: Buffer) => (stderr += chunk));
+
+    proc.on("close", (code) => {
+      if (code !== 0 || !stdout.trim()) {
+        console.error(`[Search] yt-dlp playlist failed (code ${code}): ${stderr.trim()}`);
+        resolve(null);
+        return;
+      }
+
+      try {
+        const data = JSON.parse(stdout) as { title?: string; entries?: YtDlpEntry[] };
+        const entries = data.entries ?? [];
+        const tracks: Track[] = entries.map((e) => ({
+          title: e.title ?? "Unknown",
+          url: e.url ?? `https://youtube.com/watch?v=${e.id}`,
+          duration: e.duration ? e.duration * 1000 : 0,
+          thumbnail: e.thumbnails?.[0]?.url ?? null,
+          requester,
+        }));
+
+        console.log(`[Search] Playlist "${data.title}" loaded with ${tracks.length} tracks via yt-dlp`);
+        resolve({
+          type: "PLAYLIST",
+          tracks,
+          playlistName: data.title ?? "Unknown Playlist",
+        });
+      } catch (err) {
+        console.error("[Search] Failed to parse yt-dlp playlist JSON:", err);
+        resolve(null);
+      }
+    });
+
+    proc.on("error", (err) => {
+      console.error("[Search] yt-dlp spawn error:", err);
+      resolve(null);
+    });
+  });
 }
 
 // --- Spotify resolution ---

@@ -15,7 +15,7 @@ const RUNTIME_COOKIES_PATH = "/tmp/yt-cookies.txt";
 // cookies.txt in project root (gitignored)
 const LOCAL_COOKIES_PATH = resolve(__dirname, "../../cookies.txt");
 
-function getCookiesArgs(): string[] {
+export function getCookiesArgs(): string[] {
   // Already written from a previous call
   if (existsSync(RUNTIME_COOKIES_PATH)) return ["--cookies", RUNTIME_COOKIES_PATH];
 

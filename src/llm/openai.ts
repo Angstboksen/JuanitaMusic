@@ -9,7 +9,13 @@ const MAX_RESPONSE_TOKENS_WITH_TOOLS = 300;
 
 let client: OpenAI | null = null;
 function getClient(): OpenAI {
-  if (!client) client = new OpenAI({ apiKey: config.openai!.apiKey });
+  if (!client)
+    client = new OpenAI({
+      apiKey: config.openai!.apiKey,
+      baseURL: "https://api.openai.com/v1",
+      maxRetries: 2,
+      timeout: 15_000,
+    });
   return client;
 }
 
